@@ -33,7 +33,7 @@ import.gwas <- function(file, snpid, chr, pos, pval, or, genome, ...) {
   
   gr$z <- ifelse(gr$or > 1, qnorm(gr$pval / 2), -qnorm(gr$pval / 2))
   
-  mcols(gr) <- df[vars$other]
+  mcols(gr) <- cbind(mcols(gr), df[vars$other])
   
   gr <- fix_chrs(gr, genome = genome, add.length = TRUE)
   
