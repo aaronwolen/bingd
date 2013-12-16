@@ -14,8 +14,8 @@
 #' 
 #' @examples
 #' scz <- import.gwas("data/pgc.scz.clump.txt.gz", snpid = "snpid",
-#'                    chr = "hg18chr", pos = "bp", pval = "pval",
-#'                    or = "or", genome = "hg18")
+#'                    chr = "chr", pos = "pos", pval = "pval",
+#'                    or = "or", genome = "hg19")
 
 import.gwas <- function(file, snpid, chr, pos, pval, or, genome, ...) {
   
