@@ -2,5 +2,5 @@
 #'
 #' @name bingd
 #' @docType package
-#' @import IRanges GenomicRanges rtracklayer
+#' @import IRanges GenomicRanges
 NULL

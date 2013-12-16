@@ -12,6 +12,7 @@
 #'   provide chromosome lengths so that an internet connection isn't necessary
 #'   
 #' @importFrom GenomicFeatures getChromInfoFromUCSC
+#' @importFrom rtracklayer ucscGenomes
 #' @export
 
 fix_chrs <- function(object, genome = "hg19", add.length = TRUE, db = NA) {
