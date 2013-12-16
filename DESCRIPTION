@@ -2,7 +2,13 @@ Package: bingd
 Title: Bayesian integration of genomic data
 Description: Bayesian integration of genomic data
 Version: 0.1
-Authors@R: # getOptions('devtools.desc.author')
-Depends: R (>= 3.0.1)
-License: # getOptions('devtools.desc.license')
+Author: Aaron Wolen <aaron@wolen.com>
+Maintainer: Aaron Wolen <aaron@wolen.com>
+Depends:
+    R (>= 3.0)
+Imports:
+    IRanges,
+    GenomicRanges,
+    rtracklayer
+License: MIT
 LazyData: true
