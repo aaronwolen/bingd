@@ -35,7 +35,7 @@ calc.enrich <- function(object, stat, thresh.levels) {
 #'        be applied for each enrichment calculation
 #' 
 #' @return data.frame containing `enrichment`
-#' @importFrom plyr ddply
+#' @importFrom plyr ddply as.quoted
 #' @export
 
 serial.enrich <- function(feature, stat, thresh.levels) {
@@ -58,7 +58,7 @@ serial.enrich <- function(feature, stat, thresh.levels) {
   names(out) <- c("threshold", "feature", "count")
   
   # Proportion of feature at each threshold
-  out <- ddply(out, .(threshold), transform, 
+  out <- ddply(out, as.quoted("threshold"), transform, 
                prop = count / sum(count, na.rm = TRUE))
   
   base.index <- match(out$feature, base.counts$feature)
