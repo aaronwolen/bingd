@@ -4,6 +4,8 @@
 #' @param filter named list of vectors
 #' 
 #' @importFrom AnnotationHub AnnotationHub metadata
+#' @importFrom foreach getDoParWorkers
+#' @importFrom parallel mclapply
 #' @export
 #' 
 #' @examples
@@ -28,8 +30,9 @@ annotate.gwas <- function(gwas, data.filter) {
   filter.hits <- lapply(filter.hits, function(x) make.names(md$RDataPath[x]))
   
   # Retrieve features and check for gwas overlaps
-  overlaps <- lapply(unlist(filter.hits), function(f)
-                     gwas %over% AnnotationHub:::.getResource(hub, f))
+  overlaps <- mclapply(unlist(filter.hits), function(f)
+                     gwas %over% AnnotationHub:::.getResource(hub, f),
+                     mc.cores = getDoParWorkers())
   
   names(overlaps) <- md$Description[match(unlist(filter.hits), make.names(md$RDataPath))]
   
