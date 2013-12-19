@@ -17,17 +17,7 @@ annotate.gwas <- function(gwas, data.filter) {
   hub <- AnnotationHub()
   md <- metadata(hub)
   
-  # Filter based on genome  
-  md <- md[md$Genome %in% genome(gwas),]
-  
-  # Apply user specified filters
-  mgrep <- function(pattern, x, ignore.case = TRUE, ...) {
-    hits <- sapply(pattern, grepl, x = x, ignore.case = ignore.case, ...)
-    which(rowSums(hits) == length(pattern))
-  }
-  
-  filter.hits <- lapply(data.filter, mgrep, x = md$RDataPath)
-  filter.hits <- lapply(filter.hits, function(x) make.names(md$RDataPath[x]))
+  filter.hits <- feature.search(data.filter, genome(gwas), md, hub)
   
   # Retrieve features and check for gwas overlaps
   overlaps <- mclapply(unlist(filter.hits), function(f)

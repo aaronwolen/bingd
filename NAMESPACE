@@ -1,5 +1,6 @@
 export(annotate.gwas)
 export(calc.enrich)
+export(feature.search)
 export(features)
 export(fix_chrs)
 export(import.gwas)
