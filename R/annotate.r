@@ -27,34 +27,16 @@ annotate.gwas <- function(gwas, data.filter) {
   filter.hits <- lapply(data.filter, mgrep, x = md$RDataPath)
   filter.hits <- lapply(filter.hits, function(x) make.names(md$RDataPath[x]))
   
-  # Download/retrieve features
-  get_features <- function(x, names) {
-    out <- lapply(names, function(n) AnnotationHub:::.getResource(x, n))
-    names(out) <- names
-    return(out)
-  }
+  # Retrieve features and check for gwas overlaps
+  overlaps <- lapply(unlist(filter.hits), function(f)
+                     gwas %over% AnnotationHub:::.getResource(hub, f))
   
-  message("Retrieving features...")
-  features <- lapply(filter.hits, get_features, x = hub)
+  names(overlaps) <- md$Description[match(unlist(filter.hits), make.names(md$RDataPath))]
   
-  feature.labels <- lapply(features, function(x)
-                          md$Description[match(names(x), 
-                                               make.names(md$RDataPath))])
-
-  features <- mapply(function(f, l) {
-                       names(f) <- l; f
-                     }, features, feature.labels, SIMPLIFY = FALSE)
-  
-  # Annotate GWAS data
-  message("Annotating SNPs...")
-  overlaps <- lapply(features, function(f)
-                      sapply(f, overlapsAny, query = gwas))
-
   # It'd be nice if overlap results for each feature type could
   # be stored in different slots but for now all features are just
   # added as ordinary variables
-  overlaps <- do.call("DataFrame", overlaps)
-  
+  overlaps <- DataFrame(overlaps)
   # Features will be denoted by a .prefix
   names(overlaps) <- paste0(".", names(overlaps))
   
