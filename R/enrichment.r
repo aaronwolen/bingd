@@ -38,11 +38,11 @@ serial.enrich <- function(feature, stat, thresh.levels) {
   
   n <- length(stat)
   thresh.levels <- unique(c(0, thresh.levels))
-  thresh.levels <- matrix(rep(thresh.levels, each = n), nrow = n)
-
-  hits.mat <- feature & (stat >= thresh.levels)
   
-  out <- data.frame(threshold = thresh.levels[1,],
+  stat.hits <- sapply(thresh.levels, function(t) stat >= t)
+  hits.mat <- feature & stat.hits
+  
+  out <- data.frame(threshold = thresh.levels,
                         count = colSums(hits.mat),
                          prop = colMeans(hits.mat))
   out$enrichment <- out$prop / mean(feature)
