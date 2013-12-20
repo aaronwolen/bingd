@@ -37,14 +37,13 @@ calc.enrich <- function(object, stat, thresh.levels) {
 serial.enrich <- function(feature, stat, thresh.levels) {
   
   n <- length(stat)
-  thresh.levels <- unique(c(0, thresh.levels))
   
-  stat.hits <- vapply(thresh.levels, ">=", stat, FUN.VALUE = logical(n))  
+  stat.hits <- vapply(thresh.levels, function(t) stat >= t, FUN.VALUE = logical(n))
+  
   hits.mat <- feature & stat.hits
   
-  out <- data.frame(threshold = thresh.levels,
-                        count = colSums(hits.mat),
-                         prop = colMeans(hits.mat))
+  out <- data.frame(threshold = thresh.levels, count = colSums(hits.mat))
+  out$prop <- out$count / colSums(stat.hits)
   out$enrichment <- out$prop / mean(feature)
   
   return(out)
