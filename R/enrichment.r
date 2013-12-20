@@ -39,7 +39,7 @@ serial.enrich <- function(feature, stat, thresh.levels) {
   n <- length(stat)
   thresh.levels <- unique(c(0, thresh.levels))
   
-  stat.hits <- sapply(thresh.levels, function(t) stat >= t)
+  stat.hits <- vapply(thresh.levels, ">=", stat, FUN.VALUE = logical(n))  
   hits.mat <- feature & stat.hits
   
   out <- data.frame(threshold = thresh.levels,
