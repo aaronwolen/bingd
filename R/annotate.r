@@ -20,6 +20,7 @@ annotate.gwas <- function(gwas, data.filter) {
   filter.hits <- feature.search(data.filter, genome(gwas), md, hub)
   
   # Retrieve features and check for gwas overlaps
+  message("Annotating GWAS markers...")
   overlaps <- mclapply(unlist(filter.hits), function(f)
                      gwas %over% AnnotationHub:::.getResource(hub, f),
                      mc.cores = getDoParWorkers())
@@ -30,8 +31,10 @@ annotate.gwas <- function(gwas, data.filter) {
   # be stored in different slots but for now all features are just
   # added as ordinary variables
   overlaps <- DataFrame(overlaps)
+  
   # Features will be denoted by a .prefix
-  names(overlaps) <- paste0(".", names(overlaps))
+  filter.types <- rep(names(filter.hits), each = sapply(filter.hits, length))
+  names(overlaps) <- paste0(".", filter.types, ".", names(overlaps))
   
   mcols(gwas) <- DataFrame(mcols(gwas), overlaps)
   
