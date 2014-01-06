@@ -3,16 +3,24 @@
 #' @param gwas GWAS GRanges object
 #' @param stat numeric vector containing statistic to which thresholds will 
 #'        be applied for each enrichment calculation
+#' @param data.filter optional, calculate enrichment among features that match data.filter to avoid annotating the gwas object, which can require lots of memory        
 #' 
 #' @importFrom reshape2 melt
 #' @importFrom plyr rename
 #' @export
 #'         
 
-calc.enrich <- function(object, stat, thresh.levels) {
+calc.enrich <- function(object, stat, thresh.levels, data.filter, ...) {
 
   if (missing(thresh.levels)) {
     thresh.levels <- quantile(stat, seq(0, 1, 0.1))
+  }
+  
+  if (!missing(data.filter)) {
+    features <- feature.search(data.filter, genome(object)[1])
+    features <- unlist(features)
+  } else {
+    features <- features(object)
   }
   
   out <- lapply(features(object), function(f) 
