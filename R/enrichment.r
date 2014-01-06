@@ -17,15 +17,30 @@ calc.enrich <- function(object, stat, thresh.levels, data.filter, ...) {
   }
   
   if (!missing(data.filter)) {
-    features <- feature.search(data.filter, genome(object)[1])
-    features <- unlist(features)
+    
+    hub <- AnnotationHub()
+    
+    features <- feature.search(data.filter, genome(object)[1], hub = hub)
+    
+    out <- lapply(features, function(f)
+              mclapply(f, function(x)
+                       serial.enrich(object %over% AnnotationHub:::.getResource(hub, x),
+                       stat, thresh.levels),  
+                       mc.cores = getDoParWorkers()))
+    
+    out <- mapply(function(x, y) {
+                names(x) <- y; x
+              }, out, features, SIMPLIFY = FALSE)
+    
   } else {
     features <- features(object)
+    
+    out <- lapply(features, function(f) 
+                  mclapply(f, serial.enrich, stat, thresh.levels,  
+                           mc.cores = getDoParWorkers()))
+
   }
   
-  out <- lapply(features(object), function(f) 
-                 mclapply(f, serial.enrich, stat, thresh.levels,  
-                          mc.cores = getDoParWorkers()))
 
   out <- melt(out, measure.vars = NULL)
   out <- rename(out, c(L1 = "feature", L2 = "sample"))
