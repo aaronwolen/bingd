@@ -24,7 +24,8 @@ calc.enrich <- function(object, stat, thresh.levels, data.filter, ...) {
   }
   
   out <- lapply(features(object), function(f) 
-                 lapply(f, serial.enrich, stat, thresh.levels))
+                 mclapply(f, serial.enrich, stat, thresh.levels,  
+                          mc.cores = getDoParWorkers()))
 
   out <- melt(out, measure.vars = NULL)
   out <- rename(out, c(L1 = "feature", L2 = "sample"))
