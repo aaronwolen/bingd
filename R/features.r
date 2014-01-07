@@ -1,6 +1,34 @@
+#' Load AnnotationHub features
+#' 
+#' Check for feature in local cache before AnnotationHub
+#' 
+#' @param name Name of AnnotationHub feature to load
+#' @inheritParams feature.search
+
+load.feature <- function(name, hub = NULL) {
+  
+  path <- AnnotationHub:::hubCache()
+  cached <- dir(path, recursive = TRUE)
+  
+  cached.match <- grepl(name, make.names(cached))
+  
+  if (any(cached.match)) {
+    load(file.path(path, cached[cached.match]))
+    return(obj)
+  } else {
+    if (testBioCConnection()) {
+      stop(name, " isn't cached and there is no internet connection.")
+    }
+    if (is.null(hub)) hub <- AnnotationHub()
+    obj <- AnnotationHub:::.getResource(hub, name)
+  }
+  return(obj)
+}
+
+
 #' Search AnnotationHub for features
 #' 
-#' @param filter named list of vectors
+#' @param data.filter named list of vectors
 #' @inheritParams get.metadata
 #' 
 #' @export
