@@ -1,6 +1,6 @@
 \name{features}
 \alias{features}
-\title{Accessor for feature annotations}
+\title{Accessor for feature annotations stored in gwas object}
 \usage{
 features(object)
 }
