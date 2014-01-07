@@ -10,7 +10,7 @@
 #' @export
 #'         
 
-calc.enrich <- function(object, stat, thresh.levels, data.filter, ...) {
+calc.enrich <- function(object, stat, thresh.levels, data.filter, online = NULL) {
 
   if (missing(thresh.levels)) {
     thresh.levels <- quantile(stat, seq(0, 1, 0.1))
@@ -18,13 +18,11 @@ calc.enrich <- function(object, stat, thresh.levels, data.filter, ...) {
   
   if (!missing(data.filter)) {
     
-    hub <- AnnotationHub()
-    
-    features <- feature.search(data.filter, genome(object)[1], hub = hub)
+    features <- feature.search(data.filter, genome(object)[1], online = online)
     
     out <- lapply(features, function(f)
               mclapply(f, function(x)
-                       serial.enrich(object %over% AnnotationHub:::.getResource(hub, x),
+                       serial.enrich(object %over% load.feature(x),
                        stat, thresh.levels),  
                        mc.cores = getDoParWorkers()))
     
@@ -41,10 +39,17 @@ calc.enrich <- function(object, stat, thresh.levels, data.filter, ...) {
 
   }
   
-
   out <- melt(out, measure.vars = NULL)
   out <- rename(out, c(L1 = "feature", L2 = "sample"))
   out$threshold <- factor(out$threshold)
+  
+  # Rename features if data.filter was used (this should be a separate function)
+  if (!missing(data.filter)) {
+    md <- get.metadata(online = FALSE)
+    md.index <- sapply(out$sample, grep, make.names(md$RDataPath))
+    out$sample <- md$Title[md.index]
+  }
+  
   return(out)
 }
 
