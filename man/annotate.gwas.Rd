@@ -2,7 +2,7 @@
 \alias{annotate.gwas}
 \title{Annotate GWAS object using AnnotationHub}
 \usage{
-annotate.gwas(gwas, data.filter)
+annotate.gwas(gwas, data.filter, hub = NULL, ...)
 }
 \arguments{
   \item{gwas}{GWAS GRanges object}
