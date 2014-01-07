@@ -5,7 +5,7 @@
 feature.search(data.filter, genome, md, online = NULL)
 }
 \arguments{
-  \item{filter}{named list of vectors}
+  \item{data.filter}{named list of vectors}
 
   \item{online}{logical, should metadata be retrieved
   online}

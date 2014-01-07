@@ -1,4 +1,4 @@
-#' Accessor for feature annotations
+#' Accessor for feature annotations stored in gwas object
 #' 
 #' Only needed until feature annotations are stored hierarchically by type
 #' 
@@ -108,3 +108,4 @@ order_chrs <- function(chrs) {
   
   return(out)
 }
+
