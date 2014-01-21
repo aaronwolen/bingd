@@ -29,13 +29,16 @@ load.feature <- function(name, hub = NULL) {
 #' Search AnnotationHub for features
 #' 
 #' @param data.filter named list of vectors
-#' @inheritParams get.metadata
+#' @inheritParams hub.metadata
 #' 
 #' @export
+#' 
+#' @return A named list of DataFrames containing (at minimum) columns indicating
+#' the Title and location (LocalPath) of features matching search query
 
-feature.search <- function(data.filter, genome, md, online = NULL) {
-
-  if (missing(md)) md <- get.metadata(online = online)
+hub.search <- function(data.filter, genome, md, online = FALSE) {
+  
+  if (missing(md)) md <- hub.metadata(online = TRUE)
   
   # Filter based on genome
   if (!missing(genome) & "genome" %in% colnames(md)) 
@@ -48,7 +51,7 @@ feature.search <- function(data.filter, genome, md, online = NULL) {
   }
   
   filter.hits <- lapply(data.filter, mgrep, x = md$RDataPath)
-  filter.hits <- lapply(filter.hits, function(x) make.names(md$RDataPath[x]))
+  filter.hits <- lapply(filter.hits, function(x) DataFrame(md[x, ]))                          
   
   return(filter.hits)
 }
@@ -56,21 +59,25 @@ feature.search <- function(data.filter, genome, md, online = NULL) {
 
 #' Retrieve AnnotationHub metadata
 #' 
-#' @param online logical, should metadata be retrieved online
+#' @param online if TRUE search is conducted using latest AnnotationHub metadata, otherwise only the AnnotationHub cache directory is searched
 #' 
 #' @importFrom AnnotationHub AnnotationHub metadata
 #' @importFrom Biobase testBioCConnection
 
-get.metadata <- function(online = NULL) {
+hub.metadata <- function(online = FALSE, cache.dir) {
   
-  if (is.null(online)) online <- testBioCConnection()
+  if (missing(cache.dir)) cache.dir <- AnnotationHub:::hubCache()
+  
+  # Catalog cached files
+  cache.files <- dir(cache.dir, full.names = TRUE, recursive = TRUE)
   
   if (online) {
+    # Retrieve latest features and identify which are already cached
     md <- metadata()
+    local.path <- file.path(cache.dir, "resources", md$RDataPath)
+    md$LocalPath <- ifelse(local.path %in% cache.files, local.path, NA)
   } else {
-    path <- AnnotationHub:::hubCache()
-    md <- dir(file.path(path, "resources"), recursive = TRUE)
-    md <- DataFrame(RDataPath = md, Title = feature.labels(md))
+    md <- DataFrame(Title = feature.labels(cache.files), LocalPath = cache.files)
     rownames(md) <- NULL # DataFrame (1.20.6) doesn't respect row.names = NULL
   }
   
