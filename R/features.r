@@ -39,6 +39,7 @@ load.feature <- function(name, hub = NULL) {
 hub.search <- function(data.filter, genome, md, online = FALSE) {
   
   if (missing(md)) md <- hub.metadata(online = TRUE)
+  if (is.atomic(data.filter)) data.filter <- list(data.filter)
   
   # Filter based on genome
   if (!missing(genome) & "genome" %in% colnames(md)) 
