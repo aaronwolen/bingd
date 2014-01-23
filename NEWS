@@ -1,0 +1,21 @@
+bingd 0.2
+=========
+
+* Feature search
+
+  * Searching is now decoupled from annotating and calculating enrichment
+	* Searching for AnnotationHub features can now be
+	  conducted without an internet connection by setting
+	  `online = FALSE`
+	* `get.metadata()` is now `hub.metadata()`
+	* `feature.search()` is now `hub.search()`
+  * returns a FeatureList object
+
+* `annotate.gwas()` now requires a FeatureList object and no longer requires
+   an internet connection  
+* `calc.enrichment()` can be performed with an annotated GWAS object OR
+   with an unannotated GWAS object + a FeatureList object
+
+* `features()` is now `pull.features()`, an S4 function
+
+* ADDED unit tests
