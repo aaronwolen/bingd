@@ -2,7 +2,7 @@
 #' 
 #' Only needed until feature annotations are stored hierarchically by type
 #' 
-#' @param gwas GWAS GRanges object
+#' @param gwas a \code{\link{GRanges}} object
 #' 
 #' @export
 #' 
@@ -32,5 +32,18 @@ setMethod("pull.features", "GRanges", function(gwas) {
                   names(x) <- y; x
                 }, out, feature.names, SIMPLIFY = FALSE)
   return(out)
+})
+
+
+#' Check if a GWAS GRanges object is annotated
+#' 
+#' @inheritParams pull.features
+
+setGeneric("is.annotated", function(gwas) {
+  standardGeneric("is.annotated")
+})
+
+setMethod("is.annotated", "GRanges", function(gwas) {
+  ifelse(length(pull.features(gwas)) > 0, TRUE, FALSE)
 })
 
