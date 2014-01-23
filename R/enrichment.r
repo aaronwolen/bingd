@@ -1,59 +1,63 @@
 #' Calculate enrichment of all annotated features across thresholds
 #' 
-#' @param gwas GWAS GRanges object
+#' @param gwas GWAS \code{\link{GRanges}} object
+#' @inheritParams annotate.gwas  
 #' @param stat numeric vector containing statistic to which thresholds will 
 #'        be applied for each enrichment calculation
-#' @param data.filter optional, calculate enrichment among features that match data.filter to avoid annotating the gwas object, which can require lots of memory        
+#'
+#' @description
+#' \code{gwas} must be annotated with \code{\link{annotate.gwas}} OR a
+#' \code{feature.list} must be provided.
 #' 
 #' @importFrom reshape2 melt
 #' @export
 #'         
 
-calc.enrich <- function(object, stat, thresh.levels, data.filter, online = NULL) {
+calc.enrich <- function(gwas, feature.list, stat, thresh.levels) {
+
+  annotated <- ifelse(is.annotated(gwas), TRUE, FALSE)
+  
+  if (!missing(feature.list)) {
+    feature.list <- is.FeatureList(feature.list)
+  } else {
+    if (!annotated & missing(feature.list)) {
+      stop("gwas is unannotated and no FeatureList was provided.", call. = FALSE)
+    }
+  }
 
   if (missing(thresh.levels)) {
     thresh.levels <- quantile(stat, seq(0, 1, 0.1))
   }
   
-  if (!missing(data.filter)) {
-    
-    features <- feature.search(data.filter, genome(object)[1], online = online)
-    
-    out <- lapply(features, function(f)
-              mclapply(f, function(x)
-                       serial.enrich(object %over% load.feature(x),
-                       stat, thresh.levels),  
-                       mc.cores = getDoParWorkers()))
-    
-    out <- mapply(function(x, y) {
-                names(x) <- y; x
-              }, out, features, SIMPLIFY = FALSE)
-    
+  if (annotated) {
+    features <- pull.features(gwas.annot)
+    labels <- lapply(features, names)
+    overlap <- function(x) x
   } else {
-    features <- features(object)
-    
-    out <- lapply(features, function(f) 
-                  mclapply(f, serial.enrich, stat, thresh.levels,  
-                           mc.cores = getDoParWorkers()))
-
+    features <- lapply(feature.list, function(x) x$LocalPath)
+    labels <- lapply(feature.list, function(x) x$Title)
+    overlap <- function(x) gwas %over% load.feature(x)
   }
   
-  out <- melt(out, measure.vars = NULL)
+  enrich <- lapply(features, function(group)
+                   mclapply(group, function(f) 
+                              serial.enrich(overlap(f), stat, thresh.levels),
+                            mc.cores = getDoParWorkers()))
+      
+  # Label with feature titles
+  enrich <- mapply(function(e, l) {
+                     names(e) <- l; e
+                   }, enrich, labels, SIMPLIFY = FALSE)
+
+  enrich <- melt(enrich, measure.vars = NULL)
   
   # Temp replacement for rename
-  names(out)[which(names(out) == "L1")] <- "feature"
-  names(out)[which(names(out) == "L2")] <- "sample"
+  names(enrich)[which(names(enrich) == "L1")] <- "feature"
+  names(enrich)[which(names(enrich) == "L2")] <- "sample"
 
-  out$threshold <- factor(out$threshold)
-  
-  # Rename features if data.filter was used (this should be a separate function)
-  if (!missing(data.filter)) {
-    md <- get.metadata(online = FALSE)
-    md.index <- sapply(out$sample, grep, make.names(md$RDataPath))
-    out$sample <- md$Title[md.index]
-  }
-  
-  return(out)
+  enrich$threshold <- factor(enrich$threshold)
+
+  return(enrich)
 }
 
 
