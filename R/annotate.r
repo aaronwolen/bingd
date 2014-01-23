@@ -1,30 +1,31 @@
 #' Annotate GWAS object using AnnotationHub
 #' 
 #' @param gwas GWAS GRanges object
-#' @param filter named list of vectors
+#' @param feature.list \code{FeatureList} object created with \code{\link{hub.search}}
 #' 
-#' @importFrom AnnotationHub AnnotationHub metadata
 #' @importFrom foreach getDoParWorkers
 #' @importFrom parallel mclapply
 #' @export
 #' 
 #' @examples
-#' scz <- annotate.gwas(scz, data.filter = list(DNaseI = c("UwDnaseN", "broadPeak")))
+#' query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
+#' feature.list <- hub.search(query, online = FALSE)
+#' scz <- annotate.gwas(scz, feature.list)
 
-annotate.gwas <- function(gwas, data.filter, hub = NULL, ...) {
+annotate.gwas <- function(gwas, feature.list) {
   
   feature.list <- is.FeatureList(feature.list)
   
-  # Retrieve features and check for gwas overlaps
-  message("Annotating GWAS markers...")
-  overlaps <- mclapply(unlist(filter.hits), function(f)
-                     gwas %over% load.feature(f, hub = hub),
-                     mc.cores = getDoParWorkers())
+  overlaps <- lapply(feature.list, function(df) 
+                     mclapply(df$LocalPath, function(f)
+                              gwas %over% load.feature(f),
+                              mc.cores = getDoParWorkers()))
   
-  # Use metadata labels
-  md <- get.metadata(online = FALSE)
-  md.index <- sapply(unlist(filter.hits), grep, make.names(md$RDataPath))
-  names(overlaps) <- md$Title[md.index]
+  # Label with feature titles
+  overlaps <- mapply(function(f, o) {
+                       names(o) <- f$Title
+                       DataFrame(o)
+                     }, feature.list, overlaps, SIMPLIFY = FALSE)
   
   # It'd be nice if overlap results for each feature type could
   # be stored in different slots but for now all features are just
@@ -32,10 +33,9 @@ annotate.gwas <- function(gwas, data.filter, hub = NULL, ...) {
   overlaps <- DataFrame(overlaps)
   
   # Features will be denoted by a .prefix
-  filter.types <- rep(names(filter.hits), each = sapply(filter.hits, length))
-  names(overlaps) <- paste0(".", filter.types, ".", names(overlaps))
+  names(overlaps) <- paste0(".", names(overlaps))
   
   mcols(gwas) <- DataFrame(mcols(gwas), overlaps)
-  
+    
   return(gwas)
 }
