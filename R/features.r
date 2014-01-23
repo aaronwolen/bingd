@@ -28,7 +28,8 @@ load.feature <- function(name, hub = NULL) {
 
 #' Search AnnotationHub for features
 #' 
-#' @param data.filter named list of vectors
+#' @param query a vector of strings to filter AnnotationHub features; may also
+#' be a named list of vectors to perform multiple queries
 #' @inheritParams hub.metadata
 #' 
 #' @export
@@ -36,10 +37,10 @@ load.feature <- function(name, hub = NULL) {
 #' @return A named list of DataFrames containing (at minimum) columns indicating
 #' the Title and location (LocalPath) of features matching search query
 
-hub.search <- function(data.filter, genome, md, online = FALSE) {
+hub.search <- function(query, genome, md, online = FALSE) {
   
   if (missing(md)) md <- hub.metadata(online = online)
-  if (is.atomic(data.filter)) data.filter <- list(data.filter)
+  if (is.atomic(query)) query <- list(query)
   
   # Filter based on genome
   if (!missing(genome) & "genome" %in% colnames(md)) 
@@ -51,8 +52,8 @@ hub.search <- function(data.filter, genome, md, online = FALSE) {
     which(rowSums(hits) == length(pattern))
   }
   
-  filter.hits <- lapply(data.filter, mgrep, x = md$RDataPath)
   filter.hits <- lapply(filter.hits, function(x) DataFrame(md[x, ]))                          
+  filter.hits <- lapply(query, mgrep, x = md$RDataPath)
   
   return(filter.hits)
 }
