@@ -6,7 +6,6 @@
 #' @param data.filter optional, calculate enrichment among features that match data.filter to avoid annotating the gwas object, which can require lots of memory        
 #' 
 #' @importFrom reshape2 melt
-#' @importFrom plyr rename
 #' @export
 #'         
 
@@ -40,7 +39,11 @@ calc.enrich <- function(object, stat, thresh.levels, data.filter, online = NULL)
   }
   
   out <- melt(out, measure.vars = NULL)
-  out <- rename(out, c(L1 = "feature", L2 = "sample"))
+  
+  # Temp replacement for rename
+  names(out)[which(names(out) == "L1")] <- "feature"
+  names(out)[which(names(out) == "L2")] <- "sample"
+
   out$threshold <- factor(out$threshold)
   
   # Rename features if data.filter was used (this should be a separate function)
