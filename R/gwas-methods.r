@@ -8,20 +8,29 @@
 #' 
 #' @return 
 #' List of data.frames in which each slot corresponds to a feature type
+#' 
 
-features <- function(object) {
-  
-  md.names <- names(mcols(object))
+setGeneric("pull.features", function(gwas) {
+  standardGeneric("pull.features")
+})
+
+setMethod("pull.features", "GRanges", function(gwas) {
+
+  md.names <- names(mcols(gwas))
   feature.cols <- md.names[grep("^\\.", md.names)]
+  
+  if (length(feature.cols) == 0) return(feature.cols) 
+  
   feature.vars <- do.call("rbind", strsplit(feature.cols, "\\."))
   feature.types <- feature.vars[, 2]
   feature.names <- split(feature.vars[, 3], feature.types)
   
   out <- split(feature.cols, feature.types)
-  out <- lapply(out, function(x) mcols(object)[x])
+  out <- lapply(out, function(x) mcols(gwas)[x])
   
   out <- mapply(function(x, y) {
                   names(x) <- y; x
                 }, out, feature.names, SIMPLIFY = FALSE)
   return(out)
-}
+})
+
