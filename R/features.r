@@ -52,8 +52,8 @@ hub.search <- function(query, genome, md, online = FALSE) {
     which(rowSums(hits) == length(pattern))
   }
   
-  filter.hits <- lapply(filter.hits, function(x) DataFrame(md[x, ]))                          
   filter.hits <- lapply(query, mgrep, x = md$RDataPath)
+  filter.hits <- lapply(filter.hits, function(x) md[x, ])                  
   
   return(filter.hits)
 }
