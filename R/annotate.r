@@ -13,7 +13,7 @@
 
 annotate.gwas <- function(gwas, data.filter, hub = NULL, ...) {
   
-  filter.hits <- feature.search(data.filter, genome(gwas)[1], ...)
+  feature.list <- is.FeatureList(feature.list)
   
   # Retrieve features and check for gwas overlaps
   message("Annotating GWAS markers...")
