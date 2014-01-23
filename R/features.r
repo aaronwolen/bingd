@@ -37,9 +37,9 @@ load.feature <- function(name, hub = NULL) {
 #' @return A named list of DataFrames containing (at minimum) columns indicating
 #' the Title and location (LocalPath) of features matching search query
 
-hub.search <- function(query, genome, md, online = FALSE) {
+hub.search <- function(query, genome, md, online = FALSE, cache.dir = "default") {
   
-  if (missing(md)) md <- hub.metadata(online = online)
+  if (missing(md)) md <- hub.metadata(online = online, cache.dir = cache.dir)
   if (is.atomic(query)) query <- list(query)
   
   # Filter based on genome
@@ -66,9 +66,9 @@ hub.search <- function(query, genome, md, online = FALSE) {
 #' @importFrom AnnotationHub AnnotationHub metadata
 #' @importFrom Biobase testBioCConnection
 
-hub.metadata <- function(online = FALSE, cache.dir) {
+hub.metadata <- function(online = FALSE, cache.dir = "default") {
   
-  if (missing(cache.dir)) cache.dir <- AnnotationHub:::hubCache()
+  if (cache.dir == "default") cache.dir <- AnnotationHub:::hubCache()
   
   # Catalog cached files
   cache.files <- dir(cache.dir, full.names = TRUE, recursive = TRUE)
