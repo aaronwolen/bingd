@@ -2,17 +2,20 @@
 \alias{annotate.gwas}
 \title{Annotate GWAS object using AnnotationHub}
 \usage{
-annotate.gwas(gwas, data.filter, hub = NULL, ...)
+annotate.gwas(gwas, feature.list)
 }
 \arguments{
   \item{gwas}{GWAS GRanges object}
 
-  \item{filter}{named list of vectors}
+  \item{feature.list}{\code{FeatureList} object created
+  with \code{\link{hub.search}}}
 }
 \description{
 Annotate GWAS object using AnnotationHub
 }
 \examples{
-scz <- annotate.gwas(scz, data.filter = list(DNaseI = c("UwDnaseN", "broadPeak")))
+query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
+feature.list <- hub.search(query, online = FALSE)
+scz <- annotate.gwas(scz, feature.list)
 }
 

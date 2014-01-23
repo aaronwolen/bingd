@@ -2,7 +2,7 @@
 \alias{load.feature}
 \title{Load AnnotationHub features}
 \usage{
-load.feature(name, hub = NULL)
+load.feature(path)
 }
 \arguments{
   \item{name}{Name of AnnotationHub feature to load}

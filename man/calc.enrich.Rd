@@ -2,21 +2,21 @@
 \alias{calc.enrich}
 \title{Calculate enrichment of all annotated features across thresholds}
 \usage{
-calc.enrich(object, stat, thresh.levels, data.filter, online = NULL)
+calc.enrich(gwas, feature.list, stat, thresh.levels)
 }
 \arguments{
-  \item{gwas}{GWAS GRanges object}
+  \item{gwas}{GWAS \code{\link{GRanges}} object}
 
   \item{stat}{numeric vector containing statistic to which
   thresholds will be applied for each enrichment
   calculation}
 
-  \item{data.filter}{optional, calculate enrichment among
-  features that match data.filter to avoid annotating the
-  gwas object, which can require lots of memory}
+  \item{feature.list}{\code{FeatureList} object created
+  with \code{\link{hub.search}}}
 }
 \description{
-Calculate enrichment of all annotated features across
-thresholds
+\code{gwas} must be annotated with
+\code{\link{annotate.gwas}} OR a \code{feature.list} must
+be provided.
 }
 

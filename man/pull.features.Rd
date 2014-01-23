@@ -1,11 +1,11 @@
-\name{features}
-\alias{features}
+\name{pull.features}
+\alias{pull.features}
 \title{Accessor for feature annotations stored in gwas object}
 \usage{
-features(object)
+pull.features(gwas)
 }
 \arguments{
-  \item{gwas}{GWAS GRanges object}
+  \item{gwas}{a \code{\link{GRanges}} object}
 }
 \value{
 List of data.frames in which each slot corresponds to a
