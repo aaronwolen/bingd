@@ -3,7 +3,7 @@
 #' Check for feature in local cache before AnnotationHub
 #' 
 #' @param name Name of AnnotationHub feature to load
-#' @inheritParams feature.search
+#' @inheritParams hub.search
 
 load.feature <- function(name, hub = NULL) {
   
@@ -62,7 +62,9 @@ hub.search <- function(query, genome, md, online = FALSE, cache.dir = "default")
 #' Retrieve AnnotationHub metadata
 #' 
 #' @param online if TRUE search is conducted using latest AnnotationHub metadata, otherwise only the AnnotationHub cache directory is searched
-#' 
+#' @param cache.dir define custom location used for AnnotationHub's cached
+#' directory, which should contain a 'resources' subdirectory. Normally this
+#' shouldn't be changed.
 #' @importFrom AnnotationHub AnnotationHub metadata
 #' @importFrom Biobase testBioCConnection
 
@@ -71,12 +73,13 @@ hub.metadata <- function(online = FALSE, cache.dir = "default") {
   if (cache.dir == "default") cache.dir <- AnnotationHub:::hubCache()
   
   # Catalog cached files
+  if (!grepl("resources", cache.dir)) cache.dir <- file.path(cache.dir, "resources")
   cache.files <- dir(cache.dir, full.names = TRUE, recursive = TRUE)
   
   if (online) {
     # Retrieve latest features and identify which are already cached
     md <- metadata()
-    local.path <- file.path(cache.dir, "resources", md$RDataPath)
+    local.path <- file.path(cache.dir, md$RDataPath)
     md$LocalPath <- ifelse(local.path %in% cache.files, local.path, NA)
   } else {
     md <- DataFrame(Title = feature.labels(cache.files), LocalPath = cache.files)
