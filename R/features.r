@@ -55,6 +55,7 @@ hub.search <- function(query, genome, md, online = FALSE, cache.dir = "default")
   filter.hits <- lapply(query, mgrep, x = md$LocalPath)
   filter.hits <- lapply(filter.hits, function(x) md[x, ])                  
   
+  filter.hits <- as.FeatureList(filter.hits)
   return(filter.hits)
 }
 
