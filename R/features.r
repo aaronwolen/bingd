@@ -5,23 +5,17 @@
 #' @param name Name of AnnotationHub feature to load
 #' @inheritParams hub.search
 
-load.feature <- function(name, hub = NULL) {
+load.feature <- function(path) {
   
-  path <- AnnotationHub:::hubCache()
-  cached <- dir(path, recursive = TRUE)
-  
-  cached.match <- grepl(name, make.names(cached))
-  
-  if (any(cached.match)) {
-    load(file.path(path, cached[cached.match]))
-    return(obj)
+  if (file.exists(path)) {
+    # Load in temp environment so object name can be determined
+    obj.env <- new.env()
+    obj.name <- load(path, obj.env)
+    obj <- get(obj.name, envir = obj.env)
   } else {
-    if (testBioCConnection()) {
-      stop(name, " isn't cached and there is no internet connection.")
-    }
-    if (is.null(hub)) hub <- AnnotationHub()
-    obj <- AnnotationHub:::.getResource(hub, name)
+    stop("No such file:\n", path, call. = FALSE)
   }
+  
   return(obj)
 }
 
