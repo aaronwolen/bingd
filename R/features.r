@@ -21,58 +21,45 @@ load.feature <- function(path) {
 
 
 
-#' Search AnnotationHub for features
-#' 
-#' @inheritParams filter.features
-#' @inheritParams hub.metadata
-#' 
-#' @export
-#' 
-#' @return A named list of DataFrames containing (at minimum) columns indicating
-#' the Title and location (LocalPath) of features matching search query
-
-hub.search <- function(query, genome, md, online = FALSE, cache.path = "default") {
-  
-  if (missing(md)) md <- hub.metadata(online = online, cache.path = cache.path)
-  
-  # Filter based on genome
-  if (!missing(genome) & "genome" %in% colnames(md)) 
-    md <- md[md$Genome %in% genome,]
-  
-  filter.features(query, md)
-}
-
-
-
 #' Retrieve information about AnnotationHub features
 #' 
 #' @param online if TRUE search is conducted using latest AnnotationHub metadata, otherwise only the AnnotationHub cache directory is searched
-#' @param cache.path define custom location used for AnnotationHub's cached
+#' @param path define custom location used for AnnotationHub's cached
 #' directory, which should contain a 'resources' subdirectory. Normally this
 #' shouldn't be changed.
+#' 
+#' @return A named list of DataFrames containing (at minimum) columns indicating
+#' the Title and location (LocalPath) of features matching search query
+#' 
 #' @importFrom AnnotationHub AnnotationHub metadata
-#' @importFrom Biobase testBioCConnection
 #' 
 #' @export
 
-hub.metadata <- function(online = FALSE, cache.path = "default") {
+hub.features <- function(query = NULL, path, genome, online = FALSE) {
+
+  if (missing(path)) {
+    path <- AnnotationHub:::hubCache()  
+    if (!grepl("resources", path)) path <- file.path(path, "resources")
+  } 
   
-  if (cache.path == "default") cache.path <- AnnotationHub:::hubCache()
-  
-  # Catalog cached files
-  if (!grepl("resources", cache.path)) cache.path <- file.path(cache.path, "resources")
-  cache.files <- local.features(NULL, cache.path)
+  cached.files <- local.features(NULL, path)
   
   if (online) {
     # Retrieve latest features and identify which are already cached
-    md <- metadata()
-    local.path <- file.path(cache.path, md$RDataPath)
-    md$LocalPath <- ifelse(local.path %in% cache.files$LocalPath, local.path, NA)
+    flist <- metadata()
+    
+    # Filter based on genome
+    if (!missing(genome)) flist <- flist[flist$Genome == genome,]
+    
+    local.path <- file.path(path, flist$RDataPath)
+    flist$LocalPath <- ifelse(local.path %in% cached.files$LocalPath, 
+                              local.path, NA)
   } else {
-    md <- cache.files
+    flist <- cached.files
   }
   
-  return(md)
+  if (is.null(query)) return(flist)
+  filter.features(query, flist)
 }
 
 
