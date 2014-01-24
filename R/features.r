@@ -79,16 +79,21 @@ hub.metadata <- function(online = FALSE, cache.path = "default") {
 #' 
 #' @param path Path of directory containing features
 #' @inheritParams filter.features
+#' 
+#' @export
 
 local.features <- function(query = NULL, path) {
-  
+
   files <- dir(path, full.names = TRUE, recursive = TRUE)
   
   flist <- DataFrame(Title = feature.labels(files), LocalPath = files)
   rownames(flist) <- NULL # DataFrame (1.20.6) doesn't respect row.names = NULL
   
-  return(flist)
+  if (missing(query)) return(flist)
+  filter.features(query, flist)
 }
+
+
 
 #' Filter list of features based on search terms
 #'
