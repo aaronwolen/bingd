@@ -52,6 +52,8 @@ hub.search <- function(query, genome, md, online = FALSE, cache.path = "default"
 #' shouldn't be changed.
 #' @importFrom AnnotationHub AnnotationHub metadata
 #' @importFrom Biobase testBioCConnection
+#' 
+#' @export
 
 hub.metadata <- function(online = FALSE, cache.path = "default") {
   
