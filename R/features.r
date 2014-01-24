@@ -46,20 +46,20 @@ hub.features <- function(query = NULL, path, genome, online = FALSE) {
   
   if (online) {
     # Retrieve latest features and identify which are already cached
-    flist <- metadata()
+    f.files <- metadata()
     
     # Filter based on genome
-    if (!missing(genome)) flist <- flist[flist$Genome == genome,]
+    if (!missing(genome)) f.files <- f.files[f.files$Genome == genome,]
     
-    local.path <- file.path(path, flist$RDataPath)
-    flist$LocalPath <- ifelse(local.path %in% cached.files$LocalPath, 
+    local.path <- file.path(path, f.files$RDataPath)
+    f.files$LocalPath <- ifelse(local.path %in% cached.files$LocalPath, 
                               local.path, NA)
   } else {
-    flist <- cached.files
+    f.files <- cached.files
   }
   
-  if (is.null(query)) return(flist)
-  filter.features(query, flist)
+  if (is.null(query)) return(f.files)
+  filter.features(query, f.files)
 }
 
 
@@ -75,11 +75,11 @@ local.features <- function(query = NULL, path) {
 
   files <- dir(path, full.names = TRUE, recursive = TRUE)
   
-  flist <- DataFrame(Title = feature.labels(files), LocalPath = files)
-  rownames(flist) <- NULL # DataFrame (1.20.6) doesn't respect row.names = NULL
+  f.files <- DataFrame(Title = feature.labels(files), LocalPath = files)
+  rownames(f.files) <- NULL # DataFrame (1.20.6) doesn't respect row.names = NULL
   
-  if (is.null(query)) return(flist)
-  filter.features(query, flist)
+  if (is.null(query)) return(f.files)
+  filter.features(query, f.files)
 }
 
 
