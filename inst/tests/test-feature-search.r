@@ -1,13 +1,13 @@
 context("Feature search")
 
 query <- list(Tier1 = c("Gm12878", "Encode"))
-cache.dir <- system.file("data", package = "bingd")
+cache.dir <- system.file("data/resources", package = "bingd")
 required.cols <- c("Title", "LocalPath")
 
 test_that("Offline AnnotationHub feature search", {
   
-  list.hit <- hub.search(query, online = FALSE, cache.path = cache.dir)
-  atomic.hit <- hub.search(query[[1]], online = FALSE, cache.path = cache.dir)
+  list.hit <- hub.features(query, path = cache.dir, online = FALSE)
+  atomic.hit <- hub.features(query[[1]], path = cache.dir, online = FALSE)
   
   expect_identical(list.hit[[1]], atomic.hit[[1]])
   
@@ -18,8 +18,9 @@ test_that("Offline AnnotationHub feature search", {
 
 test_that("Online AnnotationHub feature search", {
   
-  online.hit <- hub.search(query, online = TRUE, cache.path = cache.dir)
+  online.hit <- hub.features(query, path = cache.dir, online = TRUE)
+  offline.hit <- hub.features(query, path = cache.dir, online = FALSE)
   
   expect_true(all(required.cols %in% names(online.hit[[1]])))
-  expect_equal(nrow(online.hit[[1]]), 2)  
+  expect_equivalent(online.hit[[1]][, required.cols], offline.hit[[1]])
 })
