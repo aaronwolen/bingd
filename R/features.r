@@ -91,7 +91,7 @@ local.features <- function(query = NULL, path) {
   flist <- DataFrame(Title = feature.labels(files), LocalPath = files)
   rownames(flist) <- NULL # DataFrame (1.20.6) doesn't respect row.names = NULL
   
-  if (missing(query)) return(flist)
+  if (is.null(query)) return(flist)
   filter.features(query, flist)
 }
 
