@@ -29,32 +29,41 @@ load.feature <- function(path) {
 #' shouldn't be changed.
 #' 
 #' @return A named list of DataFrames containing (at minimum) columns indicating
-#' the Title and location (LocalPath) of features matching search query
+#' the Title, location (LocalPath) of features matching search query and whether
+#' the files are downloaded (Cached)
 #' 
 #' @importFrom AnnotationHub AnnotationHub metadata
 #' 
 #' @export
 
 hub.features <- function(query = NULL, path, genome, online = FALSE) {
-
+   
   if (missing(path)) {
     path <- cache.path()
     if (!grepl("resources", path)) path <- file.path(path, "resources")
-  } 
+    if (!cache.exists(path)) cache.create(path)
+  }
   
   cached.files <- local.features(NULL, path)
   
   if (online) {
-    # Retrieve latest features and identify which are already cached
+    # Retrieve latest feature
     f.files <- metadata()
     
     # Filter based on genome
     if (!missing(genome)) f.files <- f.files[f.files$Genome == genome,]
     
-    local.path <- file.path(path, f.files$RDataPath)
-    f.files$LocalPath <- ifelse(local.path %in% cached.files$LocalPath, 
-                              local.path, NA)
+    # Identify which features are already cached
+    f.files$LocalPath <- file.path(path, f.files$RDataPath)
+    
+    if (!is.null(cached.files)) {
+      f.files$Cached <- ifelse(f.files$LocalPath %in% cached.files$LocalPath, T, F)  
+    } else {
+      f.files$Cached <- FALSE
+    }
+    
   } else {
+    if (is.null(cached.files)) stop("No files found in ", path)
     f.files <- cached.files
   }
   
@@ -72,10 +81,13 @@ hub.features <- function(query = NULL, path, genome, online = FALSE) {
 #' @export
 
 local.features <- function(query = NULL, path) {
-
-  files <- dir(path, full.names = TRUE, recursive = TRUE)
   
-  f.files <- DataFrame(Title = feature.labels(files), LocalPath = files)
+  files <- dir(path, full.names = TRUE, recursive = TRUE)
+  if (length(files) == 0) return(NULL)
+  
+  f.files <- DataFrame(Title = feature.labels(files), 
+                       LocalPath = files, 
+                       Cached = TRUE)
   rownames(f.files) <- NULL # DataFrame (1.20.6) doesn't respect row.names = NULL
   
   if (is.null(query)) return(f.files)
@@ -93,7 +105,7 @@ local.features <- function(query = NULL, path) {
 
 filter.features <- function(query, file.list) {
   
-  if(!all(c("LocalPath", "Title") %in% names(file.list))) {
+  if(!all(c("LocalPath", "Title", "Cached") %in% names(file.list))) {
     stop("file.list must contain LocalPath and Title columns", call. = FALSE)
   }
   if (is.atomic(query)) query <- list(query)
