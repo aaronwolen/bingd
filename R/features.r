@@ -38,7 +38,7 @@ load.feature <- function(path) {
 hub.features <- function(query = NULL, path, genome, online = FALSE) {
 
   if (missing(path)) {
-    path <- AnnotationHub:::hubCache()  
+    path <- cache.path()
     if (!grepl("resources", path)) path <- file.path(path, "resources")
   } 
   
