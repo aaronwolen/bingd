@@ -4,6 +4,8 @@ query <- list(Tier1 = c("Gm12878", "Encode"))
 cache.dir <- system.file("data/resources", package = "bingd")
 required.cols <- c("Title", "LocalPath", "Cached")
 
+
+
 test_that("Offline AnnotationHub feature search", {
   
   list.hit <- hub.features(query, path = cache.dir, online = FALSE)
@@ -14,6 +16,7 @@ test_that("Offline AnnotationHub feature search", {
   expect_equal(names(list.hit[[1]]), required.cols)
   expect_equal(names(atomic.hit[[1]]), required.cols)  
 })
+
 
 
 test_that("Online AnnotationHub feature search", {
