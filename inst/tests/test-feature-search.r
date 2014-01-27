@@ -2,7 +2,7 @@ context("Feature search")
 
 query <- list(Tier1 = c("Gm12878", "Encode"))
 cache.dir <- system.file("data/resources", package = "bingd")
-required.cols <- c("Title", "LocalPath")
+required.cols <- c("Title", "LocalPath", "Cached")
 
 test_that("Offline AnnotationHub feature search", {
   
