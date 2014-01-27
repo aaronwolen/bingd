@@ -1,12 +1,5 @@
 context("AnnotationHub")
 
-test.dir <- paste(cache.path(), "test", sep = "-")
-query <- list(DNase   = c("GM12878", "UwDnase", "narrowPeak"),
-              Histone = c("GM12878", "H3k4me3", "narrowPeak"))
-
-features <- hub.features(query, path = test.dir, online = TRUE)
-
-
 
 test_that("Searching for uncached features", {
   
@@ -44,15 +37,3 @@ test_that("Downloading uncached features", {
 })
 
 
-
-
-
-  
-  
-
-
-# 1. create a temp cached 
-# 2. search for sample files
-# 3. download (cache) sample files
-# 4. verify offline search works on sample files
-# 5. clean-up temp cache directory
