@@ -21,6 +21,57 @@ load.feature <- function(path) {
 
 
 
+#' Download uncached features
+#' 
+#' @inheritParams filter.features
+#' @inheritParams local.features
+#' 
+#' @importFrom AnnotationHub AnnotationHub
+#' @export
+#' 
+#' @return \code{FeatureList}
+
+cache.features <- function(feature.list, path) {
+  feature.list <- is.FeatureList(feature.list)
+  if (missing(path)) path <- cache.path()
+  
+  is.uncached <- function(x) x[!x$Cached, "LocalPath"]
+  uncached <- lapply(feature.list, is.uncached)
+  
+  uncached.files <- basename(unlist(uncached))
+  
+  hub <- AnnotationHub(hubCache = path)
+  hub.files <- hub@snapshotPaths
+    
+  # Download uncached files
+  cached.files <- character()
+  for (file in uncached.files) {
+    
+    hub.file <- hub.files[match(file, basename(hub.files))]
+    
+    # Report unmatched files
+    if (is.na(hub.file)) {
+      warning(file, " not found on AnnotationHub.\b", call. = F)
+    }
+    
+    dl <- AnnotationHub:::.downloadFile(hub, hub.file)
+    
+    if (dl == 0) {
+      cached.files <- c(cached.files, file)
+    } else {
+      stop("Failed to download:\n\t", file, call. = FALSE)
+    }
+  }
+  
+  feature.list <- Map(function(f) {
+    f$Cached[basename(f$LocalPath) %in% cached.files] <- TRUE; f
+  }, feature.list)
+  
+  return(as.FeatureList(feature.list))
+}
+
+
+
 #' Retrieve information about AnnotationHub features
 #' 
 #' @param online if TRUE search is conducted using latest AnnotationHub metadata, otherwise only the AnnotationHub cache directory is searched
@@ -38,11 +89,9 @@ load.feature <- function(path) {
 
 hub.features <- function(query = NULL, path, genome, online = FALSE) {
    
-  if (missing(path)) {
-    path <- cache.path()
-    if (!grepl("resources", path)) path <- file.path(path, "resources")
-    if (!cache.exists(path)) cache.create(path)
-  }
+  if (missing(path)) path <- cache.path()
+  if (!grepl("resources", path)) path <- file.path(path, "resources")
+  if (!cache.exists(path)) cache.create(path)
   
   cached.files <- local.features(NULL, path)
   
@@ -121,6 +170,7 @@ filter.features <- function(query, file.list) {
   query.hits <- as.FeatureList(query.hits)
   return(query.hits)
 }
+
 
 
 #' Create pretty feature labels from the full RDataPaths
