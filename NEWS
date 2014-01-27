@@ -1,3 +1,13 @@
+bingd 0.2.1
+===========
+
+* Feature search
+
+  * Local features independent of AnnotationHub can now be searched for using
+    `local.features()`
+  * Searching AnnotationHub is now done using `hub.features()`, to be consistent
+    with `local.features()` and `hub.metadata()` is deprecated
+
 bingd 0.2
 =========
 
