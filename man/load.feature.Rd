@@ -5,7 +5,7 @@
 load.feature(path)
 }
 \arguments{
-  \item{name}{Name of AnnotationHub feature to load}
+  \item{path}{Path of feature to load}
 }
 \description{
 Check for feature in local cache before AnnotationHub

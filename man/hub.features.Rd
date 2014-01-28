@@ -1,0 +1,26 @@
+\name{hub.features}
+\alias{hub.features}
+\title{Retrieve information about AnnotationHub features}
+\usage{
+hub.features(query = NULL, path, genome, online = FALSE)
+}
+\arguments{
+  \item{online}{if TRUE search is conducted using latest
+  AnnotationHub metadata, otherwise only the AnnotationHub
+  cache directory is searched}
+
+  \item{path}{define custom location used for
+  AnnotationHub's cached directory, which should contain a
+  'resources' subdirectory. Normally this shouldn't be
+  changed.}
+}
+\value{
+A named list of DataFrames containing (at minimum) columns
+indicating the Title, location (LocalPath) of features
+matching search query and whether the files are downloaded
+(Cached)
+}
+\description{
+Retrieve information about AnnotationHub features
+}
+

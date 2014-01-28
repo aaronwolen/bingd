@@ -2,7 +2,7 @@
 #' 
 #' Check for feature in local cache before AnnotationHub
 #' 
-#' @param name Name of AnnotationHub feature to load
+#' @param path Path of feature to load
 #' @inheritParams hub.search
 
 load.feature <- function(path) {
@@ -20,69 +20,158 @@ load.feature <- function(path) {
 }
 
 
-#' Search AnnotationHub for features
+
+#' Download uncached features
 #' 
-#' @param query a vector of strings to filter AnnotationHub features; may also
-#' be a named list of vectors to perform multiple queries
-#' @inheritParams hub.metadata
+#' @inheritParams filter.features
+#' @inheritParams local.features
 #' 
+#' @importFrom AnnotationHub AnnotationHub
 #' @export
 #' 
-#' @return A named list of DataFrames containing (at minimum) columns indicating
-#' the Title and location (LocalPath) of features matching search query
+#' @return \code{FeatureList}
 
-hub.search <- function(query, genome, md, online = FALSE, cache.dir = "default") {
+cache.features <- function(feature.list, path) {
+  feature.list <- is.FeatureList(feature.list)
+  if (missing(path)) path <- cache.path()
   
-  if (missing(md)) md <- hub.metadata(online = online, cache.dir = cache.dir)
+  is.uncached <- function(x) x[!x$Cached, "LocalPath"]
+  uncached <- lapply(feature.list, is.uncached)
+  
+  uncached.files <- basename(unlist(uncached))
+  
+  hub <- AnnotationHub(hubCache = path)
+  hub.files <- hub@snapshotPaths
+    
+  # Download uncached files
+  cached.files <- character()
+  for (file in uncached.files) {
+    
+    hub.file <- hub.files[match(file, basename(hub.files))]
+    
+    # Report unmatched files
+    if (is.na(hub.file)) {
+      warning(file, " not found on AnnotationHub.\b", call. = F)
+    }
+    
+    dl <- AnnotationHub:::.downloadFile(hub, hub.file)
+    
+    if (dl == 0) {
+      cached.files <- c(cached.files, file)
+    } else {
+      stop("Failed to download:\n\t", file, call. = FALSE)
+    }
+  }
+  
+  feature.list <- Map(function(f) {
+    f$Cached[basename(f$LocalPath) %in% cached.files] <- TRUE; f
+  }, feature.list)
+  
+  return(as.FeatureList(feature.list))
+}
+
+
+
+#' Retrieve information about AnnotationHub features
+#' 
+#' @param online if TRUE search is conducted using latest AnnotationHub metadata, otherwise only the AnnotationHub cache directory is searched
+#' @param path define custom location used for AnnotationHub's cached
+#' directory, which should contain a 'resources' subdirectory. Normally this
+#' shouldn't be changed.
+#' 
+#' @return A named list of DataFrames containing (at minimum) columns indicating
+#' the Title, location (LocalPath) of features matching search query and whether
+#' the files are downloaded (Cached)
+#' 
+#' @importFrom AnnotationHub AnnotationHub metadata
+#' 
+#' @export
+
+hub.features <- function(query = NULL, path, genome, online = FALSE) {
+   
+  if (missing(path)) path <- cache.path()
+  if (!grepl("resources", path)) path <- file.path(path, "resources")
+  if (!cache.exists(path)) cache.create(path)
+  
+  cached.files <- local.features(NULL, path)
+  
+  if (online) {
+    # Retrieve latest feature
+    f.files <- metadata()
+    
+    # Filter based on genome
+    if (!missing(genome)) f.files <- f.files[f.files$Genome == genome,]
+    
+    # Identify which features are already cached
+    f.files$LocalPath <- file.path(path, f.files$RDataPath)
+    
+    if (!is.null(cached.files)) {
+      f.files$Cached <- ifelse(f.files$LocalPath %in% cached.files$LocalPath, T, F)  
+    } else {
+      f.files$Cached <- FALSE
+    }
+    
+  } else {
+    if (is.null(cached.files)) stop("No files found in ", path)
+    f.files <- cached.files
+  }
+  
+  if (is.null(query)) return(f.files)
+  filter.features(query, f.files)
+}
+
+
+
+#' Retrieve information about local features
+#' 
+#' @param path Path of directory containing features
+#' @inheritParams filter.features
+#' 
+#' @export
+
+local.features <- function(query = NULL, path) {
+  
+  files <- dir(path, full.names = TRUE, recursive = TRUE)
+  if (length(files) == 0) return(NULL)
+  
+  f.files <- DataFrame(Title = feature.labels(files), 
+                       LocalPath = files, 
+                       Cached = TRUE)
+  rownames(f.files) <- NULL # DataFrame (1.20.6) doesn't respect row.names = NULL
+  
+  if (is.null(query)) return(f.files)
+  filter.features(query, f.files)
+}
+
+
+
+#' Filter list of features based on search terms
+#'
+#' @param query a vector of strings to filter features; may also be a named list
+#' of vectors to perform multiple queries for different categories of features
+#' @param file.list a \code{\link{DataFrame}} containing, at minimum,
+#' \code{Title} and \code{LocalPath} columns
+
+filter.features <- function(query, file.list) {
+  
+  if(!all(c("LocalPath", "Title", "Cached") %in% names(file.list))) {
+    stop("file.list must contain LocalPath and Title columns", call. = FALSE)
+  }
   if (is.atomic(query)) query <- list(query)
   
-  # Filter based on genome
-  if (!missing(genome) & "genome" %in% colnames(md)) 
-    md <- md[md$Genome %in% genome,]
-  
-  # Apply user specified filters
   mgrep <- function(pattern, x, ignore.case = TRUE, ...) {
     hits <- sapply(pattern, grepl, x = x, ignore.case = ignore.case, ...)
     which(rowSums(hits) == length(pattern))
   }
   
-  filter.hits <- lapply(query, mgrep, x = md$LocalPath)
-  filter.hits <- lapply(filter.hits, function(x) md[x, ])                  
+  query.hits <- lapply(query, mgrep, x = file.list$LocalPath)
+  query.hits <- lapply(query.hits, function(x) file.list[x, ])
   
-  filter.hits <- as.FeatureList(filter.hits)
-  return(filter.hits)
+  query.hits <- as.FeatureList(query.hits)
+  return(query.hits)
 }
 
 
-#' Retrieve AnnotationHub metadata
-#' 
-#' @param online if TRUE search is conducted using latest AnnotationHub metadata, otherwise only the AnnotationHub cache directory is searched
-#' @param cache.dir define custom location used for AnnotationHub's cached
-#' directory, which should contain a 'resources' subdirectory. Normally this
-#' shouldn't be changed.
-#' @importFrom AnnotationHub AnnotationHub metadata
-#' @importFrom Biobase testBioCConnection
-
-hub.metadata <- function(online = FALSE, cache.dir = "default") {
-  
-  if (cache.dir == "default") cache.dir <- AnnotationHub:::hubCache()
-  
-  # Catalog cached files
-  if (!grepl("resources", cache.dir)) cache.dir <- file.path(cache.dir, "resources")
-  cache.files <- dir(cache.dir, full.names = TRUE, recursive = TRUE)
-  
-  if (online) {
-    # Retrieve latest features and identify which are already cached
-    md <- metadata()
-    local.path <- file.path(cache.dir, md$RDataPath)
-    md$LocalPath <- ifelse(local.path %in% cache.files, local.path, NA)
-  } else {
-    md <- DataFrame(Title = feature.labels(cache.files), LocalPath = cache.files)
-    rownames(md) <- NULL # DataFrame (1.20.6) doesn't respect row.names = NULL
-  }
-  
-  return(md)
-}
 
 #' Create pretty feature labels from the full RDataPaths
 #' 

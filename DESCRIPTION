@@ -7,7 +7,13 @@ Maintainer: Aaron Wolen <aaron@wolen.com>
 Depends:
     R (>= 3.0)
 Imports:
+    IRanges,
     GenomicRanges,
+    AnnotationHub,
+    GenomicFeatures,
+    rtracklayer,
+    reshape2,
+    foreach,
     testthat
 License: MIT
 LazyData: true
