@@ -1,26 +1,37 @@
 context("Feature search")
 
-query <- list(Tier1 = c("Gm12878", "Encode"))
-cache.dir <- system.file("data/resources", package = "bingd")
-required.cols <- c("Title", "LocalPath", "Cached")
 
-test_that("Offline AnnotationHub feature search", {
+test_that("Offline feature search", {
   
-  list.hit <- hub.features(query, path = cache.dir, online = FALSE)
-  atomic.hit <- hub.features(query[[1]], path = cache.dir, online = FALSE)
+  # Query can be vector or a list
+  hub.vec <- hub.features(query["DNase"],   path = test.dir, online = FALSE)
+  hub.lst <- hub.features(query[["DNase"]], path = test.dir, online = FALSE)
   
-  expect_identical(list.hit[[1]], atomic.hit[[1]])
+  expect_identical(hub.vec[[1]], hub.lst[[1]])
   
-  expect_equal(names(list.hit[[1]]), required.cols)
-  expect_equal(names(atomic.hit[[1]]), required.cols)  
+  loc.vec <- local.features(query["DNase"],   path = test.dir)
+  loc.lst <- local.features(query[["DNase"]], path = test.dir)
+  
+  expect_identical(loc.vec[[1]], loc.lst[[1]])
 })
+
 
 
 test_that("Online AnnotationHub feature search", {
   
-  online.hit <- hub.features(query, path = cache.dir, online = TRUE)
-  offline.hit <- hub.features(query, path = cache.dir, online = FALSE)
+  # Modify query to be more general
+  query <- lapply(query, Filter, f = function(x) x != "narrowPeak")
   
-  expect_true(all(required.cols %in% names(online.hit[[1]])))
-  expect_equivalent(online.hit[[1]][, required.cols], offline.hit[[1]])
+  # Online search identifies previously cached features
+  offline <- hub.features(query, path = test.dir, online = FALSE)
+  online  <- hub.features(query, path = test.dir, online = TRUE)
+  
+  online.cached <- lapply(online, function(x) x[x$Cached, names(offline[[1]])])
+  expect_equivalent(online.cached, offline)
+  
+  # Offline features are a subset of online features
+  offline.hits <- unlist(lapply(offline, function(x) x$LocalPath))
+  online.hits  <- unlist(lapply(online,  function(x) x$LocalPath))
+  
+  expect_true(all(offline.hits %in% online.hits))
 })

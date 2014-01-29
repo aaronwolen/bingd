@@ -8,6 +8,8 @@ bingd 0.2.1
   * Searching AnnotationHub is now done using `hub.features()`, to be consistent
     with `local.features()` and `hub.metadata()` is deprecated
 
+* Uncached AnnotationHub features can be downloaded using cache.features()
+
 bingd 0.2
 =========
 
