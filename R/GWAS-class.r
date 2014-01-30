@@ -63,22 +63,28 @@ setMethod("as.GWAS", "data.frame",
     
     object[[chr]] <- paste0("chr", gsub("[chr]", "", object[[chr]]))
     
-    gr <- GRanges(object[[chr]], IRanges(object[[bp]], width = 1), strand = "*", 
-                  marker = object[[marker]], pvalue = object[[pvalue]])
+    gr <- GRanges(object[[chr]], IRanges(object[[bp]], width = 1), strand = "*")
     
-    if (!missing(or))   gr$or    <- object[[or]]
-    if (!missing(beta)) gr$beta  <- object[[beta]]
+    # Attach all additional columns in on object as metadata
+    mcols(gr) <- object[, -match(c(chr, bp), names(object))]
     
-    as.GWAS(gr)
+    as.GWAS(gr, marker = marker, pvalue = pvalue, or = or, beta = beta)
 })
 
 setMethod("as.GWAS", "GRanges", 
   function(object, marker, chr, bp, pvalue, or, beta) {
-      
-    md <- mcols(object)
-    if ("or"   %in% names(md)) stat <- "or"
-    if ("beta" %in% names(md)) stat <- "beta"
     
-    object$z <- ifelse(md[[stat]] > 1, qnorm(md$pvalue / 2), -qnorm(md$pvalue / 2))
-    return(object)      
+    # Rename required metadatda columns
+    req.cols <- structure(c("marker", "pvalue"), names = c(marker, pvalue))
+    if (!missing(or))   req.cols <- c(req.cols, structure("or",  names = or))
+    if (!missing(beta)) req.cols <- c(req.cols, structure("beta", names = beta))
+    mcols(object) <- rename(mcols(object), req.cols)
+    
+    # Calculate z-score
+    object$z <- calc.z(object$pvalue, 
+                       or   = ifelse(missing(or),   NULL, object$or),
+                       beta = ifelse(missing(beta), NULL, object$beta))
+    
+    return(new("GWAS", object))      
 })
+
