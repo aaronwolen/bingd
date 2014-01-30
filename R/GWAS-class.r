@@ -80,6 +80,8 @@ setMethod("as.GWAS", "GRanges",
     if (!missing(beta)) req.cols <- c(req.cols, structure("beta", names = beta))
     mcols(object) <- rename(mcols(object), req.cols)
     
+    if (is.factor(object$marker)) object$marker <- as.character(object$marker)
+    
     # Calculate z-score
     object$z <- calc.z(object$pvalue, 
                        or   = ifelse(missing(or),   NULL, object$or),
