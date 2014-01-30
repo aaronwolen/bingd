@@ -11,6 +11,7 @@ Imports:
     GenomicRanges,
     AnnotationHub,
     GenomicFeatures,
+    methods,
     rtracklayer,
     reshape2,
     foreach,
