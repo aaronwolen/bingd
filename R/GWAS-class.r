@@ -15,14 +15,14 @@ setClass("GWAS", contains="GRanges")
   
   # Required columns
   if (!all(names(columns.req) %in% names(md))) {
-    return(cat("GWAS object metadata must contain all of the following columns:\n", 
-         paste(names(columns.req), collapse = "\n")))
+    stop("GWAS object metadata must contain all of the following columns:\n", 
+         paste(names(columns.req), collapse = "\n"), call. = FALSE)
   }
   
   # Optional columns
   if (!any(names(columns.opt) %in% names(md))) {
-    return(cat("GWAS object metadata must contain one of the following columns:\n", 
-         paste(names(columns.opt), collapse = "\n")))
+    stop("GWAS object metadata must contain one of the following columns:\n", 
+         paste(names(columns.opt), collapse = "\n"), call. = FALSE)
   }
   
   # Class information of required columns
@@ -33,8 +33,8 @@ setClass("GWAS", contains="GRanges")
   
   if (!identical(col.class[names(col.class)], md.class)) {
     class.info <- paste(names(col.class), col.class, sep = " = ")
-    return(cat("Required GWAS metadata classes should be:\n",
-         paste(class.info, collapse = "\n")))
+    stop("Required GWAS metadata classes should be:\n",
+         paste(class.info, collapse = "\n"), call. = FALSE)
   }
   
   return(TRUE)
