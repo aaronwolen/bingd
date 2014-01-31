@@ -13,15 +13,22 @@
 #' @export
 #'         
 
-calc.enrich <- function(gwas, feature.list, stat, thresh.levels) {
+setGeneric("calc.enrich", 
+ function(object, feature.list, stat, thresh.levels) {
+   standardGeneric("calc.enrich")
+}) 
 
-  annotated <- ifelse(is.annotated(gwas), TRUE, FALSE)
+setMethod("calc.enrich", "GWAS", 
+  function(object, feature.list, stat, thresh.levels) {
+  
+  annotated <- ifelse(is.annotated(object), TRUE, FALSE)
   
   if (!missing(feature.list)) {
     feature.list <- is.FeatureList(feature.list)
   } else {
     if (!annotated & missing(feature.list)) {
-      stop("gwas is unannotated and no FeatureList was provided.", call. = FALSE)
+      stop("GWAS object is unannotated and no FeatureList was provided.", 
+           call. = FALSE)
     }
   }
 
@@ -30,13 +37,13 @@ calc.enrich <- function(gwas, feature.list, stat, thresh.levels) {
   }
   
   if (annotated) {
-    features <- pull.features(gwas.annot)
+    features <- pull.features(object)
     labels <- lapply(features, names)
     overlap <- function(x) x
   } else {
     features <- lapply(feature.list, function(x) x$LocalPath)
     labels <- lapply(feature.list, function(x) x$Title)
-    overlap <- function(x) gwas %over% load.feature(x)
+    overlap <- function(x) object %over% load.feature(x)
   }
   
   enrich <- lapply(features, function(group)
@@ -50,15 +57,11 @@ calc.enrich <- function(gwas, feature.list, stat, thresh.levels) {
                    }, enrich, labels, SIMPLIFY = FALSE)
 
   enrich <- melt(enrich, measure.vars = NULL)
-  
-  # Temp replacement for rename
-  names(enrich)[which(names(enrich) == "L1")] <- "feature"
-  names(enrich)[which(names(enrich) == "L2")] <- "sample"
-
+  enrich <- rename(enrich, c(L1 = "feature", L2 = "sample"))
   enrich$threshold <- factor(enrich$threshold)
 
   return(enrich)
-}
+})
 
 
 #' Calculate the enrichment of a particular discrete feature across thresholds
