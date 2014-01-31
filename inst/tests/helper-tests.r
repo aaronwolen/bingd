@@ -10,8 +10,3 @@ make_test <- function(dir.name) {
 }
 
 test.dir <- make_test()
-
-query <- list(DNase   = c("GM12878", "UwDnase", "narrowPeak"),
-              Histone = c("GM12878", "H3k4me3", "narrowPeak"))
-
-features <- hub.features(query, path = test.dir, online = TRUE)
