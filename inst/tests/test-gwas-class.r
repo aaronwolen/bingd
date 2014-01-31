@@ -57,3 +57,35 @@ test_that("GWAS object annotation", {
   # One column exists for every cached feature
   expect_equivalent(sapply(features, nrow), sapply(f.df, length))
 })
+
+
+
+context("Ennrichment analysis of GWAS objects")
+
+log.pvals <- -log10(gwas.gr$pvalue)
+thresh.levels <- seq(1, ceiling(max(log.pvals)), 1)
+
+# Enrichment of unannotated GWAS object
+enrich <- calc.enrich(gwas.gr, feature.list = features, 
+                      stat = log.pvals, thresh.levels = thresh.levels)
+
+test_that("Enrichment results are valid", {
+  
+  # Results contain expected number of rows
+  enrich.rows <- sum(sapply(features, nrow)) * length(thresh.levels)
+  expect_identical(nrow(enrich), enrich.rows)
+  
+  # feature column matches FeatureList names
+  expect_match(unique(enrich$feature), names(features))
+  
+  # sample column matches FeatureList Titles
+  expect_match(unique(enrich$sample), sapply(features, function(x) x$Title))
+})
+
+
+
+test_that("Same results for annotated and unannotated GWAS objects", {  
+  enrich.annot <- calc.enrich(gwas.annot,
+                            stat = log.pvals, thresh.levels = thresh.levels)
+ expect_identical(enrich, enrich.annot)
+})
