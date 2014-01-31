@@ -120,7 +120,7 @@ setMethod("as.GWAS", "data.frame",
 #' object
 
 setMethod("as.GWAS", "GRanges", 
-  function(object, marker, chr, bp, pvalue, or, beta) {
+  function(object, marker, pvalue, or, beta) {
     
     # Rename required metadatda columns
     req.cols <- structure(c("marker", "pvalue"), names = c(marker, pvalue))
