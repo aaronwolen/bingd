@@ -21,12 +21,16 @@ test_that("GWAS object from data.frame", {
 
 
 
+# Create GRanges object
+test.gr <- GRanges(test.chrs, IRanges(test.pos, width = 1), strand = "*",
+                   test.snps, test.pval, test.or)
+
+
+
+# Create GWAS object
+gwas.gr <- as.GWAS(test.gr, marker = "test.snps", 
+                   pvalue = "test.pval", or = "test.or")
+
 test_that("GWAS object from GRanges", {
- 
-  test.gr <- GRanges(test.chrs, IRanges(test.pos, width = 1), strand = "*",
-                     test.snps, test.pval, test.or)
-  
-  gwas.gr <- as.GWAS(test.gr,
-                     marker = "test.snps", pvalue = "test.pval", or = "test.or")
   expect_match(class(gwas.gr), "GWAS")
 })
