@@ -3,7 +3,6 @@
 #' Check for feature in local cache before AnnotationHub
 #' 
 #' @param path Path of feature to load
-#' @inheritParams hub.search
 
 load.feature <- function(path) {
   

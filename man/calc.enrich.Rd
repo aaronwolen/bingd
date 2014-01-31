@@ -11,10 +11,11 @@ calc.enrich(object, feature.list, stat, thresh.levels)
   thresholds will be applied for each enrichment
   calculation}
 
-  \item{object}{GWAS object}
+  \item{object}{\code{\link{GWAS}} object}
 
   \item{feature.list}{\code{FeatureList} object created
-  with \code{\link{hub.search}}}
+  with \code{\link{hub.features}} or
+  \code{\link{local.features}}}
 }
 \description{
 \code{gwas} must be annotated with

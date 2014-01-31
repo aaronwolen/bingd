@@ -1,7 +1,8 @@
 #' Annotate GWAS object using AnnotationHub
 #' 
-#' @param object GWAS object
-#' @param feature.list \code{FeatureList} object created with \code{\link{hub.search}}
+#' @param object \code{\link{GWAS}} object
+#' @param feature.list \code{FeatureList} object created with 
+#' \code{\link{hub.features}} or \code{\link{local.features}}
 #' 
 #' @importFrom foreach getDoParWorkers
 #' @importFrom parallel mclapply
@@ -9,7 +10,7 @@
 #' 
 #' @examples
 #' query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
-#' feature.list <- hub.search(query, online = FALSE)
+#' feature.list <- hub.features(query)
 #' scz <- annotate.gwas(scz, feature.list)
 
 

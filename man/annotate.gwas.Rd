@@ -5,17 +5,18 @@
 annotate.gwas(object, feature.list)
 }
 \arguments{
-  \item{object}{GWAS object}
+  \item{object}{\code{\link{GWAS}} object}
 
   \item{feature.list}{\code{FeatureList} object created
-  with \code{\link{hub.search}}}
+  with \code{\link{hub.features}} or
+  \code{\link{local.features}}}
 }
 \description{
 Annotate GWAS object using AnnotationHub
 }
 \examples{
 query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
-feature.list <- hub.search(query, online = FALSE)
+feature.list <- hub.features(query)
 scz <- annotate.gwas(scz, feature.list)
 }
 
