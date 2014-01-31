@@ -13,6 +13,10 @@ hub.features(query = NULL, path, genome, online = FALSE)
   AnnotationHub's cached directory, which should contain a
   'resources' subdirectory. Normally this shouldn't be
   changed.}
+
+  \item{query}{a vector of strings to filter features; may
+  also be a named list of vectors to perform multiple
+  queries for different categories of features}
 }
 \value{
 A named list of DataFrames containing (at minimum) columns

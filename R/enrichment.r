@@ -1,9 +1,8 @@
 #' Calculate enrichment of all annotated features across thresholds
 #' 
-#' @param gwas GWAS \code{\link{GRanges}} object
+#' @param object \code{\link{GWAS}} object
 #' @inheritParams annotate.gwas  
-#' @param stat numeric vector containing statistic to which thresholds will 
-#'        be applied for each enrichment calculation
+#' @inheritParams serial.enrich
 #'
 #' @description
 #' \code{gwas} must be annotated with \code{\link{annotate.gwas}} OR a
@@ -69,6 +68,8 @@ setMethod("calc.enrich", "GWAS",
 #' @param feature logical or character vector
 #' @param stat numeric vector containing statistic to which thresholds will 
 #'        be applied for each enrichment calculation
+#' @param thresh.levels a numeric vector containing the various thresholds at
+#' which \code{feature} enrichment is calculated
 #' 
 #' @return data.frame containing `enrichment`
 #' @export

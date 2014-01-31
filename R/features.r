@@ -22,7 +22,7 @@ load.feature <- function(path) {
 
 #' Download uncached features
 #' 
-#' @inheritParams filter.features
+#' @inheritParams annotate.gwas
 #' @inheritParams local.features
 #' 
 #' @importFrom AnnotationHub AnnotationHub
@@ -82,6 +82,7 @@ cache.features <- function(feature.list, path) {
 #' the Title, location (LocalPath) of features matching search query and whether
 #' the files are downloaded (Cached)
 #' 
+#' @inheritParams filter.features
 #' @importFrom AnnotationHub AnnotationHub metadata
 #' 
 #' @export
