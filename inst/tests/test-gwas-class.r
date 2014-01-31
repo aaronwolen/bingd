@@ -25,6 +25,12 @@ test_that("GWAS object from data.frame", {
 test.gr <- GRanges(test.chrs, IRanges(test.pos, width = 1), strand = "*",
                    test.snps, test.pval, test.or)
 
+test_that("GWAS creation fails without required information", {
+  expect_error(as.GWAS(test.gr, marker = "test.snps", pvalue = "test.pval"))
+  expect_error(as.GWAS(test.gr, marker = "test.snps", or = "test.or"))
+  expect_error(as.GWAS(test.gr, pvalue = "test.pval", or = "test.or"))
+})
+
 
 
 # Create GWAS object
