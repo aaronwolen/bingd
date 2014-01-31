@@ -1,5 +1,6 @@
 \docType{class}
 \name{GWAS-class}
+\alias{GWAS}
 \alias{GWAS-class}
 \title{GWAS-class}
 \description{

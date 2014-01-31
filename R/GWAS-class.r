@@ -22,6 +22,8 @@
 #'  \item{\code{or}}{Odds ratios}
 #'  \item{\code{beta}}{Beta values (i.e., the regression coefficient)}
 #' }
+#' 
+#' @aliases GWAS
 
 setClass("GWAS", contains="GRanges")
 
