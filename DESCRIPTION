@@ -9,7 +9,7 @@ Depends:
 Imports:
     IRanges,
     GenomicRanges,
-    AnnotationHub,
+    AnnotationHub (== 1.2.0),
     GenomicFeatures,
     methods,
     rtracklayer,
