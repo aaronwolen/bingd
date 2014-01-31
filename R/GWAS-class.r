@@ -78,6 +78,9 @@ setMethod("as.GWAS", "GRanges",
     req.cols <- structure(c("marker", "pvalue"), names = c(marker, pvalue))
     if (!missing(or))   req.cols <- c(req.cols, structure("or",  names = or))
     if (!missing(beta)) req.cols <- c(req.cols, structure("beta", names = beta))
+    if (missing(or) & missing(beta)) 
+      stop("Must supply odds ratios (or) or beta values (beta).")
+      
     mcols(object) <- rename(mcols(object), req.cols)
     
     if (is.factor(object$marker)) object$marker <- as.character(object$marker)
