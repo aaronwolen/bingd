@@ -1,4 +1,4 @@
-library(IRanges)
+
 setClass("Features", 
   slots = list(Title = "character", 
                LocalPath = "character", 
