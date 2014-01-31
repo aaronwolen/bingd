@@ -1,6 +1,28 @@
 
 # Define ------------------------------------------------------------------
 
+#' GWAS-class
+#' 
+#' The GWAS class is a container for representing the genetic markers used in a
+#' genome-wide associate study (GWAS), along with their corresponding summary 
+#' statistics.
+#' 
+#' The GWAS class is a \link[GenomicRanges]{GRanges} with the following required
+#' metadata columns:
+#' 
+#' \describe{
+#'  \item{\code{marker}}{Marker or SNP identifiers}
+#'  \item{\code{pvalue}}{Marker association p-values}
+#' }
+#' 
+#' A GWAS object must also contain a metadata column indicating the direction of
+#' the minor allele's effect, which can be provided as one of the following:
+#' 
+#' \describe{
+#'  \item{\code{or}}{Odds ratios}
+#'  \item{\code{beta}}{Beta values (i.e., the regression coefficient)}
+#' }
+
 setClass("GWAS", contains="GRanges")
 
 
