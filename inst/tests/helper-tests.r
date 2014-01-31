@@ -2,7 +2,7 @@
 make_test <- function(dir.name) {
   if (missing(dir.name)) dir.name <- paste(cache.path(), "test", sep = "-")
   if (file.exists(dir.name)) {
-    warning(dir.name, " already exists.")
+    warning(dir.name, " already exists.\n", call. = FALSE)
     rndm.ext <- paste(sample(letters, 3), collapse = "")
     dir.name <- paste(dir.name, rndm.ext, sep = "-")
   }
