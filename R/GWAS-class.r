@@ -95,6 +95,11 @@ setGeneric("as.GWAS",
     standardGeneric("as.GWAS")
 }) 
 
+
+#' Create a GWAS object
+#' 
+#' Create a \code{\link{GWAS}} object from a \code{\link{data.frame}}
+
 setMethod("as.GWAS", "data.frame", 
   function(object, marker, chr, bp, pvalue, or, beta) {
     
@@ -107,6 +112,12 @@ setMethod("as.GWAS", "data.frame",
     
     as.GWAS(gr, marker = marker, pvalue = pvalue, or = or, beta = beta)
 })
+
+
+#' Create a GWAS object
+#' 
+#' Create a \code{\link{GWAS}} object from a \link[GenomicRanges]{GRanges}
+#' object
 
 setMethod("as.GWAS", "GRanges", 
   function(object, marker, chr, bp, pvalue, or, beta) {
