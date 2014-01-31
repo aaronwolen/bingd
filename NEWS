@@ -1,3 +1,13 @@
+bingd 0.2.2
+===========
+
+* Implements S4 GWAS class
+* Updated methods to work with new class
+* Adds tests for:
+    - creating GWAS objects
+    - adding annotations
+    - calculating enrichment
+
 bingd 0.2.1
 ===========
 
