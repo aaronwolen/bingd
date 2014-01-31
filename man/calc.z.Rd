@@ -1,0 +1,20 @@
+\name{calc.z}
+\alias{calc.z}
+\title{Convert p-values to z-scores}
+\usage{
+calc.z(p, or = NULL, beta = NULL)
+}
+\arguments{
+  \item{p}{a vector of p-values}
+
+  \item{or}{a vector of odds ratios}
+
+  \item{beta}{a vector of beta values}
+}
+\value{
+numeric vector of z-scores
+}
+\description{
+Must provide either odds ratios OR beta values.
+}
+

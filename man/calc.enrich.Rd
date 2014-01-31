@@ -2,7 +2,7 @@
 \alias{calc.enrich}
 \title{Calculate enrichment of all annotated features across thresholds}
 \usage{
-calc.enrich(gwas, feature.list, stat, thresh.levels)
+calc.enrich(object, feature.list, stat, thresh.levels)
 }
 \arguments{
   \item{gwas}{GWAS \code{\link{GRanges}} object}
@@ -10,6 +10,8 @@ calc.enrich(gwas, feature.list, stat, thresh.levels)
   \item{stat}{numeric vector containing statistic to which
   thresholds will be applied for each enrichment
   calculation}
+
+  \item{object}{GWAS object}
 
   \item{feature.list}{\code{FeatureList} object created
   with \code{\link{hub.search}}}
