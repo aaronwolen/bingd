@@ -43,6 +43,7 @@ test_that("GWAS object from GRanges", {
 
 
 # Create annotated GWAS object
+features <- local.features(query, path = test.dir)
 gwas.annot <- annotate.gwas(gwas.gr, feature.list = features)
 
 test_that("GWAS object annotation", {
