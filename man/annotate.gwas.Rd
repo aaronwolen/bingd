@@ -2,10 +2,10 @@
 \alias{annotate.gwas}
 \title{Annotate GWAS object using AnnotationHub}
 \usage{
-annotate.gwas(gwas, feature.list)
+annotate.gwas(object, feature.list)
 }
 \arguments{
-  \item{gwas}{GWAS GRanges object}
+  \item{object}{GWAS object}
 
   \item{feature.list}{\code{FeatureList} object created
   with \code{\link{hub.search}}}
