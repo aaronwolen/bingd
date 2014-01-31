@@ -31,7 +31,7 @@ test_that("Test features are uncached", {
 
 
 # Cache test features
-features <- cache.features(features, test.dir)
+suppressMessages(features <- cache.features(features, test.dir))
 
 test_that("Test features were cached", {
   
