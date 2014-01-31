@@ -2,7 +2,7 @@ bind 0.2.3
 ==========
 
 * Major improvements to documentation
-
+* Deprecated import.gwas()
 
 bingd 0.2.2
 ===========
