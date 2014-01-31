@@ -99,6 +99,8 @@ setGeneric("as.GWAS",
 #' Create a GWAS object
 #' 
 #' Create a \code{\link{GWAS}} object from a \code{\link{data.frame}}
+#' 
+#' @inheritParams as.GWAS
 
 setMethod("as.GWAS", "data.frame", 
   function(object, marker, chr, bp, pvalue, or, beta) {
@@ -118,6 +120,8 @@ setMethod("as.GWAS", "data.frame",
 #' 
 #' Create a \code{\link{GWAS}} object from a \link[GenomicRanges]{GRanges}
 #' object
+#' 
+#' @inheritParams as.GWAS
 
 setMethod("as.GWAS", "GRanges", 
   function(object, marker, pvalue, or, beta) {
