@@ -40,3 +40,19 @@ gwas.gr <- as.GWAS(test.gr, marker = "test.snps",
 test_that("GWAS object from GRanges", {
   expect_match(class(gwas.gr), "GWAS")
 })
+
+
+# Create annotated GWAS object
+gwas.annot <- annotate.gwas(gwas.gr, feature.list = features)
+
+test_that("GWAS object annotation", {
+  
+  expect_true(is.annotated(gwas.annot))
+  
+  # Pull annotated GWAS features
+  f.df <- pull.features(gwas.annot)
+  expect_match("DataFrame", sapply(f.df, class))
+  
+  # One column exists for every cached feature
+  expect_equivalent(sapply(features, nrow), sapply(f.df, length))
+})
