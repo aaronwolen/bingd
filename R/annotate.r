@@ -13,11 +13,14 @@
 #' scz <- annotate.gwas(scz, feature.list)
 
 
-setGeneric("annotate.gwas", function(object, feature.list) standardGeneric("annotate.gwas"))
+setGeneric("annotate.gwas", 
+  function(object, feature.list) {
+    standardGeneric("annotate.gwas")
+})
 
 setMethod("annotate.gwas", "GWAS", 
   function(object, feature.list) {
-    browser()
+    
     feature.list <- is.FeatureList(feature.list)
     
     overlaps <- lapply(feature.list, function(df) 
