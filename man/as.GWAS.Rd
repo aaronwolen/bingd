@@ -5,18 +5,35 @@
 as.GWAS(object, marker, chr, bp, pvalue, or, beta)
 }
 \arguments{
-  \item{snpid}{column label corresponding to SNP ID column}
+  \item{object}{a \code{\link{data.frame}} or
+  \code{\link[GenomicRanges]{GRanges}} object containing
+  the required fields necessary to construct a
+  \code{\link{GWAS}} object}
 
-  \item{chr}{column label corresponding to chromosome
-  column}
+  \item{marker}{name of the column in \code{object} that
+  contains the marker (or SNP) identifiers}
 
-  \item{pos}{}
+  \item{chr}{name of the column in \code{object} that
+  contains the chromosome names associated with each
+  marker}
 
-  \item{pval}{}
+  \item{bp}{name of the column in \code{object} that
+  contains the genomic position (or start position)
+  associated with each marker}
 
-  \item{or}{}
+  \item{pvalue}{name of the column in \code{object} that
+  contains the GWAS association p-value for each marker}
+
+  \item{or}{name of the column in \code{object} that
+  contains the GWAS odds ratio for each marker}
+
+  \item{beta}{name of the column in \code{object} that
+  contains the GWAS beta values (or regression
+  coefficients) for each marker}
 }
 \description{
-Create a GWAS object
+Create a \code{\link{GWAS}} object from a
+\code{\link{data.frame}} or a
+\code{\link[GenomicRanges]{GRanges}} object.
 }
 
