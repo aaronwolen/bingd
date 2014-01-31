@@ -1,7 +1,7 @@
 Package: bingd
 Title: Bayesian integration of genomic data
 Description: Bayesian integration of genomic data
-Version: 0.2
+Version: 0.2.2
 Author: Aaron Wolen <aaron@wolen.com>
 Maintainer: Aaron Wolen <aaron@wolen.com>
 Depends:
