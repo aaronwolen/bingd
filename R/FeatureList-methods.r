@@ -1,3 +1,19 @@
+setMethod("show", "FeatureList", 
+  function(object) {
+    len <- length(object)
+    cat("FeatureList object with", len,
+      ifelse(len == 1, "group", "groups"),
+      "of features.\n\n")
+    
+    for (i in seq_len(len)) {
+      cat("Group ", i, " - ", names(object)[i], 
+          " (", ncol(object[[i]]), " columns):\n", sep = "")
+      cat("  ..  ", nrow(object[[i]]), "features\n")
+      cat("  ..  ", sum(object[[i]]$cached), "of which are cached\n")
+    }
+})
+
+
 #' Download uncached features
 #' 
 #' @inheritParams annotate.gwas
