@@ -32,7 +32,7 @@ FeatureList <- function(..., names) {
   if (length(objs) == 1) {
     object <- eval(objs[[1]], envir = parent.frame())
     
-    if (is.list(object)) {
+    if (is.list(object) & !is.data.frame(object)) {
       out <- object
     } else if (class(object) %in% c("data.frame", "DataFrame")) {
       out <- list(object)
@@ -43,13 +43,19 @@ FeatureList <- function(..., names) {
     out <- lapply(objs, eval, envir = parent.frame())
   }
   
-  if (is.null(base::names(out))) {
-    if (!missing(names)) {
-      if (length(names) != length(out)) 
-        stop("Length of names differs from length supplied objects.")
-      base::names(out) <- names
+  if (!missing(names)) {
+    if (length(names) != length(out)) {
+      stop("Length of names differs from length of supplied object(s)")
     } else {
-      base::names(out) <- paste0("features", seq_along(out))
+     base::names(out) <- names 
+    }
+  } else {
+    if (is.null(base::names(out))) {
+      if (length(out) == 1) {
+        base::names(out) <- "features"
+      } else {
+        base::names(out) <- paste0("features", seq_along(out))
+      }
     }
   }
 
