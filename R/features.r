@@ -43,6 +43,9 @@ hub.features <- function(query = NULL, path, genome, online = FALSE) {
   if (!cache.exists(path)) cache.create(path)
   
   cached.files <- local.features(NULL, path)
+  if (!is.null(cached.files)) {
+    cached.files <- subset(stack(cached.files), select = -name)
+  }
   
   if (online) {
     # Retrieve latest feature
@@ -65,8 +68,9 @@ hub.features <- function(query = NULL, path, genome, online = FALSE) {
     f.files <- cached.files
   }
   
-  if (is.null(query)) return(f.files)
-  filter.features(query, f.files)
+  f.list <- FeatureList(f.files)
+  if (is.null(query)) return(f.list)
+  filter.features(f.list, query)
 }
 
 
@@ -83,13 +87,13 @@ local.features <- function(query = NULL, path) {
   files <- dir(path, full.names = TRUE, recursive = TRUE)
   if (length(files) == 0) return(NULL)
   
-  f.list <- DataFrame(Title = feature.labels(files), 
+  f.files <- DataFrame(Title = feature.labels(files), 
                        LocalPath = files, 
                        Cached = TRUE)
-  rownames(f.list) <- NULL # DataFrame (1.20.6) doesn't respect row.names=NULL
-  names(f.list$Title) <- NULL
-  f.list <- FeatureList(f.list)
-
+  rownames(f.files) <- NULL # DataFrame (1.20.6) doesn't respect row.names=NULL
+  names(f.files$Title) <- NULL
+  
+  f.list <- FeatureList(f.files)
   if (is.null(query)) return(f.list)
   filter.features(f.list, query)
 }
