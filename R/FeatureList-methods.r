@@ -9,7 +9,7 @@ setMethod("show", "FeatureList",
       cat("Group ", i, " - ", names(object)[i], 
           " (", ncol(object[[i]]), " columns):\n", sep = "")
       cat("  ..  ", nrow(object[[i]]), "features\n")
-      cat("  ..  ", sum(object[[i]]$cached), "of which are cached\n")
+      cat("  ..  ", sum(object[[i]]$Cached), "of which are cached\n")
     }
 })
 
