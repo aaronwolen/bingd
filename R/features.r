@@ -83,42 +83,60 @@ local.features <- function(query = NULL, path) {
   files <- dir(path, full.names = TRUE, recursive = TRUE)
   if (length(files) == 0) return(NULL)
   
-  f.files <- DataFrame(Title = feature.labels(files), 
+  f.list <- DataFrame(Title = feature.labels(files), 
                        LocalPath = files, 
                        Cached = TRUE)
-  rownames(f.files) <- NULL # DataFrame (1.20.6) doesn't respect row.names = NULL
-  
-  if (is.null(query)) return(f.files)
-  filter.features(query, f.files)
+  rownames(f.list) <- NULL # DataFrame (1.20.6) doesn't respect row.names=NULL
+  names(f.list$Title) <- NULL
+  f.list <- FeatureList(f.list)
+
+  if (is.null(query)) return(f.list)
+  filter.features(f.list, query)
 }
 
 
 
-#' Filter list of features based on search terms
+#' Filter FeatureList object based on search terms
+#'
+#' Search terms can be grouped together using a list of queries.
 #'
 #' @param query a vector of strings to filter features; may also be a named list
 #' of vectors to perform multiple queries for different categories of features
-#' @param file.list a \code{\link{DataFrame}} containing, at minimum,
-#' \code{Title} and \code{LocalPath} columns
+#' @param query a \code{\link{FeatureList}} object comprising one or more
+#' DataFrames that containing, at minimum, \code{Title} \code{LocalPath}, and
+#' \code{Cached} columns
 
-filter.features <- function(query, file.list) {
-  
-  if(!all(c("LocalPath", "Title", "Cached") %in% names(file.list))) {
-    stop("file.list must contain LocalPath and Title columns", call. = FALSE)
-  }
-  if (is.atomic(query)) query <- list(query)
-  
-  mgrep <- function(pattern, x, ignore.case = TRUE, ...) {
-    hits <- sapply(pattern, grepl, x = x, ignore.case = ignore.case, ...)
-    which(rowSums(hits) == length(pattern))
-  }
-  
-  query.hits <- lapply(query, mgrep, x = file.list$LocalPath)
-  query.hits <- lapply(query.hits, function(x) file.list[x, ])
-  
-  query.hits <- as.FeatureList(query.hits)
-  return(query.hits)
-}
+setGeneric("filter.features", 
+  function(object, query) {
+    standardGeneric("filter.features")
+})
+           
+setMethod("filter.features", "FeatureList",
+  function(object, query) {
+
+    if (is.atomic(query)) query <- list(query)
+    
+    # FeatureList groupings are ignored in favor of query groupings
+    object <- subset(stack(object), select = -name)
+    
+    # Feature group names
+    if(is.null(names(query))) {
+      f.names <- paste0("features", seq_along(query))
+    } else {
+      f.names <- names(query)
+    }
+      
+    # multi-grep: pattern can be a vector of multiple character strings 
+    mgrep <- function(pattern, x, ignore.case = TRUE, ...) {
+      hits <- sapply(pattern, grepl, x = x, ignore.case = ignore.case, ...)
+      which(rowSums(hits) == length(pattern))
+    }
+    
+    query.hits <- lapply(query, mgrep, x = object$LocalPath)
+    object <- lapply(query.hits, function(x) object[x, ])
+    
+    return(FeatureList(object))
+})
 
 
 
