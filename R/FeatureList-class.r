@@ -7,9 +7,11 @@ setClass("FeatureList", contains="SimpleDataFrameList")
 # Validate ----------------------------------------------------------------
 
 .validFeatureList <- function(object) {
-  .validColClass(object, "FeatureList", "Title",     "character")
-  .validColClass(object, "FeatureList", "LocalPath", "character")
-  .validColClass(object, "FeatureList", "Cached",    "logical")
+  
+  lapply(object, .validColClass, "FeatureList", "Title",     "character")
+  lapply(object, .validColClass, "FeatureList", "LocalPath", "character")
+  lapply(object, .validColClass, "FeatureList", "Cached",    "logical")
+
   return(TRUE)
 }
 
