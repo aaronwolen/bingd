@@ -30,7 +30,7 @@ FeatureList <- function(..., names) {
   objs <- as.list(substitute(list(...))[-1])
     
   if (length(objs) == 1) {
-    object <- eval(objs[[1]])
+    object <- eval(objs[[1]], envir = parent.frame())
     
     if (is.list(object)) {
       out <- object
@@ -40,7 +40,7 @@ FeatureList <- function(..., names) {
       stop("Must provide data.frames, DataFrames, or a list of either class.")
     }
   } else {
-    out <- lapply(objs, eval)
+    out <- lapply(objs, eval, envir = parent.frame())
   }
   
   if (is.null(base::names(out))) {
