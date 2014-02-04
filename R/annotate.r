@@ -53,6 +53,9 @@ setMethod("annotate.gwas", "GWAS",
 #' @param query \code{GWAS} object
 #' @param subject \code{FeatureList} object
 #' @param ... additional arguments passed to \code{\link[IRanges]{overlapsAny}}
+#' 
+#' @export
+#' @aliases overlapsAny-method
 
 setMethod("overlapsAny", c(query = "GWAS", subject = "FeatureList"),
   function(query, subject, ...) {
