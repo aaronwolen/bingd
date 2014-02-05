@@ -75,6 +75,11 @@ test_that("GWAS object annotation", {
   expect_equivalent(sapply(features, nrow), sapply(f.df, length))
 })
 
+test_that("Feature genome versions must match GWAS", {
+  genome(gwas.gr) <- "hg18"
+  expect_error(annotate.gwas(gwas.gr, feature.list = features))
+})
+
 
 
 context("Ennrichment analysis of GWAS objects")
@@ -105,3 +110,11 @@ test_that("Same results for annotated and unannotated GWAS objects", {
                             stat = log.pvals, thresh.levels = thresh.levels)
  expect_identical(enrich, enrich.annot)
 })
+
+
+test_that("Feature genome versions must match GWAS", {
+  genome(gwas.gr) <- "hg18"
+  expect_error(calc.enrich(gwas.gr, feature.list = features, 
+                      stat = log.pvals, thresh.levels = thresh.levels))
+})
+
