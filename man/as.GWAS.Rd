@@ -2,13 +2,16 @@
 \alias{as.GWAS}
 \title{Create a GWAS object}
 \usage{
-as.GWAS(object, marker, chr, bp, pvalue, or, beta)
+as.GWAS(object, genome, marker, chr, bp, pvalue, or, beta)
 }
 \arguments{
   \item{object}{a \code{\link{data.frame}} or
   \code{\link[GenomicRanges]{GRanges}} object containing
   the required fields necessary to construct a
   \code{\link{GWAS}} object}
+
+  \item{genome}{genome abbreviation used by UCSC (e.g.,
+  hg19)}
 
   \item{marker}{name of the column in \code{object} that
   contains the marker (or SNP) identifiers}

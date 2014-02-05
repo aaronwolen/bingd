@@ -4,6 +4,7 @@ bind 0.2.3
 * Major improvements to documentation
 * Deprecated import.gwas()
 * Implements S4 FeatureList class
+* GWAS objects now require genome build information
 
 bingd 0.2.2
 ===========

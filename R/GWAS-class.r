@@ -77,6 +77,7 @@ setValidity("GWAS", .validGWAS)
 #' @param object a \code{\link{data.frame}} or 
 #' \code{\link[GenomicRanges]{GRanges}} object containing the required fields
 #' necessary to construct a \code{\link{GWAS}} object
+#' @param genome genome abbreviation used by UCSC (e.g., hg19)
 #' @param marker name of the column in \code{object} that contains the marker
 #' (or SNP) identifiers
 #' @param chr name of the column in \code{object} that contains the chromosome
@@ -91,7 +92,7 @@ setValidity("GWAS", .validGWAS)
 #' values (or regression coefficients) for each marker
 
 setGeneric("as.GWAS", 
-  function(object, marker, chr, bp, pvalue, or, beta) {
+  function(object, genome, marker, chr, bp, pvalue, or, beta) {
     standardGeneric("as.GWAS")
 }) 
 
@@ -103,7 +104,7 @@ setGeneric("as.GWAS",
 #' @inheritParams as.GWAS
 
 setMethod("as.GWAS", "data.frame", 
-  function(object, marker, chr, bp, pvalue, or, beta) {
+  function(object, genome, marker, chr, bp, pvalue, or, beta) {
     
     object[[chr]] <- paste0("chr", gsub("[chr]", "", object[[chr]]))
     
@@ -112,7 +113,8 @@ setMethod("as.GWAS", "data.frame",
     # Attach all additional columns in on object as metadata
     mcols(gr) <- object[, -match(c(chr, bp), names(object))]
     
-    as.GWAS(gr, marker = marker, pvalue = pvalue, or = or, beta = beta)
+    as.GWAS(gr, genome = genome, marker = marker, 
+            pvalue = pvalue, or = or, beta = beta)
 })
 
 
@@ -124,7 +126,7 @@ setMethod("as.GWAS", "data.frame",
 #' @inheritParams as.GWAS
 
 setMethod("as.GWAS", "GRanges", 
-  function(object, marker, pvalue, or, beta) {
+  function(object, genome, marker, pvalue, or, beta) {
     
     # Rename required metadatda columns
     req.cols <- structure(c("marker", "pvalue"), names = c(marker, pvalue))
@@ -137,6 +139,14 @@ setMethod("as.GWAS", "GRanges",
     
     if (is.factor(object$marker)) object$marker <- as.character(object$marker)
     
+    # Genome information
+    if (missing(genome)) {
+      if (all(is.na(GenomicRanges::genome(object))))
+        stop("Must supply UCSC genome abbreviation (e.g., hg19).")
+    } else {
+     GenomicRanges::genome(object) <- genome 
+    }
+     
     # Calculate z-score
     object$z <- calc.z(object$pvalue, 
                        or   = ifelse(missing(or),   NULL, object$or),
