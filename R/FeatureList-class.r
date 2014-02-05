@@ -19,6 +19,8 @@ setValidity("FeatureList", .validFeatureList)
 
 # Constructor -------------------------------------------------------------
 
+#' FeatureList objects
+#'
 #' @param ... either the names of \code{data.frames}, \code{DataFrames}, or a
 #' list of either class, optionally named
 #' @param names a character vector of names to assign to each element

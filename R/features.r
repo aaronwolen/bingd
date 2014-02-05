@@ -106,7 +106,7 @@ local.features <- function(query = NULL, path) {
 #'
 #' @param query a vector of strings to filter features; may also be a named list
 #' of vectors to perform multiple queries for different categories of features
-#' @param query a \code{\link{FeatureList}} object comprising one or more
+#' @param object a \code{\link{FeatureList}} object comprising one or more
 #' DataFrames that containing, at minimum, \code{Title} \code{LocalPath}, and
 #' \code{Cached} columns
 
