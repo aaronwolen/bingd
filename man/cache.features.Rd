@@ -2,12 +2,10 @@
 \alias{cache.features}
 \title{Download uncached features}
 \usage{
-cache.features(feature.list, path)
+cache.features(object, path)
 }
 \arguments{
-  \item{feature.list}{\code{FeatureList} object created
-  with \code{\link{hub.features}} or
-  \code{\link{local.features}}}
+  \item{object}{\code{\link{GWAS}} object}
 
   \item{path}{Path of directory containing features}
 }
