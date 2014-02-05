@@ -8,7 +8,7 @@ test_that("Searching for uncached features", {
   expect_true(file.exists(test.dir))
   
   # Returns a FeatureList
-  expect_identical(is.FeatureList(features), features)
+  expect_match(class(features), "FeatureList")
 
   # Returns expected number of matches
   expect_equal(sapply(features, nrow), 

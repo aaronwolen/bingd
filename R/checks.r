@@ -1,12 +1,3 @@
-#' FeatureList object check
-is.FeatureList <- function(x) {
-   if (class(x)[1] != "FeatureList") {
-    stop("Must provide a FeatureList object.")
-  }
-  return(x)
-}
- 
-
 #' Verify the presence and class of a data.frame variable
 #' 
 #' @param object \code{data.frame} or a \code{\link[IRanges]{DataFrame}}

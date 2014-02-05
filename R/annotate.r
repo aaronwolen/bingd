@@ -19,11 +19,9 @@ setGeneric("annotate.gwas",
     standardGeneric("annotate.gwas")
 })
 
-setMethod("annotate.gwas", "GWAS", 
+setMethod("annotate.gwas", c(object = "GWAS", feature.list = "FeatureList"), 
   function(object, feature.list) {
-    
-    feature.list <- is.FeatureList(feature.list)
-    
+
     overlaps <- overlapsAny(query = object, subject = feature.list)
 
     # It'd be nice if overlap results for each feature type could
