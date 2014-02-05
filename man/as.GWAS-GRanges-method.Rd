@@ -1,8 +1,9 @@
-\name{as.GWAS}
-\alias{as.GWAS}
+\docType{methods}
+\name{as.GWAS,GRanges-method}
+\alias{as.GWAS,GRanges-method}
 \title{Create a GWAS object}
 \usage{
-as.GWAS(object, marker, chr, bp, pvalue, or, beta)
+\S4method{as.GWAS}{GRanges}(object, marker, pvalue, or, beta)
 }
 \arguments{
   \item{object}{a \code{\link{data.frame}} or
@@ -12,14 +13,6 @@ as.GWAS(object, marker, chr, bp, pvalue, or, beta)
 
   \item{marker}{name of the column in \code{object} that
   contains the marker (or SNP) identifiers}
-
-  \item{chr}{name of the column in \code{object} that
-  contains the chromosome names associated with each
-  marker}
-
-  \item{bp}{name of the column in \code{object} that
-  contains the genomic position (or start position)
-  associated with each marker}
 
   \item{pvalue}{name of the column in \code{object} that
   contains the GWAS association p-value for each marker}
@@ -33,7 +26,6 @@ as.GWAS(object, marker, chr, bp, pvalue, or, beta)
 }
 \description{
 Create a \code{\link{GWAS}} object from a
-\code{\link{data.frame}} or a
-\code{\link[GenomicRanges]{GRanges}} object.
+\link[GenomicRanges]{GRanges} object
 }
 

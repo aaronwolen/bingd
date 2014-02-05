@@ -2,9 +2,11 @@
 \alias{cache.features}
 \title{Download uncached features}
 \usage{
-cache.features(feature.list, path)
+cache.features(object, path)
 }
 \arguments{
+  \item{object}{\code{\link{GWAS}} object}
+
   \item{path}{Path of directory containing features}
 }
 \value{

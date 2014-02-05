@@ -10,6 +10,10 @@ serial.enrich(feature, stat, thresh.levels)
   \item{stat}{numeric vector containing statistic to which
   thresholds will be applied for each enrichment
   calculation}
+
+  \item{thresh.levels}{a numeric vector containing the
+  various thresholds at which \code{feature} enrichment is
+  calculated}
 }
 \value{
 data.frame containing `enrichment`

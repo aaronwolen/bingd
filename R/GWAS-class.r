@@ -1,6 +1,30 @@
 
 # Define ------------------------------------------------------------------
 
+#' GWAS-class
+#' 
+#' The GWAS class is a container for representing the genetic markers used in a
+#' genome-wide associate study (GWAS), along with their corresponding summary 
+#' statistics.
+#' 
+#' The GWAS class is a \link[GenomicRanges]{GRanges} with the following required
+#' metadata columns:
+#' 
+#' \describe{
+#'  \item{\code{marker}}{Marker or SNP identifiers}
+#'  \item{\code{pvalue}}{Marker association p-values}
+#' }
+#' 
+#' A GWAS object must also contain a metadata column indicating the direction of
+#' the minor allele's effect, which can be provided as one of the following:
+#' 
+#' \describe{
+#'  \item{\code{or}}{Odds ratios}
+#'  \item{\code{beta}}{Beta values (i.e., the regression coefficient)}
+#' }
+#' 
+#' @aliases GWAS
+
 setClass("GWAS", contains="GRanges")
 
 
@@ -46,17 +70,37 @@ setValidity("GWAS", .validGWAS)
 # Constructors ------------------------------------------------------------
 
 #' Create a GWAS object
+#'
+#' Create a \code{\link{GWAS}} object from a \code{\link{data.frame}} or a
+#' \code{\link[GenomicRanges]{GRanges}} object.
 #' 
-#' @param snpid column label corresponding to SNP ID column
-#' @param chr column label corresponding to chromosome column
-#' @param pos
-#' @param pval
-#' @param or
+#' @param object a \code{\link{data.frame}} or 
+#' \code{\link[GenomicRanges]{GRanges}} object containing the required fields
+#' necessary to construct a \code{\link{GWAS}} object
+#' @param marker name of the column in \code{object} that contains the marker
+#' (or SNP) identifiers
+#' @param chr name of the column in \code{object} that contains the chromosome
+#' names associated with each marker
+#' @param bp name of the column in \code{object} that contains the genomic 
+#' position (or start position) associated with each marker
+#' @param pvalue name of the column in \code{object} that contains the GWAS 
+#' association p-value for each marker
+#' @param or name of the column in \code{object} that contains the GWAS odds
+#' ratio for each marker
+#' @param beta name of the column in \code{object} that contains the GWAS beta
+#' values (or regression coefficients) for each marker
 
 setGeneric("as.GWAS", 
   function(object, marker, chr, bp, pvalue, or, beta) {
     standardGeneric("as.GWAS")
 }) 
+
+
+#' Create a GWAS object
+#' 
+#' Create a \code{\link{GWAS}} object from a \code{\link{data.frame}}
+#' 
+#' @inheritParams as.GWAS
 
 setMethod("as.GWAS", "data.frame", 
   function(object, marker, chr, bp, pvalue, or, beta) {
@@ -71,8 +115,16 @@ setMethod("as.GWAS", "data.frame",
     as.GWAS(gr, marker = marker, pvalue = pvalue, or = or, beta = beta)
 })
 
+
+#' Create a GWAS object
+#' 
+#' Create a \code{\link{GWAS}} object from a \link[GenomicRanges]{GRanges}
+#' object
+#' 
+#' @inheritParams as.GWAS
+
 setMethod("as.GWAS", "GRanges", 
-  function(object, marker, chr, bp, pvalue, or, beta) {
+  function(object, marker, pvalue, or, beta) {
     
     # Rename required metadatda columns
     req.cols <- structure(c("marker", "pvalue"), names = c(marker, pvalue))

@@ -1,18 +1,21 @@
 \name{filter.features}
 \alias{filter.features}
-\title{Filter list of features based on search terms}
+\title{Filter FeatureList object based on search terms}
 \usage{
-filter.features(query, file.list)
+filter.features(object, query)
 }
 \arguments{
   \item{query}{a vector of strings to filter features; may
   also be a named list of vectors to perform multiple
   queries for different categories of features}
 
-  \item{file.list}{a \code{\link{DataFrame}} containing, at
-  minimum, \code{Title} and \code{LocalPath} columns}
+  \item{object}{a \code{\link{FeatureList}} object
+  comprising one or more DataFrames that containing, at
+  minimum, \code{Title} \code{LocalPath}, and \code{Cached}
+  columns}
 }
 \description{
-Filter list of features based on search terms
+Search terms can be grouped together using a list of
+queries.
 }
 

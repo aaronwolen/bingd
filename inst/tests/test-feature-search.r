@@ -30,7 +30,9 @@ test_that("Online AnnotationHub feature search", {
   offline <- hub.features(query, path = test.dir, online = FALSE)
   online  <- hub.features(query, path = test.dir, online = TRUE)
   
-  online.cached <- lapply(online, function(x) x[x$Cached, names(offline[[1]])])
+  online.cached <- IRanges::endoapply(online, function(x) 
+                                      x[x$Cached, names(offline[[1]])])
+  
   expect_equivalent(online.cached, offline)
   
   # Offline features are a subset of online features

@@ -1,9 +1,8 @@
 #' Calculate enrichment of all annotated features across thresholds
 #' 
-#' @param gwas GWAS \code{\link{GRanges}} object
+#' @param object \code{\link{GWAS}} object
 #' @inheritParams annotate.gwas  
-#' @param stat numeric vector containing statistic to which thresholds will 
-#'        be applied for each enrichment calculation
+#' @inheritParams serial.enrich
 #'
 #' @description
 #' \code{gwas} must be annotated with \code{\link{annotate.gwas}} OR a
@@ -23,9 +22,7 @@ setMethod("calc.enrich", "GWAS",
   
   annotated <- ifelse(is.annotated(object), TRUE, FALSE)
   
-  if (!missing(feature.list)) {
-    feature.list <- is.FeatureList(feature.list)
-  } else {
+  if (missing(feature.list)) {
     if (!annotated & missing(feature.list)) {
       stop("GWAS object is unannotated and no FeatureList was provided.", 
            call. = FALSE)
@@ -46,16 +43,15 @@ setMethod("calc.enrich", "GWAS",
     overlap <- function(x) object %over% load.feature(x)
   }
   
-  enrich <- lapply(features, function(group)
-                   mclapply(group, function(f) 
-                              serial.enrich(overlap(f), stat, thresh.levels),
-                            mc.cores = getDoParWorkers()))
-      
-  # Label with feature titles
-  enrich <- mapply(function(e, l) {
-                     names(e) <- l; e
-                   }, enrich, labels, SIMPLIFY = FALSE)
-
+  enrich <- list()    
+  
+  for (i in names(features)) {
+    paths  <- structure(features[[i]], names = labels[[i]])
+    enrich[[i]] <- mclapply(paths, function(p) 
+                            serial.enrich(overlap(p), stat, thresh.levels),
+                            mc.cores = getDoParWorkers())
+  }
+  
   enrich <- melt(enrich, measure.vars = NULL)
   enrich <- rename(enrich, c(L1 = "feature", L2 = "sample"))
   enrich$threshold <- factor(enrich$threshold)
@@ -69,6 +65,8 @@ setMethod("calc.enrich", "GWAS",
 #' @param feature logical or character vector
 #' @param stat numeric vector containing statistic to which thresholds will 
 #'        be applied for each enrichment calculation
+#' @param thresh.levels a numeric vector containing the various thresholds at
+#' which \code{feature} enrichment is calculated
 #' 
 #' @return data.frame containing `enrichment`
 #' @export
