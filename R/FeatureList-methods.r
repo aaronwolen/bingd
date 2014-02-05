@@ -65,8 +65,3 @@ setMethod("cache.features", "FeatureList",
     
     return(FeatureList(object))
 })
-
-
-# Subsetting --------------------------------------------------------------
-
-#' Return 
