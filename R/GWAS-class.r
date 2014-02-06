@@ -151,8 +151,8 @@ setMethod("as.GWAS", "GRanges",
      
     # Calculate z-score
     object$z <- calc.z(object$pvalue, 
-                       or   = ifelse(missing(or),   NULL, object$or),
-                       beta = ifelse(missing(beta), NULL, object$beta))
+                       or   = if (!missing(or))   object$or,
+                       beta = if (!missing(beta)) object$beta)
     
     return(new("GWAS", object))      
 })
