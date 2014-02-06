@@ -14,7 +14,7 @@ calc.z <- function(p, or = NULL, beta = NULL) {
   if (!is.null(or))
     z[or < 1]   <- -z[or < 1]
   else if (!is.null(beta)) 
-    z[beta < 0] <- -z[beta < 1]
+    z[beta < 0] <- -z[beta < 0]
   else 
     stop("Must provide odds ratios (or) or beta values (beta).\n")
   

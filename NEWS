@@ -1,3 +1,9 @@
+bingd 0.2.3.2
+=============
+
+* Export as.GWAS()
+* Fix bug in z-score calculations
+
 bingd 0.2.3.1
 =============
 
