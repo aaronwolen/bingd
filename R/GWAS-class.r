@@ -90,6 +90,8 @@ setValidity("GWAS", .validGWAS)
 #' ratio for each marker
 #' @param beta name of the column in \code{object} that contains the GWAS beta
 #' values (or regression coefficients) for each marker
+#'
+#' @export
 
 setGeneric("as.GWAS", 
   function(object, genome, marker, chr, bp, pvalue, or, beta) {
