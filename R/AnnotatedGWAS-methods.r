@@ -1,5 +1,4 @@
 #' Access AnnotatedGWAS feature index
-#' 
 #' @param object \code{AnnotatedGWAS} object
 
 setGeneric("featureIndex", function(object) {
@@ -10,7 +9,6 @@ setMethod("featureIndex", "AnnotatedGWAS", function(object) object@featureIndex)
 
 
 #' Extract list of features from AnnotatedGWAS object
-#' 
 #' @inheritParams featureIndex
 
 setGeneric("features", function(object) {
@@ -18,14 +16,12 @@ setGeneric("features", function(object) {
 })
 
 setMethod("features", "AnnotatedGWAS", function(object) {
-  out <- lapply(featureIndex(object), function(x) 
-                rename(mcols(object)[, x], structure(names(x), names = x)))
+  out <- lapply(featureIndex(object), function(x) mcols(object)[, x])
   return(DataFrameList(out))
 })
 
 
 #' Extract features from AnnotatedGWAS object
-#' 
 #' @inheritParams featureIndex
 
 setGeneric("fcols", function(object) {
@@ -33,9 +29,5 @@ setGeneric("fcols", function(object) {
 })
 
 setMethod("fcols", "AnnotatedGWAS", function(object) {
-  
-  out <- DataFrame(features(object))
-  names(out) <- paste0(".", names(out))
-  
-  return(out)
+  return(DataFrame(features(object)))
 })

@@ -26,19 +26,9 @@ setMethod("annotate.gwas", c(object = "GWAS", feature.list = "FeatureList"),
     
     overlaps <- overlapsAny(query = object, subject = feature.list)
     
-    f.index <- mapply(function(g, f) {
-                              g <- make.names(g)
-                              f <- make.names(names(f))
-                              structure(paste0(".", g, ".", f), names = f)
-                      }, names(overlaps), overlaps, SIMPLIFY = FALSE)
-
-    # It'd be nice if overlap results for each feature type could
-    # be stored in different slots but for now all features are just
-    # added as ordinary variables
+    f.index <- lapply(overlaps, function(x) make.names(names(x)))
     overlaps <- DataFrame(overlaps)
-    
-    # Features will be denoted by a .prefix
-    names(overlaps) <- paste0(".", names(overlaps))
+    names(overlaps) <- unlist(f.index)
     
     mcols(object) <- DataFrame(mcols(object), overlaps)
     
