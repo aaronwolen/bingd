@@ -20,7 +20,7 @@ setGeneric("calc.enrich",
 setMethod("calc.enrich", "GWAS", 
   function(object, feature.list, stat, thresh.levels) {
   
-  annotated <- ifelse(is.annotated(object), TRUE, FALSE)
+  annotated <- ifelse(class(object) == "AnnotatedGWAS", TRUE, FALSE)
   
   if (missing(feature.list)) {
     if (!annotated & missing(feature.list)) {
@@ -34,7 +34,7 @@ setMethod("calc.enrich", "GWAS",
   }
   
   if (annotated) {
-    features <- pull.features(object)
+    features <- features(object)
     labels <- lapply(features, names)
     overlap <- function(x) x
   } else {
