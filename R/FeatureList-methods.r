@@ -65,3 +65,21 @@ setMethod("cache.features", "FeatureList",
     
     return(FeatureList(object))
 })
+
+
+# Accessors ---------------------------------------------------------------
+
+setGeneric("LocalPath", function(object) standardGeneric("LocalPath"))
+           
+setMethod("LocalPath", "FeatureList",
+  function(object) {
+    Map(function(x) structure(x$LocalPath, names = x$Title), object)
+})
+
+
+setGeneric("Cached", function(object) standardGeneric("Cached"))
+           
+setMethod("Cached", "FeatureList",
+  function(object) {
+    Map(function(x) structure(x$Cached, names = x$Title), object)
+})
