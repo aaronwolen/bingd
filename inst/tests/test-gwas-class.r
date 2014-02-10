@@ -65,10 +65,10 @@ gwas.annot <- annotate.gwas(gwas.gr, feature.list = features)
 
 test_that("GWAS object annotation", {
   
-  expect_true(is.annotated(gwas.annot))
+  expect_match("AnnotatedGWAS", class(gwas.annot))
   
-  # Pull annotated GWAS features
-  f.df <- pull.features(gwas.annot)
+  # Access annotated GWAS features
+  f.df <- features(gwas.annot)
   expect_match("DataFrame", sapply(f.df, class))
   
   # One column exists for every cached feature

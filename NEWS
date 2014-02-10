@@ -1,3 +1,10 @@
+bingd 0.2.4
+===========
+
+* Implements S4 Annotated GWAS class
+* pull.features() is deprecated
+
+
 bingd 0.2.3.2
 =============
 
