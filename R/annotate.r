@@ -8,6 +8,8 @@
 #' @importFrom parallel mclapply
 #' @export
 #' 
+#' @returns \code{\link{AnnotatedGWAS}} object
+#' 
 #' @examples
 #' query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
 #' feature.list <- hub.features(query)
@@ -21,8 +23,14 @@ setGeneric("annotate.gwas",
 
 setMethod("annotate.gwas", c(object = "GWAS", feature.list = "FeatureList"), 
   function(object, feature.list) {
-
+    
     overlaps <- overlapsAny(query = object, subject = feature.list)
+    
+    f.index <- mapply(function(g, f) {
+                              g <- make.names(g)
+                              f <- make.names(names(f))
+                              structure(paste0(".", g, ".", f), names = f)
+                      }, names(overlaps), overlaps, SIMPLIFY = FALSE)
 
     # It'd be nice if overlap results for each feature type could
     # be stored in different slots but for now all features are just
@@ -33,6 +41,9 @@ setMethod("annotate.gwas", c(object = "GWAS", feature.list = "FeatureList"),
     names(overlaps) <- paste0(".", names(overlaps))
     
     mcols(object) <- DataFrame(mcols(object), overlaps)
+    
+    object <- new("AnnotatedGWAS", object, 
+                  featureIndex = as(f.index, "SimpleList"))
       
     return(object)
 })
