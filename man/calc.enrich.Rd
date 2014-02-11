@@ -1,6 +1,6 @@
 \name{calc.enrich}
 \alias{calc.enrich}
-\title{Calculate enrichment of all annotated features across thresholds}
+\title{Calculate enrichment of features across thresholds}
 \usage{
 calc.enrich(object, feature.list, stat, thresh.levels)
 }

@@ -1,4 +1,4 @@
-#' Calculate enrichment of all annotated features across thresholds
+#' Calculate enrichment of features across thresholds
 #' 
 #' @param object \code{\link{GWAS}} object
 #' @inheritParams annotate.gwas  
@@ -8,55 +8,56 @@
 #' \code{gwas} must be annotated with \code{\link{annotate.gwas}} OR a
 #' \code{feature.list} must be provided.
 #' 
-#' @importFrom reshape2 melt
-#' @export
-#'         
+#' @export         
 
 setGeneric("calc.enrich", 
  function(object, feature.list, stat, thresh.levels) {
    standardGeneric("calc.enrich")
 }) 
 
+#' Calculate enrichment of FeatureList features across thresholds
+
 setMethod("calc.enrich", "GWAS", 
   function(object, feature.list, stat, thresh.levels) {
-  
-  annotated <- ifelse(is.annotated(object), TRUE, FALSE)
-  
-  if (missing(feature.list)) {
-    if (!annotated & missing(feature.list)) {
-      stop("GWAS object is unannotated and no FeatureList was provided.", 
-           call. = FALSE)
-    }
-  }
 
   if (missing(thresh.levels)) {
     thresh.levels <- quantile(stat, seq(0, 1, 0.1))
   }
   
-  if (annotated) {
-    features <- pull.features(object)
-    labels <- lapply(features, names)
-    overlap <- function(x) x
-  } else {
-    features <- lapply(feature.list, function(x) x$LocalPath)
-    labels <- lapply(feature.list, function(x) x$Title)
-    overlap <- function(x) object %over% load.feature(x)
-  }
-  
-  enrich <- list()    
+  features <- LocalPath(feature.list)
+  enrich <- list()
   
   for (i in names(features)) {
-    paths  <- structure(features[[i]], names = labels[[i]])
-    enrich[[i]] <- mclapply(paths, function(p) 
-                            serial.enrich(overlap(p), stat, thresh.levels),
+    
+    enrich[[i]] <- mclapply(features[[i]], function(p) 
+                            serial.enrich(object %over% load.feature(p),
+                                          stat, thresh.levels),
                             mc.cores = getDoParWorkers())
   }
   
-  enrich <- melt(enrich, measure.vars = NULL)
-  enrich <- rename(enrich, c(L1 = "feature", L2 = "sample"))
-  enrich$threshold <- factor(enrich$threshold)
+  return(format.enrich(enrich))
+})
 
-  return(enrich)
+#' Calculate enrichment of annotated features across thresholds
+
+setMethod("calc.enrich", "AnnotatedGWAS", 
+  function(object, stat, thresh.levels) {
+
+  if (missing(thresh.levels)) {
+    thresh.levels <- quantile(stat, seq(0, 1, 0.1))
+  }
+  
+  features <- features(object)
+  enrich <- list()    
+  
+  for (i in names(features)) {
+    
+    enrich[[i]] <- mclapply(features[[i]], function(f) 
+                            serial.enrich(f, stat, thresh.levels),
+                            mc.cores = getDoParWorkers())
+  }
+  
+  return(format.enrich(enrich))
 })
 
 
@@ -85,3 +86,13 @@ serial.enrich <- function(feature, stat, thresh.levels) {
   
   return(out)
 }
+
+
+#' Reformat list of enrichment results
+#' @importFrom reshape2 melt
+format.enrich <- function(x) {
+  x <- melt(x, measure.vars = NULL)
+  x <- rename(x, c(L1 = "feature", L2 = "sample"))
+  x$threshold <- factor(x$threshold)
+  return(x)
+} 

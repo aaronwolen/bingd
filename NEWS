@@ -1,3 +1,12 @@
+bingd 0.2.4
+===========
+
+* Implements S4 AnnotatedGWAS class
+* Adds features() and fcols() accesors for AnnotatedGWAS objects
+* pull.features() is deprecated
+* Adds pvalue() and marker() accessors for GWAS objects
+
+
 bingd 0.2.3.2
 =============
 
