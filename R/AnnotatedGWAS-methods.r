@@ -31,3 +31,38 @@ setGeneric("fcols", function(object) {
 setMethod("fcols", "AnnotatedGWAS", function(object) {
   return(DataFrame(features(object)))
 })
+
+
+#' Consolidate each group of annotated features
+#'
+#' consolidate combines the features within each group to produce a new single
+#' feature that comprises all of the original individual features
+#' 
+#' @param \code{AnnotatedGWAS} object
+#' @return \code{AnnotatedGWAS} object
+#' 
+#' @export
+
+setGeneric("consolidate", function(object) {
+  standardGeneric("consolidate")
+})
+
+setMethod("consolidate", "AnnotatedGWAS", function(object) {
+  
+  # Consolidate
+  new.features <- lapply(features(object), 
+                         function(f) DataFrame(n = rowSums(as.matrix(f)) > 0))
+  new.features <- DataFrame(new.features)
+  names(new.features) <- sub("\\.n$", "", names(new.features))
+  
+  # Replace features
+  old.features <- unlist(featureIndex(object))
+  mcols(object) <- mcols(object)[, setdiff(names(mcols(object)), old.features)]
+  mcols(object) <- DataFrame(mcols(object), new.features)
+  
+  # Update index
+  new.index <- as.list(structure(names(new.features), names = names(new.features)))
+  object@featureIndex <- as(new.index, "SimpleList")
+  
+  return(object)
+})
