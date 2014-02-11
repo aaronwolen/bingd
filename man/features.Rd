@@ -1,0 +1,13 @@
+\name{features}
+\alias{features}
+\title{Extract list of features from AnnotatedGWAS object}
+\usage{
+features(object)
+}
+\arguments{
+  \item{object}{\code{AnnotatedGWAS} object}
+}
+\description{
+Extract list of features from AnnotatedGWAS object
+}
+
