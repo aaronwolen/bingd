@@ -15,8 +15,8 @@ setGeneric("features", function(object) {
   standardGeneric("features")
 })
 
-setMethod("features", "AnnotatedGWAS", function(object) {
-  out <- lapply(featureIndex(object), function(x) mcols(object)[, x])
+setMethod("features", "AnnotatedGWAS", function(object) {  
+  out <- lapply(featureIndex(object), function(x) mcols(object)[x])
   return(DataFrameList(out))
 })
 
