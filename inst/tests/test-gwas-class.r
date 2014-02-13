@@ -68,8 +68,34 @@ test_that("GWAS object annotation", {
   
   # Annotating added the expected number of columns
   expect_equal(ncol(mcols(gwas.annot)),
-               ncol(mcols(gwas.gr)) + sum(sapply(f.list, length)))
+               ncol(mcols(gwas.gr)) + sum(sapply(f.list, nrow)))
+})
+
+test_that("Features can be accessed with features()", {
   
+  f <- features(gwas.annot)
+  expect_match(class(f), "DataFrameList")
+  
+  expect_true(all(nrow(f) == length(gwas.annot)))
+  expect_equal(length(f), length(f.list))
+  # Group names match
+  expect_equal(names(f), names(f.list))
+  # Feature names match
+  expect_match(unlist(colnames(f)),
+               unlist(lapply(LocalPath(f.list), names)))
+})
+
+test_that("Features can be accessed with fcols()", {
+  
+  f <- fcols(gwas.annot)
+  expect_match(class(f), "DataFrame")
+  
+  expect_equal(nrow(f), length(gwas.annot))
+  expect_equal(ncol(f), nrow(unlist(f.list)))
+  
+  # Feature names match
+  expect_match(names(f),
+               unlist(lapply(LocalPath(f.list), names)))
 })
 
 
