@@ -149,6 +149,9 @@ test_that("Same number of feature groups after consolidation", {
   
   gwas.cons <- consolidate(gwas.annot)
   
+  expect_true(is.consolidated(gwas.cons))
+  expect_false(is.consolidated(gwas.annot))
+  
   # All groups are still present
   expect_equal(length(features(gwas.cons)), length(features(gwas.annot)))
   expect_equal(names(features(gwas.cons)), names(features(gwas.annot)))

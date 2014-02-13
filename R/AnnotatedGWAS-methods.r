@@ -67,3 +67,11 @@ setMethod("consolidate", "AnnotatedGWAS", function(object) {
   
   return(object)
 })
+
+#' Check if AnnotatedGWAS features have been consolidated
+setGeneric("is.consolidated", function(object) standardGeneric("is.consolidated"))
+
+setMethod("is.consolidated", "AnnotatedGWAS", function(object) {
+  all(sapply(features(object), length) == 1)
+})
+
