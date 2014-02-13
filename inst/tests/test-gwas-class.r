@@ -58,27 +58,29 @@ test_that("GWAS object using annotated genome", {
 
 
 
-context("Create annotated GWAS object")
+context("Create AnnotatedGWAS object")
 
-features <- local.features(query, path = test.dir)
-gwas.annot <- annotate.gwas(gwas.gr, feature.list = features)
+f.list <- local.features(query, path = test.dir)
+gwas.annot <- annotate.gwas(gwas.gr, feature.list = f.list)
 
-test_that("GWAS object annotation", {
-  
+test_that("GWAS object annotation", {  
   expect_match("AnnotatedGWAS", class(gwas.annot))
   
-  # Access annotated GWAS features
-  f.df <- features(gwas.annot)
-  expect_match("DataFrame", sapply(f.df, class))
+  # Annotating added the expected number of columns
+  expect_equal(ncol(mcols(gwas.annot)),
+               ncol(mcols(gwas.gr)) + sum(sapply(f.list, length)))
   
-  # One column exists for every cached feature
-  expect_equivalent(sapply(features, nrow), sapply(f.df, length))
 })
+
+
 
 test_that("Feature genome versions must match GWAS", {
   genome(gwas.gr) <- "hg18"
-  expect_error(annotate.gwas(gwas.gr, feature.list = features))
+  expect_error(annotate.gwas(gwas.gr, feature.list = f.list))
 })
+
+
+
 
 
 
@@ -88,20 +90,20 @@ log.pvals <- -log10(gwas.gr$pvalue)
 thresh.levels <- seq(1, ceiling(max(log.pvals)), 1)
 
 # Enrichment of unannotated GWAS object
-enrich <- calc.enrich(gwas.gr, feature.list = features, 
+enrich <- calc.enrich(gwas.gr, feature.list = f.list, 
                       stat = log.pvals, thresh.levels = thresh.levels)
 
 test_that("Enrichment results are valid", {
   
   # Results contain expected number of rows
-  enrich.rows <- sum(sapply(features, nrow)) * length(thresh.levels)
+  enrich.rows <- sum(sapply(f.list, nrow)) * length(thresh.levels)
   expect_identical(nrow(enrich), enrich.rows)
   
   # feature column matches FeatureList names
-  expect_match(unique(enrich$feature), names(features))
+  expect_match(unique(enrich$feature), names(f.list))
   
   # sample column matches FeatureList Titles
-  expect_match(unique(enrich$sample), sapply(features, function(x) x$Title))
+  expect_match(unique(enrich$sample), sapply(f.list, function(x) x$Title))
 })
 
 
@@ -114,7 +116,18 @@ test_that("Same results for annotated and unannotated GWAS objects", {
 
 test_that("Feature genome versions must match GWAS", {
   genome(gwas.gr) <- "hg18"
-  expect_error(calc.enrich(gwas.gr, feature.list = features, 
+  expect_error(calc.enrich(gwas.gr, feature.list = f.list, 
                       stat = log.pvals, thresh.levels = thresh.levels))
+})
+
+
+
+
+context("Consolidation")
+
+gwas.cons <- consolidate(gwas.annot)
+
+test_that("Same number of feature groups after consolidation", {
+  features(gwas.cons)
 })
 

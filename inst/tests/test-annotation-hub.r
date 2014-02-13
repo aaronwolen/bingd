@@ -1,6 +1,6 @@
 context("AnnotationHub")
 
-features <- hub.features(query, path = test.dir, online = TRUE)
+f.list <- hub.features(query, path = test.dir, online = TRUE)
 
 test_that("Searching for uncached features", {
   
@@ -8,10 +8,10 @@ test_that("Searching for uncached features", {
   expect_true(file.exists(test.dir))
   
   # Returns a FeatureList
-  expect_match(class(features), "FeatureList")
+  expect_match(class(f.list), "FeatureList")
 
   # Returns expected number of matches
-  expect_equal(sapply(features, nrow), 
+  expect_equal(sapply(f.list, nrow), 
                c("DNase" = 2, "Histone" = 2))
 })
 
@@ -20,10 +20,10 @@ test_that("Searching for uncached features", {
 test_that("Test features are uncached", {
   
   # FeatureList indicates files aren't cached
-  expect_equal(sum(sapply(features, function(x) x$Cached)), 0)
+  expect_equal(sum(sapply(f.list, function(x) x$Cached)), 0)
   
   # Files don't exist
-  feature.files <- unlist(lapply(features, function(x) x$LocalPath))
+  feature.files <- unlist(lapply(f.list, function(x) x$LocalPath))
   expect_true(all(grepl(test.dir, feature.files)))
   expect_false(any(file.exists(feature.files)))
 })
@@ -31,18 +31,18 @@ test_that("Test features are uncached", {
 
 
 # Cache test features
-suppressMessages(features <- cache.features(features, test.dir))
+suppressMessages(f.list <- cache.features(f.list, test.dir))
 
 test_that("Test features were cached", {
   
   # Returns a FeatureList
-  expect_true(.validFeatureList(features))
+  expect_true(.validFeatureList(f.list))
   
   # FeatureList indicates files are cached
-  expect_equal(sum(IRanges::stack(features)$Cached), 4)
+  expect_equal(sum(IRanges::stack(f.list)$Cached), 4)
   
   # Files do exist
-  feature.files <- IRanges::stack(features)$LocalPath
+  feature.files <- IRanges::stack(f.list)$LocalPath
   expect_true(all(grepl(test.dir, feature.files)))
   expect_true(all(file.exists(feature.files)))
 })
