@@ -29,5 +29,6 @@ setGeneric("fcols", function(object) {
 })
 
 setMethod("fcols", "AnnotatedGWAS", function(object) {
-  return(DataFrame(features(object)))
+  out <- structure(as.list(features(object)), names = NULL)
+  return(DataFrame(out))
 })
