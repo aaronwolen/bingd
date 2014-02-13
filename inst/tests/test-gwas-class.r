@@ -56,6 +56,11 @@ test_that("GWAS object using annotated genome", {
   expect_match(class(gwas.gr), "GWAS")
 })
 
+test_that("Feature genome versions must match GWAS", {
+  genome(gwas.gr) <- "hg18"
+  expect_error(annotate.gwas(gwas.gr, feature.list = f.list))
+})
+
 
 
 context("Create AnnotatedGWAS object")
@@ -100,16 +105,6 @@ test_that("Features can be accessed with fcols()", {
 
 
 
-test_that("Feature genome versions must match GWAS", {
-  genome(gwas.gr) <- "hg18"
-  expect_error(annotate.gwas(gwas.gr, feature.list = f.list))
-})
-
-
-
-
-
-
 context("Ennrichment analysis of GWAS objects")
 
 log.pvals <- -log10(gwas.gr$pvalue)
@@ -144,16 +139,5 @@ test_that("Feature genome versions must match GWAS", {
   genome(gwas.gr) <- "hg18"
   expect_error(calc.enrich(gwas.gr, feature.list = f.list, 
                       stat = log.pvals, thresh.levels = thresh.levels))
-})
-
-
-
-
-context("Consolidation")
-
-gwas.cons <- consolidate(gwas.annot)
-
-test_that("Same number of feature groups after consolidation", {
-  features(gwas.cons)
 })
 
