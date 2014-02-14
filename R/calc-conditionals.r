@@ -20,7 +20,7 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
     stop("Features must be consolidated with consolidate().", call. = FALSE)
   
   labels <- names(fcols(object))
-  vars.df <- DataFrame(conditional = pvalue(object) < risk.thresh, fcols(object))
+  vars <- DataFrame(conditional = pvalue(object) < risk.thresh, fcols(object))
   
   # Baseline probabilities
   base <- transform(count(vars[labels]), 
@@ -41,6 +41,9 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
   } else {
     probs$prob <- probs$prob.risk * adjust - (adjust - 1) * probs$prob.base  
   }
+  
+  # Label variable combinations
+  probs <- data.frame(label = label.groups(probs[labels]), probs)
   
   return(probs)
 })
