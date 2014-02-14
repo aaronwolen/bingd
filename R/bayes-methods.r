@@ -46,7 +46,8 @@ setMethod("calc.bayes", "AnnotatedGWAS", function(object) {
                                  ((p.f.r * fz.e * p.r) + p.f.n * fz.n * p.n))  
   
   m.index <- match(marker(object), post.probs$marker)
-  mcols(object)$post.prob <- post.probs[m.index, c("post.prob.gwas", "post.prob")]
+  post.probs <- post.probs[m.index, c("post.prob.gwas", "post.prob")]
+  mcols(object) <- DataFrame(mcols(object), post.probs)
   
   return(object)
 })
