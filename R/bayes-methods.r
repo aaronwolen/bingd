@@ -7,14 +7,16 @@
 #' @importFrom plyr ddply
 #' @export
 
-setGeneric("calc.bayes", function(object) {
+setGeneric("calc.bayes", function(object, ld.adjust) {
   standardGeneric("calc.bayes")
 })
 
-setMethod("calc.bayes", "AnnotatedGWAS", function(object) {
+setMethod("calc.bayes", "AnnotatedGWAS", function(object, ld.adjust) {
   
   gwas.params <- calc.pr(object, trace = 2)
-  cond.probs <- calc.conditionals(object, risk.thresh = 1e-4)
+  if (!missing(ld.adjust)) gwas.params$p.r <- gwas.params$p.r / (1 + ld.adjust)
+  
+  cond.probs <- calc.conditionals(object, risk.thresh = 1e-4, adjust = ld.adjust)
   
   post.probs <- data.frame(label = label.groups(fcols(object)),
                           marker = marker(object),
