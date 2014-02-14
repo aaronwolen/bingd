@@ -40,11 +40,13 @@ setMethod("calc.bayes", "AnnotatedGWAS", function(object) {
   
   # Calculate posterior probabilities by feature combination groups                  
   post.probs <- ddply(post.probs, "label", transform,
+                 post.prob.gwas = (fz.e * p.r) /
+                                 ((fz.e * p.r) + fz.n * p.n),
                       post.prob = (p.f.r * fz.e * p.r) / 
                                  ((p.f.r * fz.e * p.r) + p.f.n * fz.n * p.n))  
   
   m.index <- match(marker(object), post.probs$marker)
-  mcols(object)$post.prob <- post.probs$post.prob[m.index]
+  mcols(object)$post.prob <- post.probs[m.index, c("post.prob.gwas", "post.prob")]
   
   return(object)
 })
