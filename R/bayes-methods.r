@@ -13,13 +13,13 @@ setGeneric("calc.bayes", function(object) {
 
 setMethod("calc.bayes", "AnnotatedGWAS", function(object) {
   
-  gwas.params <- calc.pe(object, trace = 2)
+  gwas.params <- calc.pr(object, trace = 2)
   cond.probs <- calc.conditionals(object, risk.thresh = 1e-4)
   
   post.probs <- data.frame(label = label.groups(fcols(object)),
                           marker = marker(object),
                           zscore = zscore(object),
-                             p.e = gwas.params$p.e,
+                             p.r = gwas.params$p.r,
                              p.n = gwas.params$p.n,
                            stringsAsFactors = FALSE)
   
@@ -40,8 +40,8 @@ setMethod("calc.bayes", "AnnotatedGWAS", function(object) {
   
   # Calculate posterior probabilities by feature combination groups                  
   post.probs <- ddply(post.probs, "label", transform,
-                      post.prob = (p.f.r * fz.e * p.e) / 
-                                 ((p.f.r * fz.e * p.e) + p.f.n * fz.n * p.n))  
+                      post.prob = (p.f.r * fz.e * p.r) / 
+                                 ((p.f.r * fz.e * p.r) + p.f.n * fz.n * p.n))  
   
   m.index <- match(marker(object), post.probs$marker)
   mcols(object)$post.prob <- post.probs$post.prob[m.index]
@@ -51,7 +51,7 @@ setMethod("calc.bayes", "AnnotatedGWAS", function(object) {
 
 
 
-#' Calculate prior probability of being an effective SNP
+#' Calculate prior probability of being a risk SNP
 #'
 #' @param object \code{AnnotatedGWAS} object
 #' @param effect assumed effect size, used to shift the ideal z-score distribution
@@ -61,16 +61,16 @@ setMethod("calc.bayes", "AnnotatedGWAS", function(object) {
 #'  
 #'  @return A list with components:
 #' \describe{
-#'  \item{\code{p.e}}{P(E): prior probability of being an effective SNP}
+#'  \item{\code{p.r}}{P(R): prior probability of being a risk SNP}
 #'  \item{\code{p.n}}{P(N): prior probability of a SNP having no effect}
 #'  \item{\code{lambda}}{GWAS inflation factor (\eqn{\lambda})}
 #' }
 
-setGeneric("calc.pe", function(object, effect = 2, trace = 0) {
-  standardGeneric("calc.pe")
+setGeneric("calc.pr", function(object, effect = 2, trace = 0) {
+  standardGeneric("calc.pr")
 })
 
-setMethod("calc.pe", "AnnotatedGWAS", function(object, effect = 2, trace = 0) {
+setMethod("calc.pr", "AnnotatedGWAS", function(object, effect = 2, trace = 0) {
     
   # Ideal densities at the same points as observed z-scores
   z.ideal <- seq(-50, 50) / 10
@@ -97,7 +97,7 @@ setMethod("calc.pe", "AnnotatedGWAS", function(object, effect = 2, trace = 0) {
                  method = 'L-BFGS-B', 
                  control = list(trace = trace))
 
-  return(list(p.e = roots$par[2], 
+  return(list(p.r = roots$par[2], 
               p.n = 1 - roots$par[2], 
               lambda = roots$par[1]))  
 })
