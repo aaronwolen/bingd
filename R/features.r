@@ -147,11 +147,14 @@ setMethod("filter.features", "FeatureList",
 
 #' Create pretty feature labels from the full RDataPaths
 #' 
+#' Basically just strips off the extension from the basename
+#' 
 #' @param x characer vector of full RDataPaths
 
 feature.labels <- function(x) {
   out <- basename(x)
-  out <- sapply(strsplit(out, "\\.", fixed = F), function(x) x[1])
+  ext.pos <- sapply(gregexpr("\\.", out), function(x) tail(x, 1))
+  out <- substr(out, 1, stop = ext.pos - 1)
   names(out) <- x
   return(out)  
 }
