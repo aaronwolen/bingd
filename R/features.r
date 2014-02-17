@@ -133,7 +133,8 @@ setMethod("filter.features", "FeatureList",
     # multi-grep: pattern can be a vector of multiple character strings 
     mgrep <- function(pattern, x, ignore.case = TRUE, ...) {
       hits <- sapply(pattern, grepl, x = x, ignore.case = ignore.case, ...)
-      which(rowSums(hits) == length(pattern))
+      hits <- .rowSums(hits, m = length(x), n = length(pattern))
+      which(hits == length(pattern))
     }
     
     query.hits <- lapply(query, mgrep, x = object$LocalPath)
