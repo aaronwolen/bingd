@@ -8,6 +8,6 @@ feature.labels(x)
   \item{x}{characer vector of full RDataPaths}
 }
 \description{
-Create pretty feature labels from the full RDataPaths
+Basically just strips off the extension from the basename
 }
 
