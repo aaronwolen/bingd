@@ -141,3 +141,25 @@ test_that("Feature genome versions must match GWAS", {
                       stat = log.pvals, thresh.levels = thresh.levels))
 })
 
+
+
+context("Test feature consolidation")
+
+test_that("Same number of feature groups after consolidation", {
+  
+  gwas.cons <- consolidate(gwas.annot)
+  
+  expect_true(is.consolidated(gwas.cons))
+  expect_false(is.consolidated(gwas.annot))
+  
+  # All groups are still present
+  expect_equal(length(features(gwas.cons)), length(features(gwas.annot)))
+  expect_equal(names(features(gwas.cons)), names(features(gwas.annot)))
+  
+  # One feature per group
+  expect_true(all(sapply(features(gwas.cons), length) == 1))
+
+  # Group and feature names match
+  expect_match(names(features(gwas.cons)),
+               sapply(features(gwas.cons),  names))
+})

@@ -1,3 +1,30 @@
+bingd 0.3.0
+===========
+
+Major changes
+-------------
+
+Adds initial implementation of Bayesian algorithm:
+
+* Adds consolidate() function to reduce features within groups
+* Adds calc.pr()
+* Adds calc.conditionals()
+  
+Minor changes
+-------------
+
+* Adds tests for features() and fcols()
+* Adds tests for consolidate()
+* feature.labels() now just strips file extension from basename
+* Adds summary method for AnnotatedGWAS objects
+
+Bug fixes
+---------
+
+* Fixes bug in consolidate() causing feature names to be lost
+* Fixes bug in local.features() causing it to fail when searched directories
+  contained only one file
+
 bingd 0.2.4
 ===========
 
