@@ -133,7 +133,8 @@ setMethod("filter.features", "FeatureList",
     # multi-grep: pattern can be a vector of multiple character strings 
     mgrep <- function(pattern, x, ignore.case = TRUE, ...) {
       hits <- sapply(pattern, grepl, x = x, ignore.case = ignore.case, ...)
-      which(rowSums(hits) == length(pattern))
+      hits <- .rowSums(hits, m = length(x), n = length(pattern))
+      which(hits == length(pattern))
     }
     
     query.hits <- lapply(query, mgrep, x = object$LocalPath)
@@ -146,11 +147,14 @@ setMethod("filter.features", "FeatureList",
 
 #' Create pretty feature labels from the full RDataPaths
 #' 
+#' Basically just strips off the extension from the basename
+#' 
 #' @param x characer vector of full RDataPaths
 
 feature.labels <- function(x) {
   out <- basename(x)
-  out <- sapply(strsplit(out, "\\.", fixed = F), function(x) x[1])
+  ext.pos <- sapply(gregexpr("\\.", out), function(x) tail(x, 1))
+  out <- substr(out, 1, stop = ext.pos - 1)
   names(out) <- x
   return(out)  
 }

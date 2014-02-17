@@ -80,3 +80,19 @@ order_chrs <- function(chrs) {
   return(out)
 }
 
+
+#' Generate labels based on column names of logical variables in a data.frame
+#' 
+#' @examples 
+#' label.groups(data.frame(a = c(T,F, T), b = c(F, T, T)))
+
+label.groups <- function(df, sep = ".and.", empty = "neither") {
+  labels <- sapply(names(df), function(x) ifelse(df[[x]], x, NA))
+  labels <- replace(labels, is.na(labels), "")
+  labels <- do.call("paste", as.data.frame(labels, stringsAsFactors = FALSE))
+  labels <- gsub("\\s{2,}", " ", labels)
+  labels <- gsub("^\\s+|\\s+$", "", labels)
+  labels[labels == ""] <- empty
+  labels <- gsub(" ", sep, labels, fixed = TRUE)
+  return(labels)
+}
