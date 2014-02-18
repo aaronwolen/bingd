@@ -1,3 +1,9 @@
+bingd 0.3.1
+===========
+
+* Add zscore as an optional argument when constructing a GWAS object
+
+
 bingd 0.3.0
 ===========
 
