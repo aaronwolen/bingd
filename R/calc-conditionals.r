@@ -9,12 +9,13 @@
 #' @return data.frame containing probabilities of observing each combination of
 #' annotated features.
 
-setGeneric("calc.conditionals", function(object, risk.thresh = NULL, adjust) {
+setGeneric("calc.conditionals", 
+  function(object, risk.thresh = NULL, adjust, verbose = FALSE) {
   standardGeneric("calc.conditionals")
 })
 
 setMethod("calc.conditionals", "AnnotatedGWAS", 
-  function(object, risk.thresh = NULL, adjust) {
+  function(object, risk.thresh = NULL, adjust, verbose = FALSE) {
   
   if (!is.consolidated(object)) 
     stop("Features must be consolidated with consolidate().", call. = FALSE)
@@ -47,6 +48,8 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
   # Label variable combinations
   out <- data.frame(label = label.groups(probs[labels]), probs)
   out <- structure(out, class = c("gwas.conditionals", class(out)))
+  
+  if (verbose) report(out, "Conditional probabilities")
   return(out)
 })
 

@@ -19,17 +19,14 @@ setMethod("calc.bayes", "AnnotatedGWAS",
   function(object, risk.thresh = NULL, adjust, effect = 2, 
            verbose = FALSE, trace = 0) {
   
-  gwas.params <- calc.pr(object, trace = trace)
-  if (verbose) report(gwas.params, "Prior probabilities")
+  gwas.params <- calc.pr(object, effect, trace, verbose)
   
   if (!missing(adjust)) {
     gwas.params$p.r <- gwas.params$p.r / (1 + adjust)
     if (verbose) report(gwas.params, "LD adjusted prior probabilities")
   } 
   
-  cond.probs <- calc.conditionals(object, risk.thresh = risk.thresh, adjust = adjust)
-  if (verbose) report(cond.probs, "Conditional probabilities")
-  
+  cond.probs <- calc.conditionals(object, risk.thresh, adjust, verbose)
   
   post.probs <- data.frame(label = label.groups(fcols(object)),
                           marker = marker(object),
@@ -85,11 +82,13 @@ setMethod("calc.bayes", "AnnotatedGWAS",
 #'  \item{\code{lambda}}{GWAS inflation factor (\eqn{\lambda})}
 #' }
 
-setGeneric("calc.pr", function(object, effect = 2, trace = 0) {
+setGeneric("calc.pr", 
+  function(object, effect = 2, trace = 0, verbose = FALSE) {
   standardGeneric("calc.pr")
 })
 
-setMethod("calc.pr", "AnnotatedGWAS", function(object, effect = 2, trace = 0) {
+setMethod("calc.pr", "AnnotatedGWAS", 
+  function(object, effect = 2, trace = 0, verbose = FALSE) {
     
   # Ideal densities at the same points as observed z-scores
   z.ideal <- seq(-50, 50) / 10
@@ -120,5 +119,6 @@ setMethod("calc.pr", "AnnotatedGWAS", function(object, effect = 2, trace = 0) {
               p.n = 1 - roots$par[2], 
            lambda = roots$par[1])
   out <- structure(out, class = c("gwas.priors", class(out)))
+  if (verbose) report(out, "Prior probabilities")
   return(out)  
 })
