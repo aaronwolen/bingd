@@ -9,15 +9,17 @@
 #' @return data.frame containing probabilities of observing each combination of
 #' annotated features.
 
-setGeneric("calc.conditionals", function(object, risk.thresh, adjust) {
+setGeneric("calc.conditionals", function(object, risk.thresh = NULL, adjust) {
   standardGeneric("calc.conditionals")
 })
 
 setMethod("calc.conditionals", "AnnotatedGWAS", 
-  function(object, risk.thresh, adjust) {
+  function(object, risk.thresh = NULL, adjust) {
   
   if (!is.consolidated(object)) 
     stop("Features must be consolidated with consolidate().", call. = FALSE)
+  
+  if (is.null(risk.thresh)) risk.thresh <- risk.threshold(pvalue(object))
   
   labels <- names(fcols(object))
   vars <- DataFrame(conditional = pvalue(object) < risk.thresh, fcols(object))

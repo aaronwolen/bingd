@@ -10,12 +10,14 @@
 #' @export
 
 setGeneric("calc.bayes", 
-  function(object, risk.thresh, adjust, effect = 2, verbose = FALSE, trace = 0) {
+  function(object, risk.thresh = NULL, adjust, effect = 2, 
+           verbose = FALSE, trace = 0) {
   standardGeneric("calc.bayes")
 })
 
 setMethod("calc.bayes", "AnnotatedGWAS", 
-  function(object, risk.thresh, adjust, effect = 2, verbose = FALSE, trace = 0) {
+  function(object, risk.thresh = NULL, adjust, effect = 2, 
+           verbose = FALSE, trace = 0) {
   
   gwas.params <- calc.pr(object, trace = trace)
   if (verbose) report(gwas.params, "Prior probabilities")
