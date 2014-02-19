@@ -1,6 +1,6 @@
 \name{load.feature}
 \alias{load.feature}
-\title{Load AnnotationHub features}
+\title{Load a local GRanges feature}
 \usage{
 load.feature(path)
 }
@@ -8,6 +8,7 @@ load.feature(path)
   \item{path}{Path of feature to load}
 }
 \description{
-Check for feature in local cache before AnnotationHub
+\code{path} must point to an \code{R} object that contains
+a \code{GRanges} feature
 }
 

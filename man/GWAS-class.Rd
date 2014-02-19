@@ -19,8 +19,8 @@ A GWAS object must also contain a metadata column
 indicating the direction of the minor allele's effect,
 which can be provided as one of the following:
 
-\describe{ \item{\code{or}}{Odds ratios}
-\item{\code{beta}}{Beta values (i.e., the regression
-coefficient)} }
+\describe{ \item{\code{zscore}}{z-scores}
+\item{\code{or}}{Odds ratios} \item{\code{beta}}{Beta
+values (i.e., the regression coefficient)} }
 }
 
