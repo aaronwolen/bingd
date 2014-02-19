@@ -1,6 +1,7 @@
-#' Load AnnotationHub features
+#' Load a local GRanges feature
 #' 
-#' Check for feature in local cache before AnnotationHub
+#' \code{path} must point to an \code{R} object that contains a 
+#' \code{GRanges} feature
 #' 
 #' @param path Path of feature to load
 
@@ -14,6 +15,9 @@ load.feature <- function(path) {
   } else {
     stop("No such file:\n", path, call. = FALSE)
   }
+  
+  if (class(obj) != "GRanges")
+    stop("Features must be GRanges objects.")
   
   return(obj)
 }
