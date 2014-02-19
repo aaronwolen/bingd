@@ -3,20 +3,21 @@
 #' Integrate GWAS results with annotated genomic features
 #' 
 #' @param object \code{AnnotatedGWAS} object
+#' @inheritParams calc.conditionals
 #' 
 #' @importFrom plyr ddply
 #' @export
 
-setGeneric("calc.bayes", function(object, ld.adjust) {
+setGeneric("calc.bayes", function(object, risk.thresh, adjust, verbose = FALSE) {
   standardGeneric("calc.bayes")
 })
 
-setMethod("calc.bayes", "AnnotatedGWAS", function(object, ld.adjust) {
+setMethod("calc.bayes", "AnnotatedGWAS", function(object, adjust, verbose = FALSE) {
   
-  gwas.params <- calc.pr(object, trace = 2)
-  if (!missing(ld.adjust)) gwas.params$p.r <- gwas.params$p.r / (1 + ld.adjust)
+  gwas.params <- calc.pr(object, trace = ifelse(verbose, 2, 0))
+  if (!missing(adjust)) gwas.params$p.r <- gwas.params$p.r / (1 + adjust)
   
-  cond.probs <- calc.conditionals(object, risk.thresh = 1e-4, adjust = ld.adjust)
+  cond.probs <- calc.conditionals(object, risk.thresh = 1e-4, adjust = adjust)
   
   post.probs <- data.frame(label = label.groups(fcols(object)),
                           marker = marker(object),
