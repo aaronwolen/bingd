@@ -3,21 +3,31 @@
 #' Integrate GWAS results with annotated genomic features
 #' 
 #' @param object \code{AnnotatedGWAS} object
+#' @inheritParams calc.pr
 #' @inheritParams calc.conditionals
 #' 
 #' @importFrom plyr ddply
 #' @export
 
-setGeneric("calc.bayes", function(object, risk.thresh, adjust, verbose = FALSE) {
+setGeneric("calc.bayes", 
+  function(object, risk.thresh, adjust, effect = 2, verbose = FALSE, trace = 0) {
   standardGeneric("calc.bayes")
 })
 
-setMethod("calc.bayes", "AnnotatedGWAS", function(object, adjust, verbose = FALSE) {
+setMethod("calc.bayes", "AnnotatedGWAS", 
+  function(object, risk.thresh, adjust, effect = 2, verbose = FALSE, trace = 0) {
   
-  gwas.params <- calc.pr(object, trace = ifelse(verbose, 2, 0))
-  if (!missing(adjust)) gwas.params$p.r <- gwas.params$p.r / (1 + adjust)
+  gwas.params <- calc.pr(object, trace = trace)
+  if (verbose) report(gwas.params, "Prior probabilities")
   
-  cond.probs <- calc.conditionals(object, risk.thresh = 1e-4, adjust = adjust)
+  if (!missing(adjust)) {
+    gwas.params$p.r <- gwas.params$p.r / (1 + adjust)
+    if (verbose) report(gwas.params, "LD adjusted prior probabilities")
+  } 
+  
+  cond.probs <- calc.conditionals(object, risk.thresh = risk.thresh, adjust = adjust)
+  if (verbose) report(cond.probs, "Conditional probabilities")
+  
   
   post.probs <- data.frame(label = label.groups(fcols(object)),
                           marker = marker(object),
@@ -104,7 +114,9 @@ setMethod("calc.pr", "AnnotatedGWAS", function(object, effect = 2, trace = 0) {
                  method = 'L-BFGS-B', 
                  control = list(trace = trace))
 
-  return(list(p.r = roots$par[2], 
+  out <- list(p.r = roots$par[2], 
               p.n = 1 - roots$par[2], 
-              lambda = roots$par[1]))  
+           lambda = roots$par[1])
+  out <- structure(out, class = c("gwas.priors", class(out)))
+  return(out)  
 })

@@ -43,9 +43,9 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
   }
   
   # Label variable combinations
-  probs <- data.frame(label = label.groups(probs[labels]), probs)
-  
-  return(probs)
+  out <- data.frame(label = label.groups(probs[labels]), probs)
+  out <- structure(out, class = c("gwas.conditionals", class(out)))
+  return(out)
 })
 
 
