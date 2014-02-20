@@ -69,6 +69,10 @@ setMethod("cache.features", "FeatureList",
 
 # Accessors ---------------------------------------------------------------
 
+#' Access LocalPath information from FeatureList object
+#' @param object \code{FeatureList} object
+#' @export 
+
 setGeneric("LocalPath", function(object) standardGeneric("LocalPath"))
            
 setMethod("LocalPath", "FeatureList",
@@ -76,6 +80,9 @@ setMethod("LocalPath", "FeatureList",
     Map(function(x) structure(x$LocalPath, names = x$Title), object)
 })
 
+#' Access Cached column from FeatureList object
+#' @param object \code{FeatureList} object
+#' @export 
 
 setGeneric("Cached", function(object) standardGeneric("Cached"))
            

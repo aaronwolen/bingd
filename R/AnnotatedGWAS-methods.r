@@ -10,6 +10,7 @@ setMethod("featureIndex", "AnnotatedGWAS", function(object) object@featureIndex)
 
 #' Extract list of features from AnnotatedGWAS object
 #' @inheritParams featureIndex
+#' @export
 
 setGeneric("features", function(object) {
   standardGeneric("features")
@@ -23,6 +24,7 @@ setMethod("features", "AnnotatedGWAS", function(object) {
 
 #' Extract features from AnnotatedGWAS object
 #' @inheritParams featureIndex
+#' @export
 
 setGeneric("fcols", function(object) {
   standardGeneric("fcols")
