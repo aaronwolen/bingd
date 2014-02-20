@@ -3,20 +3,27 @@
 #' Integrate GWAS results with annotated genomic features
 #' 
 #' @param object \code{AnnotatedGWAS} object
+#' @param adjust optional parameter to adjust P(R), as well as conditional
+#' probabilities for linkage disequilibrium
+#' @inheritParams calc.pr
+#' @inheritParams calc.conditionals
 #' 
 #' @importFrom plyr ddply
 #' @export
 
-setGeneric("calc.bayes", function(object, ld.adjust) {
+setGeneric("calc.bayes", 
+  function(object, risk.thresh = NULL, adjust = NULL, effect = 2, 
+           verbose = FALSE, trace = 0) {
   standardGeneric("calc.bayes")
 })
 
-setMethod("calc.bayes", "AnnotatedGWAS", function(object, ld.adjust) {
+setMethod("calc.bayes", "AnnotatedGWAS", 
+  function(object, risk.thresh = NULL, adjust = NULL, effect = 2, 
+           verbose = FALSE, trace = 0) {
   
-  gwas.params <- calc.pr(object, trace = 2)
-  if (!missing(ld.adjust)) gwas.params$p.r <- gwas.params$p.r / (1 + ld.adjust)
-  
-  cond.probs <- calc.conditionals(object, risk.thresh = 1e-4, adjust = ld.adjust)
+  gwas.params <- calc.pr(object, effect, adjust, verbose, trace)
+    
+  cond.probs <- calc.conditionals(object, risk.thresh, adjust, verbose)
   
   post.probs <- data.frame(label = label.groups(fcols(object)),
                           marker = marker(object),
@@ -61,6 +68,7 @@ setMethod("calc.bayes", "AnnotatedGWAS", function(object, ld.adjust) {
 #'
 #' @param object \code{AnnotatedGWAS} object
 #' @param effect assumed effect size, used to shift the ideal z-score distribution
+#' @param adjust optional parameter to adjust P(R) for linkage disequilibrium
 #' @param trace Non-negative integer. If positive, tracing information on the
 #'  progress of the optimization is produced. See \code{\link[stats]{optim}} for
 #'  details.
@@ -72,11 +80,13 @@ setMethod("calc.bayes", "AnnotatedGWAS", function(object, ld.adjust) {
 #'  \item{\code{lambda}}{GWAS inflation factor (\eqn{\lambda})}
 #' }
 
-setGeneric("calc.pr", function(object, effect = 2, trace = 0) {
+setGeneric("calc.pr", 
+  function(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0) {
   standardGeneric("calc.pr")
 })
 
-setMethod("calc.pr", "AnnotatedGWAS", function(object, effect = 2, trace = 0) {
+setMethod("calc.pr", "AnnotatedGWAS", 
+  function(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0) {
     
   # Ideal densities at the same points as observed z-scores
   z.ideal <- seq(-50, 50) / 10
@@ -103,7 +113,18 @@ setMethod("calc.pr", "AnnotatedGWAS", function(object, effect = 2, trace = 0) {
                  method = 'L-BFGS-B', 
                  control = list(trace = trace))
 
-  return(list(p.r = roots$par[2], 
+  out <- list(p.r = roots$par[2], 
               p.n = 1 - roots$par[2], 
-              lambda = roots$par[1]))  
+           lambda = roots$par[1])
+  
+  out <- structure(out, class = c("gwas.priors", class(out)))
+  if (verbose) report(out, "Prior probabilities")
+  
+  
+  if (!is.null(adjust)) {
+    out$p.r <- out$p.r / (1 + adjust)
+    if (verbose) report(out, "LD adjusted prior probabilities")
+  } 
+  
+  return(out)  
 })

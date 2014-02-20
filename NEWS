@@ -1,3 +1,16 @@
+bingd 0.3.1
+===========
+
+* Add zscore as an optional argument when constructing a GWAS object
+
+* load.feature() checks loaded object class is GRanges
+
+* Add verbose option to calc.bayes
+* Add S3 reporter functions for verbose option
+* calc.pr() and calc.conditionals() results are now S3 objects
+
+* A p-value risk threshold is now calculated if one isn't provided
+
 bingd 0.3.0
 ===========
 

@@ -3,7 +3,7 @@
 \alias{as.GWAS,GRanges-method}
 \title{Create a GWAS object}
 \usage{
-\S4method{as.GWAS}{GRanges}(object, genome, marker, pvalue, or, beta)
+\S4method{as.GWAS}{GRanges}(object, genome, marker, pvalue, zscore, or, beta)
 }
 \arguments{
   \item{object}{a \code{\link{data.frame}} or
@@ -21,7 +21,7 @@
   contains the GWAS association p-value for each marker}
 
   \item{or}{name of the column in \code{object} that
-  contains the GWAS odds ratio for each marker}
+  contains the GWAS z-scores for each marker}
 
   \item{beta}{name of the column in \code{object} that
   contains the GWAS beta values (or regression

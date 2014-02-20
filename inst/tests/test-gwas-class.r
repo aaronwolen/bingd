@@ -14,18 +14,27 @@ test.args <- c(genome = "hg19",
                marker = "test.snps", chr = "test.chrs", bp = "test.pos", 
                pvalue = "test.pval", or = "test.or")
 
-test_that("GWAS creation from GRanges fails without required information", {   
+test_that("GWAS creation from data.frame", {
+  gwas.df <- do.call("as.GWAS", c(list(test.df), test.args))  
+  expect_match(class(gwas.df), "GWAS")
+})
+
+test_that("GWAS creation with different signed statistics", {
+  test.args <- test.args[-6]
+  test.args <- c(test.args, zscore = "test.or")
+  
+  gwas.df <- do.call("as.GWAS", c(list(test.df), test.args))  
+  expect_match(class(gwas.df), "GWAS")
+  expect_identical(zscore(gwas.df), test.or)
+})
+
+test_that("GWAS creation from data.frame  fails without required information", {   
   expect_error(do.call("as.GWAS", c(list(test.df), test.args[-1])))
   expect_error(do.call("as.GWAS", c(list(test.df), test.args[-2])))
   expect_error(do.call("as.GWAS", c(list(test.df), test.args[-3])))
   expect_error(do.call("as.GWAS", c(list(test.df), test.args[-4])))
   expect_error(do.call("as.GWAS", c(list(test.df), test.args[-5])))
   expect_error(do.call("as.GWAS", c(list(test.df), test.args[-6])))
-})
-
-test_that("GWAS creation from data.frame", {
-  gwas.df <- do.call("as.GWAS", c(list(test.df), test.args))  
-  expect_match(class(gwas.df), "GWAS")
 })
 
 

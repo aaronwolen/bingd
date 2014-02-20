@@ -19,6 +19,7 @@
 #' the minor allele's effect, which can be provided as one of the following:
 #' 
 #' \describe{
+#'  \item{\code{zscore}}{z-scores}
 #'  \item{\code{or}}{Odds ratios}
 #'  \item{\code{beta}}{Beta values (i.e., the regression coefficient)}
 #' }
@@ -33,7 +34,7 @@ setClass("GWAS", contains="GRanges")
 .validGWAS <- function(object) {
   
   columns.req <- c(marker = "character", pvalue = "numeric")
-  columns.opt <- c(or = "numeric", beta = "numeric")
+  columns.opt <- c(or = "numeric", beta = "numeric", zscore = "numeric")
   
   md <- mcols(object)
   
@@ -86,6 +87,8 @@ setValidity("GWAS", .validGWAS)
 #' position (or start position) associated with each marker
 #' @param pvalue name of the column in \code{object} that contains the GWAS 
 #' association p-value for each marker
+#' @param or name of the column in \code{object} that contains the GWAS z-scores
+#'  for each marker
 #' @param or name of the column in \code{object} that contains the GWAS odds
 #' ratio for each marker
 #' @param beta name of the column in \code{object} that contains the GWAS beta
@@ -94,7 +97,7 @@ setValidity("GWAS", .validGWAS)
 #' @export
 
 setGeneric("as.GWAS", 
-  function(object, genome, marker, chr, bp, pvalue, or, beta) {
+  function(object, genome, marker, chr, bp, pvalue, zscore, or, beta) {
     standardGeneric("as.GWAS")
 }) 
 
@@ -106,7 +109,7 @@ setGeneric("as.GWAS",
 #' @inheritParams as.GWAS
 
 setMethod("as.GWAS", "data.frame", 
-  function(object, genome, marker, chr, bp, pvalue, or, beta) {
+  function(object, genome, marker, chr, bp, pvalue, zscore, or, beta) {
     
     object[[chr]] <- paste0("chr", gsub("[chr]", "", object[[chr]]))
     
@@ -116,7 +119,7 @@ setMethod("as.GWAS", "data.frame",
     mcols(gr) <- object[, -match(c(chr, bp), names(object))]
     
     as.GWAS(gr, genome = genome, marker = marker, 
-            pvalue = pvalue, or = or, beta = beta)
+            pvalue = pvalue, zscore = zscore, or = or, beta = beta)
 })
 
 
@@ -128,14 +131,15 @@ setMethod("as.GWAS", "data.frame",
 #' @inheritParams as.GWAS
 
 setMethod("as.GWAS", "GRanges", 
-  function(object, genome, marker, pvalue, or, beta) {
+  function(object, genome, marker, pvalue, zscore, or, beta) {
     
     # Rename required metadatda columns
     req.cols <- structure(c("marker", "pvalue"), names = c(marker, pvalue))
-    if (!missing(or))   req.cols <- c(req.cols, structure("or",  names = or))
-    if (!missing(beta)) req.cols <- c(req.cols, structure("beta", names = beta))
-    if (missing(or) & missing(beta)) 
-      stop("Must supply odds ratios (or) or beta values (beta).")
+    if (!missing(zscore)) req.cols <- c(req.cols, structure("zscore", names = zscore))
+    if (!missing(or))     req.cols <- c(req.cols, structure("or",  names = or))
+    if (!missing(beta))   req.cols <- c(req.cols, structure("beta", names = beta))
+    if (missing(zscore) & missing(or) & missing(beta)) 
+      stop("Must supply z-scores (zscore), odds ratios (or) or beta values (beta).")
       
     mcols(object) <- rename(mcols(object), req.cols)
     
@@ -150,10 +154,12 @@ setMethod("as.GWAS", "GRanges",
     }
      
     # Calculate z-score
-    object$zscore <- calc.z(object$pvalue, 
-                            or   = if (!missing(or))   object$or,
-                            beta = if (!missing(beta)) object$beta)
-    
+    if (missing(zscore)) {
+      object$zscore <- calc.z(object$pvalue, 
+                              or   = if (!missing(or))   object$or,
+                              beta = if (!missing(beta)) object$beta)
+    }
+
     return(new("GWAS", object))      
 })
 

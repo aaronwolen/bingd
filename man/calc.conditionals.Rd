@@ -2,7 +2,8 @@
 \alias{calc.conditionals}
 \title{Calculate conditional probabilities for annotated features}
 \usage{
-calc.conditionals(object, risk.thresh, adjust)
+calc.conditionals(object, risk.thresh = NULL, adjust = NULL,
+  verbose = FALSE)
 }
 \arguments{
   \item{object}{\code{AnnotatedGWAS} object}
@@ -11,7 +12,7 @@ calc.conditionals(object, risk.thresh, adjust)
   identify ``risky'' markers}
 
   \item{adjust}{optional parameter to adjust baseline and
-  conditional probabilities}
+  conditional probabilities for linkage disequilibrium}
 }
 \value{
 data.frame containing probabilities of observing each

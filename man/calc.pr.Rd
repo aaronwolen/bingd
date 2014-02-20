@@ -2,13 +2,16 @@
 \alias{calc.pr}
 \title{Calculate prior probability of being a risk SNP}
 \usage{
-calc.pr(object, effect = 2, trace = 0)
+calc.pr(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0)
 }
 \arguments{
   \item{object}{\code{AnnotatedGWAS} object}
 
   \item{effect}{assumed effect size, used to shift the
   ideal z-score distribution}
+
+  \item{adjust}{optional parameter to adjust P(R) for
+  linkage disequilibrium}
 
   \item{trace}{Non-negative integer. If positive, tracing
   information on the progress of the optimization is

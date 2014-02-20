@@ -2,7 +2,7 @@
 \alias{as.GWAS}
 \title{Create a GWAS object}
 \usage{
-as.GWAS(object, genome, marker, chr, bp, pvalue, or, beta)
+as.GWAS(object, genome, marker, chr, bp, pvalue, zscore, or, beta)
 }
 \arguments{
   \item{object}{a \code{\link{data.frame}} or
@@ -26,6 +26,9 @@ as.GWAS(object, genome, marker, chr, bp, pvalue, or, beta)
 
   \item{pvalue}{name of the column in \code{object} that
   contains the GWAS association p-value for each marker}
+
+  \item{or}{name of the column in \code{object} that
+  contains the GWAS z-scores for each marker}
 
   \item{or}{name of the column in \code{object} that
   contains the GWAS odds ratio for each marker}

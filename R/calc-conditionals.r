@@ -2,22 +2,26 @@
 #' 
 #' @param object \code{AnnotatedGWAS} object
 #' @param risk.thresh the p-value threshold applied to identify ``risky'' markers
-#' @param adjust optional parameter to adjust baseline and conditional probabilities
+#' @param adjust optional parameter to adjust baseline and conditional
+#' probabilities for linkage disequilibrium
 #' 
 #' @importFrom plyr count
 #' 
 #' @return data.frame containing probabilities of observing each combination of
 #' annotated features.
 
-setGeneric("calc.conditionals", function(object, risk.thresh, adjust) {
+setGeneric("calc.conditionals", 
+  function(object, risk.thresh = NULL, adjust = NULL, verbose = FALSE) {
   standardGeneric("calc.conditionals")
 })
 
 setMethod("calc.conditionals", "AnnotatedGWAS", 
-  function(object, risk.thresh, adjust) {
+  function(object, risk.thresh = NULL, adjust = NULL, verbose = FALSE) {
   
   if (!is.consolidated(object)) 
     stop("Features must be consolidated with consolidate().", call. = FALSE)
+  
+  if (is.null(risk.thresh)) risk.thresh <- risk.threshold(pvalue(object))
   
   labels <- names(fcols(object))
   vars <- DataFrame(conditional = pvalue(object) < risk.thresh, fcols(object))
@@ -36,16 +40,18 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
   probs <- merge(base, risk, by = labels, suffixes = c(".base", ".risk"))
   
   # Calculate enrichment
-  if (missing(adjust)) {
-    probs$prob <- probs$prob.risk - probs$prob.base  
+  if (is.null(adjust)) {
+    probs$prob <- probs$prob.risk - probs$prob.base 
   } else {
     probs$prob <- probs$prob.risk * adjust - (adjust - 1) * probs$prob.base  
   }
   
   # Label variable combinations
-  probs <- data.frame(label = label.groups(probs[labels]), probs)
+  out <- data.frame(label = label.groups(probs[labels]), probs)
+  out <- structure(out, class = c("gwas.conditionals", class(out)))
   
-  return(probs)
+  if (verbose) report(out, "Conditional probabilities")
+  return(out)
 })
 
 
