@@ -1,8 +1,9 @@
-\name{calc.pr}
-\alias{calc.pr}
+\name{calc.priors}
+\alias{calc.priors}
 \title{Calculate prior probability of being a risk SNP}
 \usage{
-calc.pr(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0)
+calc.priors(object, effect = 2, adjust = NULL, verbose = FALSE,
+  trace = 0)
 }
 \arguments{
   \item{object}{\code{AnnotatedGWAS} object}
