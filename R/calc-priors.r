@@ -19,7 +19,7 @@ setGeneric("calc.priors",
   standardGeneric("calc.priors")
 })
 
-setMethod("calc.priors", "AnnotatedGWAS", 
+setMethod("calc.priors", "GWAS", 
   function(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0) {
     
   # Ideal densities at the same points as observed z-scores

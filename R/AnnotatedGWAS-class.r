@@ -5,8 +5,8 @@
 #' 
 #' @aliases AnnotatedGWAS
 
-setClass("AnnotatedGWAS", contains = "GRanges",  
-         representation = representation(featureIndex = "SimpleList"))
+setClass("AnnotatedGWAS",  
+         representation = representation("GWAS", featureIndex = "SimpleList"))
 
 
 # Validate ----------------------------------------------------------------

@@ -1,7 +1,9 @@
 bingd 0.3.2
 ===========
 
+* AnnotatedGWAS class now an extension of the GWAS class
 * calc.pr() is now calc.priors()
+* calc.priors() works with GWAS as well as AnnotatedGWAS objects
 
 bingd 0.3.1
 ===========

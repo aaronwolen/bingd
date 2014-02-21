@@ -18,3 +18,22 @@ Imports:
     testthat
 License: MIT
 LazyData: true
+Collate:
+    'GWAS-class.r'
+    'FeatureList-class.r'
+    'AnnotatedGWAS-class.r'
+    'GWAS-methods.r'
+    'FeatureList-methods.r'
+    'AnnotatedGWAS-methods.r'
+    'annotate.r'
+    'annotation-hub.r'
+    'bayes-methods.r'
+    'bingd-package.r'
+    'calc-conditionals.r'
+    'calc-priors.r'
+    'checks.r'
+    'enrichment.r'
+    'features.r'
+    'reporters.r'
+    'stats.r'
+    'utils.r'

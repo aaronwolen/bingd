@@ -1,4 +1,4 @@
-#' Annotate GWAS object using AnnotationHub
+#' Annotate GWAS makers with genomic features
 #' 
 #' @param object \code{\link{GWAS}} object
 #' @param feature.list \code{FeatureList} object created with 
