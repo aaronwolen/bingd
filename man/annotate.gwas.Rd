@@ -1,6 +1,6 @@
 \name{annotate.gwas}
 \alias{annotate.gwas}
-\title{Annotate GWAS object using AnnotationHub}
+\title{Annotate GWAS makers with genomic features}
 \usage{
 annotate.gwas(object, feature.list)
 }
@@ -12,7 +12,7 @@ annotate.gwas(object, feature.list)
   \code{\link{local.features}}}
 }
 \description{
-Annotate GWAS object using AnnotationHub
+Annotate GWAS makers with genomic features
 }
 \examples{
 query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
