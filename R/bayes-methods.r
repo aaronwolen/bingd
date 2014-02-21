@@ -34,11 +34,11 @@ setMethod("calc.bayes", "AnnotatedGWAS",
   
   
   # density of zscores for risk SNPs and conditional on null density (inflated)
-  fz_e <- function(z, l) (dnorm((2 - z) / l) + dnorm((-2 - z) / l)) / 2 / l
+  fz_r <- function(z, l) (dnorm((2 - z) / l) + dnorm((-2 - z) / l)) / 2 / l
   fz_n <- function(z, l)  dnorm(z / l) / l
   
   post.probs <- transform(post.probs,
-                          fz.e = fz_e(zscore, gwas.params$lambda), 
+                          fz.r = fz_r(zscore, gwas.params$lambda), 
                           fz.n = fz_n(zscore, gwas.params$lambda))
   
   # Add conditional feature probabilities
@@ -49,10 +49,10 @@ setMethod("calc.bayes", "AnnotatedGWAS",
   
   # Calculate posterior probabilities by feature combination groups                  
   post.probs <- ddply(post.probs, "label", transform,
-                 post.prob.gwas = (fz.e * p.r) /
-                                 ((fz.e * p.r) + fz.n * p.n),
-                      post.prob = (p.f.r * fz.e * p.r) / 
-                                 ((p.f.r * fz.e * p.r) + p.f.n * fz.n * p.n))  
+                 post.prob.gwas = (fz.r * p.r) /
+                                 ((fz.r * p.r) + fz.n * p.n),
+                      post.prob = (p.f.r * fz.r * p.r) / 
+                                 ((p.f.r * fz.r * p.r) + p.f.n * fz.n * p.n))  
   
   m.index <- match(marker(object), post.probs$marker)
   post.probs <- post.probs[m.index, c("label", "post.prob.gwas", "post.prob")]

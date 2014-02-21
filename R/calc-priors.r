@@ -25,15 +25,15 @@ setMethod("calc.priors", "AnnotatedGWAS",
   # Ideal densities at the same points as observed z-scores
   z.ideal <- seq(-50, 50) / 10
   fz.n <- dnorm(z.ideal)
-  fz.e <- (dnorm(z.ideal + effect) + dnorm(z.ideal - effect)) / 2
+  fz.r <- (dnorm(z.ideal + effect) + dnorm(z.ideal - effect)) / 2
   
   # Density of observed z-scores
   z.obs <- density(zscore(object), 
                    bw = 0.1, from = -5, to = 5, n = length(z.ideal))
   
   # Calculate residual SS
-  calc.resids.sq <- function(pars, z.vals , obs.z.density, fz.e) {
-    results <- (1 - pars[2]) * dnorm(z.vals / pars[1]) / pars[1] + pars[2] * fz.e
+  calc.resids.sq <- function(pars, z.vals , obs.z.density, fz.r) {
+    results <- (1 - pars[2]) * dnorm(z.vals / pars[1]) / pars[1] + pars[2] * fz.r
     sum((results - obs.z.density)^2)
   }
 
@@ -41,7 +41,7 @@ setMethod("calc.priors", "AnnotatedGWAS",
                  fn = calc.resids.sq, 
                  z.vals = z.ideal,
                  obs.z.density = z.obs$y,
-                 fz.e = fz.e,
+                 fz.r = fz.r,
                  lower = c(1, 0), 
                  upper = c(1.2, .1), 
                  method = 'L-BFGS-B', 
