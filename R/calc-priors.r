@@ -13,6 +13,7 @@
 #'  \item{\code{p.n}}{P(N): prior probability of a SNP having no effect}
 #'  \item{\code{lambda}}{GWAS inflation factor (\eqn{\lambda})}
 #' }
+#' @export
 
 setGeneric("calc.priors", 
   function(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0) {
