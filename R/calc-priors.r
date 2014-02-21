@@ -14,12 +14,12 @@
 #'  \item{\code{lambda}}{GWAS inflation factor (\eqn{\lambda})}
 #' }
 
-setGeneric("calc.pr", 
+setGeneric("calc.priors", 
   function(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0) {
-  standardGeneric("calc.pr")
+  standardGeneric("calc.priors")
 })
 
-setMethod("calc.pr", "AnnotatedGWAS", 
+setMethod("calc.priors", "AnnotatedGWAS", 
   function(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0) {
     
   # Ideal densities at the same points as observed z-scores

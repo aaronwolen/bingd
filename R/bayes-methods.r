@@ -5,7 +5,7 @@
 #' @param object \code{AnnotatedGWAS} object
 #' @param adjust optional parameter to adjust P(R), as well as conditional
 #' probabilities for linkage disequilibrium
-#' @inheritParams calc.pr
+#' @inheritParams calc.priors
 #' @inheritParams calc.conditionals
 #' 
 #' @importFrom plyr ddply
@@ -21,7 +21,7 @@ setMethod("calc.bayes", "AnnotatedGWAS",
   function(object, risk.thresh = NULL, adjust = NULL, effect = 2, 
            verbose = FALSE, trace = 0) {
   
-  gwas.params <- calc.pr(object, effect, adjust, verbose, trace)
+  gwas.params <- calc.priors(object, effect, adjust, verbose, trace)
     
   cond.probs <- calc.conditionals(object, risk.thresh, adjust, verbose)
   

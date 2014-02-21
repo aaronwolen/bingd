@@ -1,3 +1,8 @@
+bingd 0.3.2
+===========
+
+* calc.pr() is now calc.priors()
+
 bingd 0.3.1
 ===========
 
