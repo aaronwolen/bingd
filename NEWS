@@ -2,6 +2,7 @@ bingd 0.3.3
 ===========
 
 * risk.threshold() is now a calc.threshold() and adds a verbose option 
+* add option to supply prob.risk in  calc.bayes() 
 
 bingd 0.3.2
 ===========
