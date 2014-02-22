@@ -21,7 +21,7 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
   if (!is.consolidated(object)) 
     stop("Features must be consolidated with consolidate().", call. = FALSE)
   
-  if (is.null(risk.thresh)) risk.thresh <- risk.threshold(pvalue(object))
+  if (is.null(risk.thresh)) risk.thresh <- calc.threshold(pvalue(object), verbose)
   
   labels <- names(fcols(object))
   vars <- DataFrame(conditional = pvalue(object) < risk.thresh, fcols(object))

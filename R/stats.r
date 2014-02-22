@@ -26,16 +26,32 @@ calc.z <- function(p, or = NULL, beta = NULL) {
 #' We select at least 100 SNPs with FDR < 0.05 or 1000 SNPs with FDR < 0.1. If 
 #' this can't be done then we use 100 SNPs but warn the estimate is ureliable.
 #' 
-#' @inheritParams stats::p.adjust
+#' @inheritParams p.adjust
+#' 
+#' @importFrom stats p.adjust
 
-risk.threshold <- function(p, method = "BH") {
-  
+calc.threshold <- function(p, verbose = FALSE, method = "BH") {
+
   q <- p.adjust(p, method)
  
-  if (sum(q < 0.05) >= 100)  return(max(p[q < 0.05]))
-  if (sum(q < 0.1)  >= 1000) return(max(p[q < 0.1 ]))
+  if (sum(q < 0.05) >= 100) {
+    thresh <- max(p[q < 0.05])
+    warn <- FALSE
+  }  
+
+  if (sum(q < 0.1)  >= 1000) {
+    thresh <- max(p[q < 0.1 ])
+    warn <- TRUE
+  }
+
+  if (!exists("thresh")) {
+    thresh <- sort(p)[100]  
+    warn <- TRUE
+  }
   
-  warning("p-value threshold may be unreliable.")
-  return(sort(p)[100])
+  if (verbose) report(format(thresh, scientific = TRUE), "Risk p-value threshold")
+  if (warn) warning("p-value threshold may be unreliable.\n", call. = FALSE, immediate. = TRUE)
+  
+  return(thresh)
 }
 
