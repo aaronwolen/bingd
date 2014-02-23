@@ -68,6 +68,7 @@ setMethod("calc.enrich", c(object = "AnnotatedGWAS", feature.list = "missing"),
 #' which \code{feature} enrichment is calculated
 #' 
 #' @return data.frame containing `enrichment`
+#' @importFrom reshape2 melt
 #' @export
 
 serial.enrich <- function(feature, stat, thresh.levels) {
@@ -86,8 +87,7 @@ serial.enrich <- function(feature, stat, thresh.levels) {
 }
 
 
-#' Reformat list of enrichment results
-#' @importFrom reshape2 melt
+# Reformat list of enrichment results
 format.enrich <- function(x) {
   x <- melt(x, measure.vars = NULL)
   x <- rename(x, c(L1 = "feature", L2 = "sample"))

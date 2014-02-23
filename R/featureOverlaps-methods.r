@@ -10,7 +10,8 @@
 #'  
 #' @param query \code{GWAS} object
 #' @param subject \code{FeatureList} object
-#' @inheritParams IRanges::findOverlaps-methods
+#' @inheritParams IRanges::findOverlaps
+#' @param minoverlap see documentation for \code{maxgap} argument
 #' 
 #' @export
 

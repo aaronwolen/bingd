@@ -60,6 +60,12 @@
   \code{query}. When\code{select != "all" && drop}, an
   integer vector is returned containing indices that are
   offset to align with the unlisted \code{query}.  }
+
+  \item{ignore.strand}{ When set to \code{TRUE}, the strand
+  information is ignored in the overlap calculations.  }
+
+  \item{minoverlap}{see documentation for \code{maxgap}
+  argument}
 }
 \value{
 \code{findOverlaps} returns either a \code{\link[IRanges]{HitsList-class}}

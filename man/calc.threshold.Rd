@@ -11,6 +11,9 @@ calc.threshold(p, verbose = FALSE, method = "BH")
   \code{\link{as.numeric}}.}
 
   \item{method}{correction method}
+
+  \item{verbose}{print out intermediate statistics
+  calculated during the analysis}
 }
 \description{
 We select at least 100 SNPs with FDR < 0.05 or 1000 SNPs with FDR < 0.1. If

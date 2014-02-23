@@ -27,6 +27,7 @@ calc.z <- function(p, or = NULL, beta = NULL) {
 #' this can't be done then we use 100 SNPs but warn the estimate is ureliable.
 #' 
 #' @inheritParams stats::p.adjust
+#' @inheritParams calc.priors
 #' 
 #' @importFrom stats p.adjust
 

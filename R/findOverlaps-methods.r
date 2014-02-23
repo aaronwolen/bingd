@@ -10,8 +10,11 @@
 #' 
 #' @param query \code{GWAS} object
 #' @param subject \code{FeatureList} object
-#' @inheritParams IRanges::findOverlaps-methods
-
+#' @inheritParams IRanges::findOverlaps
+#' @inheritParams GenomicRanges::findOverlaps-methods
+#' @inheritParams featureOverlaps
+#' 
+#' @rdname findOverlaps
 
 setMethod("findOverlaps", c(query = "GWAS", subject = "FeatureList"),
   function(query, subject, maxgap = 0L, minoverlap = 1L,

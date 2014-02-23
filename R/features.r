@@ -35,8 +35,10 @@ load.feature <- function(path) {
 #' the Title, location (LocalPath) of features matching search query and whether
 #' the files are downloaded (Cached)
 #' 
+#' @param genome filter results based on genome version
 #' @inheritParams filter.features
 #' @importFrom AnnotationHub AnnotationHub metadata
+#' 
 #' 
 #' @export
 

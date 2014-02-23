@@ -15,6 +15,8 @@ hub.features(query = NULL, path, genome, online = FALSE)
   'resources' subdirectory. Normally this shouldn't be
   changed.}
 
+  \item{genome}{filter results based on genome version}
+
   \item{query}{a vector of strings to filter features; may
   also be a named list of vectors to perform multiple
   queries for different categories of features}

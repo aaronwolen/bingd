@@ -14,6 +14,9 @@ calc.conditionals(object, risk.thresh = NULL, adjust = NULL,
 
   \item{adjust}{optional parameter to adjust baseline and
   conditional probabilities for linkage disequilibrium}
+
+  \item{verbose}{print out intermediate statistics
+  calculated during the analysis}
 }
 \value{
 data.frame containing probabilities of observing each combination of

@@ -19,6 +19,9 @@ calc.bayes(object, risk.thresh = NULL, adjust = NULL, effect = 2,
   \item{effect}{assumed effect size, used to shift the
   ideal z-score distribution}
 
+  \item{verbose}{print out intermediate statistics
+  calculated during the analysis}
+
   \item{trace}{Non-negative integer. If positive, tracing
   information on the progress of the optimization is
   produced. See \code{\link[stats]{optim}} for details.}

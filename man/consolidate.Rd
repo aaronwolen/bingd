@@ -6,7 +6,7 @@
 consolidate(object)
 }
 \arguments{
-  \item{\code{AnnotatedGWAS}}{object}
+  \item{object}{\code{AnnotatedGWAS} object}
 }
 \value{
 \code{AnnotatedGWAS} object

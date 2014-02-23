@@ -3,6 +3,7 @@
 #' @param object \code{AnnotatedGWAS} object
 #' @param effect assumed effect size, used to shift the ideal z-score distribution
 #' @param adjust optional parameter to adjust P(R) for linkage disequilibrium
+#' @param verbose print out intermediate statistics calculated during the analysis
 #' @param trace Non-negative integer. If positive, tracing information on the
 #'  progress of the optimization is produced. See \code{\link[stats]{optim}} for
 #'  details.

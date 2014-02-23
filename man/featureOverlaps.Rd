@@ -11,6 +11,9 @@ featureOverlaps(query, subject, maxgap = 0L, minoverlap = 1L,
 
   \item{subject}{\code{FeatureList} object}
 
+  \item{minoverlap}{see documentation for \code{maxgap}
+  argument}
+
   \item{maxgap}{ Intervals with a separation of
   \code{maxgap} or less and a minimum of \code{minoverlap}
   overlapping positions, allowing for \code{maxgap}, are

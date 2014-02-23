@@ -16,8 +16,8 @@ zvalue <- function(object) zscore(object)
 
 # Summaries ---------------------------------------------------------------
 
-#' Summarize AnnotatedGWAS object
-#' @param object \code{AnnotatedGWAS} object
+# Summarize AnnotatedGWAS object
+# @param object \code{AnnotatedGWAS} object
 #' @export
 
 setGeneric("summary", function(object) standardGeneric("summary"))

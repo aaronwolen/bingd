@@ -15,6 +15,9 @@ calc.priors(object, effect = 2, adjust = NULL, verbose = FALSE,
   \item{adjust}{optional parameter to adjust P(R) for
   linkage disequilibrium}
 
+  \item{verbose}{print out intermediate statistics
+  calculated during the analysis}
+
   \item{trace}{Non-negative integer. If positive, tracing
   information on the progress of the optimization is
   produced. See \code{\link[stats]{optim}} for details.}
