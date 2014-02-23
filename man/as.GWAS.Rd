@@ -27,7 +27,7 @@ as.GWAS(object, genome, marker, chr, bp, pvalue, zscore, or, beta)
   \item{pvalue}{name of the column in \code{object} that
   contains the GWAS association p-value for each marker}
 
-  \item{or}{name of the column in \code{object} that
+  \item{zscore}{name of the column in \code{object} that
   contains the GWAS z-scores for each marker}
 
   \item{or}{name of the column in \code{object} that

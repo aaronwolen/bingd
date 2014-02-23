@@ -1,8 +1,8 @@
-\name{risk.threshold}
-\alias{risk.threshold}
+\name{calc.threshold}
+\alias{calc.threshold}
 \title{Calculate p-value threshold for identifying risk SNPs}
 \usage{
-risk.threshold(p, method = "BH")
+calc.threshold(p, verbose = FALSE, method = "BH")
 }
 \arguments{
   \item{p}{numeric vector of p-values (possibly with

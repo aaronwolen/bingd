@@ -20,8 +20,11 @@
   \item{pvalue}{name of the column in \code{object} that
   contains the GWAS association p-value for each marker}
 
-  \item{or}{name of the column in \code{object} that
+  \item{zscore}{name of the column in \code{object} that
   contains the GWAS z-scores for each marker}
+
+  \item{or}{name of the column in \code{object} that
+  contains the GWAS odds ratio for each marker}
 
   \item{beta}{name of the column in \code{object} that
   contains the GWAS beta values (or regression

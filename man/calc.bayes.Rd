@@ -3,13 +3,17 @@
 \title{Calculate posterior probability of being an effective SNP}
 \usage{
 calc.bayes(object, risk.thresh = NULL, adjust = NULL, effect = 2,
-  verbose = FALSE, trace = 0)
+  prob.risk = NULL, verbose = FALSE, trace = 0)
 }
 \arguments{
   \item{object}{\code{AnnotatedGWAS} object}
 
   \item{adjust}{optional parameter to adjust P(R), as well
   as conditional probabilities for linkage disequilibrium}
+
+  \item{prob.risk}{probability of being a risk SNP, this is
+  normally calculated automatically but can be supplied in
+  situations where the result was 0}
 
   \item{effect}{assumed effect size, used to shift the
   ideal z-score distribution}

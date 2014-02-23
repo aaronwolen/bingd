@@ -87,7 +87,7 @@ setValidity("GWAS", .validGWAS)
 #' position (or start position) associated with each marker
 #' @param pvalue name of the column in \code{object} that contains the GWAS 
 #' association p-value for each marker
-#' @param or name of the column in \code{object} that contains the GWAS z-scores
+#' @param zscore name of the column in \code{object} that contains the GWAS z-scores
 #'  for each marker
 #' @param or name of the column in \code{object} that contains the GWAS odds
 #' ratio for each marker
