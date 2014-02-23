@@ -10,6 +10,9 @@ bingd 0.3.3
   which returns a logical vector for each feature, nested within an list that
   mirrors the structure of the supplied FeatureList object
 
+* removed unused fix_chrs() and order_chrs() code
+* removed rtracklayer and GenomicFeatures as dependencies
+
 bingd 0.3.2
 ===========
 
