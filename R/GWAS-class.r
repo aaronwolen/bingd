@@ -24,7 +24,24 @@
 #'  \item{\code{beta}}{Beta values (i.e., the regression coefficient)}
 #' }
 #' 
-#' @aliases GWAS
+#' @section Accessors:
+#' 
+#' In the following code snippets, \code{x} is a \code{GWAS} object.
+#'  
+#' \describe{
+#'  \item{}{
+#'    \code{pvalue(x)} retrieve GWAS markers
+#'  }
+#'  \item{}{
+#'    \code{pvalue(x)} retrieve marker pvalues
+#'  }
+#'  \item{}{
+#'    \code{zscore(x)} retrieve marker z-scores
+#'  }
+#' }
+#' 
+#' 
+#' @aliases GWAS pvalue marker zscore
 
 setClass("GWAS", contains="GRanges")
 

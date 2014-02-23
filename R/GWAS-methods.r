@@ -1,19 +1,13 @@
 # Accessors ---------------------------------------------------------------
 
-#' Access GWAS pvalues
-#' @param object \code{GWAS} or \code{AnnotatedGWAS} object
 #' @export
 setGeneric("pvalue", function(object) standardGeneric("pvalue"))
 setMethod( "pvalue", "GWAS",          function(object) mcols(object)$pvalue)
 
-#' Access GWAS markers
-#' @param object \code{GWAS} or \code{AnnotatedGWAS} object
-#' @export
+# @export
 setGeneric("marker", function(object) standardGeneric("marker"))
 setMethod( "marker", "GWAS",          function(object) mcols(object)$marker)
 
-#' Access GWAS z-scores
-#' @param object \code{GWAS} or \code{AnnotatedGWAS} object
 #' @export
 setGeneric("zscore", function(object) standardGeneric("zscore"))
 setMethod( "zscore", "GWAS",          function(object) mcols(object)$zscore)
