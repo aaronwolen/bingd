@@ -25,6 +25,8 @@ Collate:
     'GWAS-methods.r'
     'FeatureList-methods.r'
     'AnnotatedGWAS-methods.r'
+    'findOverlaps-methods.r'
+    'featureOverlaps-methods.r'
     'annotate.r'
     'annotation-hub.r'
     'bayes-methods.r'

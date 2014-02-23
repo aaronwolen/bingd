@@ -1,30 +1,41 @@
 #' Find features overlapping GWAS markers
 #' 
 #' Determine which GWAS markers overlap each \code{FeatureList} feature.
-#' 
-#'  @return A list of \code{DataFrame}s, the structure of which mirrors that of
-#'  the supplied \code{FeatureList} object. Each element of the list is a
-#'  \code{DataFrame} with one logical vector for each feature, indicating
-#'  marker overlap. 
+#'  
+#' @return 
+#' \code{findOverlaps} returns either a \code{\link[IRanges]{HitsList-class}}
+#' object when \code{select="all"} (the default), or a 
+#' \code{\link[IRanges]{CompressedIntegerList}} when \code{select} is not
+#' \code{"all"}.
 #' 
 #' @param query \code{GWAS} object
 #' @param subject \code{FeatureList} object
-#' @param ... additional arguments passed to \code{\link[IRanges]{overlapsAny}}
-#' 
-#' @aliases overlapsAny-method
-#' @export
+#' @inheritParams IRanges::findOverlaps-methods
 
-setMethod("overlapsAny", c(query = "GWAS", subject = "FeatureList"),
-  function(query, subject, ...) {
+
+setMethod("findOverlaps", c(query = "GWAS", subject = "FeatureList"),
+  function(query, subject, maxgap = 0L, minoverlap = 1L,
+           type = c("any", "start", "end", "within"),
+           select = c("all", "first", "last", "arbitrary"), 
+           ignore.strand = FALSE) {
     
-    result <- list()
+    type <- match.arg(type)
+    select <- match.arg(select)
     
-    for (i in names(subject)) {
-      
-      paths  <- structure(subject[[i]]$LocalPath, names =  subject[[i]]$Title)
-      
-      result[[i]] <- mclapply(paths, function(p) query %over% load.feature(p),
-                              mc.cores = getDoParWorkers())
+    f.index <- stack(LocalPath(subject))
+    f.paths <- structure(f.index$values, names = rownames(f.index))
+    
+    result <- mclapply(f.paths, function(p) 
+                       findOverlaps(query = query, subject = load.feature(p),
+                                    maxgap = maxgap, minoverlap = minoverlap,
+                                    type = type, select = select, 
+                                    ignore.strand = ignore.strand),
+                       mc.cores = getDoParWorkers())
+    
+    if (select == "all") {
+      result <- as(SimpleList(result), "HitsList")  
+    } else {
+      result <- IntegerList(result)
     }
     
     return(result)

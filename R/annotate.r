@@ -24,10 +24,10 @@ setGeneric("annotate.gwas",
 setMethod("annotate.gwas", c(object = "GWAS", feature.list = "FeatureList"), 
   function(object, feature.list) {
     
-    overlaps <- overlapsAny(query = object, subject = feature.list)
+    overlaps <- featureOverlaps(query = object, subject = feature.list)
     
     f.index <- lapply(overlaps, function(x) make.names(names(x)))
-    overlaps <- DataFrame(overlaps)
+    overlaps <- do.call("DataFrame", as(overlaps, "list"))
     names(overlaps) <- unlist(f.index)
     
     mcols(object) <- DataFrame(mcols(object), overlaps)
