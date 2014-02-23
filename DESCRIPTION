@@ -12,7 +12,6 @@ Imports:
     AnnotationHub (== 1.2.0),
     GenomicFeatures,
     methods,
-    rtracklayer,
     reshape2,
     foreach,
     testthat
