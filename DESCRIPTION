@@ -10,7 +10,6 @@ Imports:
     IRanges,
     GenomicRanges,
     AnnotationHub (== 1.2.0),
-    GenomicFeatures,
     methods,
     reshape2,
     foreach,
