@@ -16,6 +16,7 @@ Imports:
     testthat
 License: MIT
 LazyData: true
+Roxygen: list(wrap = FALSE)
 Collate:
     'GWAS-class.r'
     'AnnotatedGWAS-class.r'

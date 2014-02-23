@@ -8,7 +8,7 @@
 #' @importFrom parallel mclapply
 #' @export
 #' 
-#' @returns \code{\link{AnnotatedGWAS}} object
+#' @return \code{\link{AnnotatedGWAS}} object
 #' 
 #' @examples
 #' query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
