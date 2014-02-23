@@ -71,10 +71,34 @@ test_that("Feature genome versions must match GWAS", {
 })
 
 
+context("Overlap functions")
+
+f.list <- local.features(query, path = test.dir)
+f.ranges <- lapply(unlist(LocalPath(f.list)), load.feature)
+
+test_that("findOverlaps results are accurate", {
+  
+  flist.overlaps <- findOverlaps(gwas.gr, f.list)
+  expect_is(flist.overlaps, "HitsList")
+  
+  f.overlaps <- lapply(f.ranges, function(f) findOverlaps(test.gr, f))
+  
+  expect_true(all(mapply(identical, flist.overlaps, f.overlaps)))
+})
+  
+test_that("featureOverlaps results are accurate", {
+  
+  flist.overlaps <- featureOverlaps(gwas.gr, f.list)
+  expect_is(flist.overlaps, "DataFrameList")
+  
+  flist.overlaps <- DataFrame(as(flist.overlaps, "list"))
+  
+  f.overlaps <- lapply(f.ranges, function(f) overlapsAny(test.gr, f))
+  expect_true(all(mapply(identical, flist.overlaps, f.overlaps)))
+})
 
 context("Create AnnotatedGWAS object")
 
-f.list <- local.features(query, path = test.dir)
 gwas.annot <- annotate.gwas(gwas.gr, feature.list = f.list)
 
 test_that("GWAS object annotation", {  
