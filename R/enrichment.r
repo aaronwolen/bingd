@@ -15,9 +15,8 @@ setGeneric("calc.enrich",
    standardGeneric("calc.enrich")
 }) 
 
-#' Calculate enrichment of FeatureList features across thresholds
 
-setMethod("calc.enrich", "GWAS", 
+setMethod("calc.enrich", c(object = "GWAS", feature.list = "FeatureList"), 
   function(object, feature.list, stat, thresh.levels) {
 
   if (missing(thresh.levels)) {
@@ -38,10 +37,9 @@ setMethod("calc.enrich", "GWAS",
   return(format.enrich(enrich))
 })
 
-#' Calculate enrichment of annotated features across thresholds
 
-setMethod("calc.enrich", "AnnotatedGWAS", 
-  function(object, stat, thresh.levels) {
+setMethod("calc.enrich", c(object = "AnnotatedGWAS", feature.list = "missing"),
+  function(object, feature.list, stat, thresh.levels) {
 
   if (missing(thresh.levels)) {
     thresh.levels <- quantile(stat, seq(0, 1, 0.1))

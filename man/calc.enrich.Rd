@@ -2,7 +2,7 @@
 \alias{calc.enrich}
 \title{Calculate enrichment of features across thresholds}
 \usage{
-calc.enrich(object, feature.list, stat, thresh.levels)
+calc.enrich(object, feature.list = NULL, stat, thresh.levels)
 }
 \arguments{
   \item{object}{\code{\link{GWAS}} object}
