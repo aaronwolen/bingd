@@ -1,4 +1,4 @@
-#' Report intermediate statistics
+# Report intermediate statistics
 
 report <- function(x, header, digits = 2) UseMethod("report")
 
