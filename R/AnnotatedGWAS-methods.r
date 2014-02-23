@@ -41,7 +41,7 @@ setMethod("fcols", "AnnotatedGWAS", function(object) {
 #' consolidate combines the features within each group to produce a new single
 #' feature that comprises all of the original individual features
 #' 
-#' @param \code{AnnotatedGWAS} object
+#' @param object \code{AnnotatedGWAS} object
 #' @return \code{AnnotatedGWAS} object
 #' 
 #' @export
@@ -70,7 +70,7 @@ setMethod("consolidate", "AnnotatedGWAS", function(object) {
   return(object)
 })
 
-#' Check if AnnotatedGWAS features have been consolidated
+# Check if AnnotatedGWAS features have been consolidated
 setGeneric("is.consolidated", function(object) standardGeneric("is.consolidated"))
 
 setMethod("is.consolidated", "AnnotatedGWAS", function(object) {

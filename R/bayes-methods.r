@@ -5,6 +5,8 @@
 #' @param object \code{AnnotatedGWAS} object
 #' @param adjust optional parameter to adjust P(R), as well as conditional
 #' probabilities for linkage disequilibrium
+#' @param prob.risk probability of being a risk SNP, this is normally calculated
+#' automatically but can be supplied in situations where the result was 0
 #' @inheritParams calc.priors
 #' @inheritParams calc.conditionals
 #' 
@@ -12,16 +14,23 @@
 #' @export
 
 setGeneric("calc.bayes", 
-  function(object, risk.thresh = NULL, adjust = NULL, effect = 2, 
+  function(object, risk.thresh = NULL, adjust = NULL, effect = 2, prob.risk = NULL,
            verbose = FALSE, trace = 0) {
   standardGeneric("calc.bayes")
 })
 
 setMethod("calc.bayes", "AnnotatedGWAS", 
-  function(object, risk.thresh = NULL, adjust = NULL, effect = 2, 
+  function(object, risk.thresh = NULL, adjust = NULL, effect = 2, prob.risk = NULL,  
            verbose = FALSE, trace = 0) {
   
   gwas.params <- calc.priors(object, effect, adjust, verbose, trace)
+  
+  if (!is.null(prob.risk)) {
+    gwas.params$p.r <- prob.risk
+    gwas.params$p.n <- 1 - prob.risk
+  }
+  
+  if (gwas.params$p.r == 0) stop("P(R) is zero, the analysis cannot proceed.")
     
   cond.probs <- calc.conditionals(object, risk.thresh, adjust, verbose)
   
@@ -31,7 +40,6 @@ setMethod("calc.bayes", "AnnotatedGWAS",
                              p.r = gwas.params$p.r,
                              p.n = gwas.params$p.n,
                            stringsAsFactors = FALSE)
-  
   
   # density of zscores for risk SNPs and conditional on null density (inflated)
   fz_r <- function(z, l) (dnorm((2 - z) / l) + dnorm((-2 - z) / l)) / 2 / l

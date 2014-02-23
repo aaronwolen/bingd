@@ -1,7 +1,11 @@
-#' Report intermediate statistics
+# Report intermediate statistics
 
 report <- function(x, header, digits = 2) UseMethod("report")
 
+report.character <- function(x, header, digits = 2) {
+  print.header(header)
+  message(x, "\n")
+}
 
 report.gwas.priors <- function(x, header, digits = 2) {
   print.header(header)  

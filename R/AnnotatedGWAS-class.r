@@ -4,6 +4,7 @@
 #' AnnotatedGWAS-class
 #' 
 #' @aliases AnnotatedGWAS
+#' @include GWAS-class.r
 
 setClass("AnnotatedGWAS",  
          representation = representation("GWAS", featureIndex = "SimpleList"))

@@ -4,6 +4,7 @@
 #' @param risk.thresh the p-value threshold applied to identify ``risky'' markers
 #' @param adjust optional parameter to adjust baseline and conditional
 #' probabilities for linkage disequilibrium
+#' @inheritParams calc.priors
 #' 
 #' @importFrom plyr count
 #' 
@@ -21,7 +22,7 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
   if (!is.consolidated(object)) 
     stop("Features must be consolidated with consolidate().", call. = FALSE)
   
-  if (is.null(risk.thresh)) risk.thresh <- risk.threshold(pvalue(object))
+  if (is.null(risk.thresh)) risk.thresh <- calc.threshold(pvalue(object), verbose)
   
   labels <- names(fcols(object))
   vars <- DataFrame(conditional = pvalue(object) < risk.thresh, fcols(object))
@@ -55,7 +56,7 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
 })
 
 
-#' Impute combined conditional probabilities
+# Impute combined conditional probabilities
 impute.conditionals <- function(base, risk, labels) {
   
   # Identify variable combinations absent in risk

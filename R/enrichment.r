@@ -15,9 +15,8 @@ setGeneric("calc.enrich",
    standardGeneric("calc.enrich")
 }) 
 
-#' Calculate enrichment of FeatureList features across thresholds
 
-setMethod("calc.enrich", "GWAS", 
+setMethod("calc.enrich", c(object = "GWAS", feature.list = "FeatureList"), 
   function(object, feature.list, stat, thresh.levels) {
 
   if (missing(thresh.levels)) {
@@ -38,10 +37,9 @@ setMethod("calc.enrich", "GWAS",
   return(format.enrich(enrich))
 })
 
-#' Calculate enrichment of annotated features across thresholds
 
-setMethod("calc.enrich", "AnnotatedGWAS", 
-  function(object, stat, thresh.levels) {
+setMethod("calc.enrich", c(object = "AnnotatedGWAS", feature.list = "missing"),
+  function(object, feature.list, stat, thresh.levels) {
 
   if (missing(thresh.levels)) {
     thresh.levels <- quantile(stat, seq(0, 1, 0.1))
@@ -88,11 +86,16 @@ serial.enrich <- function(feature, stat, thresh.levels) {
 }
 
 
-#' Reformat list of enrichment results
-#' @importFrom reshape2 melt
+# Reformat list of enrichment results
 format.enrich <- function(x) {
-  x <- melt(x, measure.vars = NULL)
-  x <- rename(x, c(L1 = "feature", L2 = "sample"))
-  x$threshold <- factor(x$threshold)
-  return(x)
+  
+  # Melt nested list into a data.frame
+  out <- mapply(function(feature, f) {
+    df <- lapply(names(f), function(s) data.frame(feature, sample = s, f[[s]]))
+    do.call("rbind", df)
+  }, names(x), x, SIMPLIFY = FALSE)
+  
+  out <- data.frame(do.call("rbind", out), row.names = NULL)
+  
+  return(out)
 } 

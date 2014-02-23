@@ -3,6 +3,7 @@
 #' @param object \code{AnnotatedGWAS} object
 #' @param effect assumed effect size, used to shift the ideal z-score distribution
 #' @param adjust optional parameter to adjust P(R) for linkage disequilibrium
+#' @param verbose print out intermediate statistics calculated during the analysis
 #' @param trace Non-negative integer. If positive, tracing information on the
 #'  progress of the optimization is produced. See \code{\link[stats]{optim}} for
 #'  details.
@@ -13,6 +14,7 @@
 #'  \item{\code{p.n}}{P(N): prior probability of a SNP having no effect}
 #'  \item{\code{lambda}}{GWAS inflation factor (\eqn{\lambda})}
 #' }
+#' @export
 
 setGeneric("calc.priors", 
   function(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0) {

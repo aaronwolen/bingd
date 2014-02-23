@@ -1,3 +1,21 @@
+bingd 0.3.3
+===========
+
+* risk.threshold() is now a calc.threshold() and adds a verbose option 
+* add option to supply prob.risk in  calc.bayes() 
+
+* overlapsAny() is now findOverlaps(), which returns HitsList or integer vectors
+  to be consistent with with the IRanges package
+* the new featureOverlaps() function is the exported version of findOverlaps(),
+  which returns a logical vector for each feature, nested within an list that
+  mirrors the structure of the supplied FeatureList object
+
+* removed unused fix_chrs() and order_chrs() code
+* removed rtracklayer and GenomicFeatures as dependencies
+* removed reshape2 dependency
+
+* documentation improvements, switched to roxygen2 4.0
+
 bingd 0.3.2
 ===========
 

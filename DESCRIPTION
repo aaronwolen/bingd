@@ -1,30 +1,35 @@
 Package: bingd
 Title: Bayesian integration of genomic data
-Description: Bayesian integration of genomic data
-Version: 0.3.2
-Author: Aaron Wolen <aaron@wolen.com>
-Maintainer: Aaron Wolen <aaron@wolen.com>
+Description: bingd provides functions for conveniently integrating GWAS summary
+    statistics with various kinds of genomic features, including DNaseI
+    hypersensitivity data and evolutionary conservation scores
+URL: https://github.com/aaronwolen/bingd
+Version: 0.3.3
+Authors@R: c(
+    person("Aaron", "Wolen", email = "aaron@wolen.com",
+    role = c("aut", "cre")),
+    person("Mark", "Reimers", email = "mreimers@vcu.edu",
+    role = "aut")
+    )
 Depends:
     R (>= 3.0)
 Imports:
     IRanges,
     GenomicRanges,
     AnnotationHub (== 1.2.0),
-    GenomicFeatures,
     methods,
-    rtracklayer,
-    reshape2,
     foreach,
     testthat
 License: MIT
 LazyData: true
+Roxygen: list(wrap = FALSE)
 Collate:
     'GWAS-class.r'
-    'FeatureList-class.r'
     'AnnotatedGWAS-class.r'
-    'GWAS-methods.r'
-    'FeatureList-methods.r'
     'AnnotatedGWAS-methods.r'
+    'FeatureList-class.r'
+    'FeatureList-methods.r'
+    'GWAS-methods.r'
     'annotate.r'
     'annotation-hub.r'
     'bayes-methods.r'
@@ -33,7 +38,9 @@ Collate:
     'calc-priors.r'
     'checks.r'
     'enrichment.r'
+    'featureOverlaps-methods.r'
     'features.r'
+    'findOverlaps-methods.r'
     'reporters.r'
     'stats.r'
     'utils.r'
