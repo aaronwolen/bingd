@@ -11,7 +11,6 @@ Imports:
     GenomicRanges,
     AnnotationHub (== 1.2.0),
     methods,
-    reshape2,
     foreach,
     testthat
 License: MIT

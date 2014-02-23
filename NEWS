@@ -12,6 +12,7 @@ bingd 0.3.3
 
 * removed unused fix_chrs() and order_chrs() code
 * removed rtracklayer and GenomicFeatures as dependencies
+* removed reshape2 dependency
 
 * documentation improvements, switched to roxygen2 4.0
 
