@@ -26,7 +26,7 @@ calc.z <- function(p, or = NULL, beta = NULL) {
 #' We select at least 100 SNPs with FDR < 0.05 or 1000 SNPs with FDR < 0.1. If 
 #' this can't be done then we use 100 SNPs but warn the estimate is ureliable.
 #' 
-#' @inheritParams p.adjust
+#' @inheritParams stats::p.adjust
 #' 
 #' @importFrom stats p.adjust
 
