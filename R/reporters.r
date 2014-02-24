@@ -20,7 +20,8 @@ report.gwas.priors <- function(x, header, digits = 2) {
 report.gwas.conditionals <- function(x, header, digits = 2) {
   print.header(header)
   
-  out <- data.frame(x[, c("freq.base", "prob.base", "freq.risk", "prob.risk")])
+  out.cols <- c("freq.base", "prob.base", "freq.risk", "prob.risk", "prob")
+  out <- data.frame(x[, out.cols])
   
   f.prob <- function(x) format(x, digits = digits)
   f.freq <- function(x) format(x, big.mark = ",")
@@ -29,7 +30,8 @@ report.gwas.conditionals <- function(x, header, digits = 2) {
                    freq.base = f.freq(freq.base),
                    prob.base = f.prob(prob.base),
                    freq.risk = f.freq(freq.risk),
-                   prob.risk = f.prob(prob.risk))
+                   prob.risk = f.prob(prob.risk),
+                        prob = f.prob(prob))
   
   out <- mapply(function(o, n) format(c(n, o)),
                 out, colnames(out), SIMPLIFY = FALSE)

@@ -1,3 +1,9 @@
+bingd 0.3.3.2
+=============
+
+* export consolidate()
+* calc.conditionals() reports feature probabilities when verbose = TRUE
+
 bingd 0.3.3.1
 =============
 
