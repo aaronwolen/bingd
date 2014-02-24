@@ -111,7 +111,7 @@ setValidity("GWAS", .validGWAS)
 #' @param beta name of the column in \code{object} that contains the GWAS beta
 #' values (or regression coefficients) for each marker
 #'
-#' @export
+#' @exportMethod as.GWAS
 
 setGeneric("as.GWAS", 
   function(object, genome, marker, chr, bp, pvalue, zscore, or, beta) {
@@ -121,7 +121,6 @@ setGeneric("as.GWAS",
 
 #' @describeIn as.GWAS Create a \code{\link{GWAS}} object from a
 #' \code{\link{data.frame}}
-
 setMethod("as.GWAS", "data.frame", 
   function(object, genome, marker, chr, bp, pvalue, zscore, or, beta) {
     

@@ -6,7 +6,7 @@
 #' 
 #' @importFrom foreach getDoParWorkers
 #' @importFrom parallel mclapply
-#' @export
+#' @exportMethod annotate.gwas
 #' 
 #' @return \code{\link{AnnotatedGWAS}} object
 #' 
