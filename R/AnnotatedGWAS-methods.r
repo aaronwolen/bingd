@@ -44,7 +44,7 @@ setMethod("fcols", "AnnotatedGWAS", function(object) {
 #' @param object \code{AnnotatedGWAS} object
 #' @return \code{AnnotatedGWAS} object
 #' 
-#' @export
+#' @exportMethod consolidate
 
 setGeneric("consolidate", function(object) {
   standardGeneric("consolidate")
