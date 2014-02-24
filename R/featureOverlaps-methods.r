@@ -13,7 +13,7 @@
 #' @inheritParams IRanges::findOverlaps
 #' @param minoverlap see documentation for \code{maxgap} argument
 #' 
-#' @export
+#' @exportMethod featureOverlaps
 
 setGeneric("featureOverlaps", 
   function(query, subject, maxgap = 0L, minoverlap = 1L,

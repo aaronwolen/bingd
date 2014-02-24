@@ -11,7 +11,7 @@
 #' @inheritParams calc.conditionals
 #' 
 #' @importFrom plyr ddply
-#' @export
+#' @exportMethod calc.bayes
 
 setGeneric("calc.bayes", 
   function(object, risk.thresh = NULL, adjust = NULL, effect = 2, prob.risk = NULL,

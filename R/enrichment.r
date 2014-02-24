@@ -8,7 +8,7 @@
 #' \code{gwas} must be annotated with \code{\link{annotate.gwas}} OR a
 #' \code{feature.list} must be provided.
 #' 
-#' @export         
+#' @exportMethod calc.enrich       
 
 setGeneric("calc.enrich", 
  function(object, feature.list, stat, thresh.levels) {

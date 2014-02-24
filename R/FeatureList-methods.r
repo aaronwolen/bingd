@@ -20,7 +20,7 @@ setMethod("show", "FeatureList",
 #' @inheritParams local.features
 #' 
 #' @importFrom AnnotationHub AnnotationHub
-#' @export
+#' @exportMethod cache.features
 #' 
 #' @return \code{FeatureList}
 

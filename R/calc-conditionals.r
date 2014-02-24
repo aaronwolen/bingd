@@ -7,6 +7,7 @@
 #' @inheritParams calc.priors
 #' 
 #' @importFrom plyr count
+#' @exportMethod calc.conditionals
 #' 
 #' @return data.frame containing probabilities of observing each combination of
 #' annotated features.
