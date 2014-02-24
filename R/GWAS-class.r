@@ -1,4 +1,3 @@
-
 # Define ------------------------------------------------------------------
 
 #' GWAS-class
@@ -30,7 +29,7 @@
 #'  
 #' \describe{
 #'  \item{}{
-#'    \code{pvalue(x)} retrieve GWAS markers
+#'    \code{marker(x)} retrieve GWAS markers
 #'  }
 #'  \item{}{
 #'    \code{pvalue(x)} retrieve marker pvalues
