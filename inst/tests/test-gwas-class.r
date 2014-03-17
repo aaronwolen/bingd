@@ -119,8 +119,8 @@ test_that("Features can be accessed with features()", {
   # Group names match
   expect_equal(names(f), names(f.list))
   # Feature names match
-  expect_match(unlist(colnames(f)),
-               unlist(lapply(LocalPath(f.list), names)))
+  expect_equivalent(unlist(colnames(f)),
+                    unlist(lapply(LocalPath(f.list), names)))
 })
 
 test_that("Features can be accessed with fcols()", {
@@ -132,8 +132,8 @@ test_that("Features can be accessed with fcols()", {
   expect_equal(ncol(f), nrow(unlist(f.list)))
   
   # Feature names match
-  expect_match(names(f),
-               unlist(lapply(LocalPath(f.list), names)))
+  expect_equivalent(names(f),
+                    unlist(lapply(LocalPath(f.list), names)))
 })
 
 
@@ -154,10 +154,11 @@ test_that("Enrichment results are valid", {
   expect_identical(nrow(enrich), enrich.rows)
   
   # feature column matches FeatureList names
-  expect_match(unique(enrich$feature), names(f.list))
+  expect_equivalent(as.character(unique(enrich$feature)), names(f.list))
   
   # sample column matches FeatureList Titles
-  expect_match(unique(enrich$sample), sapply(f.list, function(x) x$Title))
+  expect_equivalent(as.character(unique(enrich$sample)), 
+                    as.character(sapply(f.list, function(x) x$Title)))
 })
 
 
@@ -193,6 +194,6 @@ test_that("Same number of feature groups after consolidation", {
   expect_true(all(sapply(features(gwas.cons), length) == 1))
 
   # Group and feature names match
-  expect_match(names(features(gwas.cons)),
-               sapply(features(gwas.cons),  names))
+  expect_equivalent(names(features(gwas.cons)),
+                    sapply(features(gwas.cons),  names))
 })
