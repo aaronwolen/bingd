@@ -43,7 +43,7 @@ load.feature <- function(path) {
 #' @export
 
 hub.features <- function(query = NULL, path, genome, online = FALSE) {
-   
+
   if (missing(path)) path <- cache.path()
   if (!grepl("resources", path)) path <- file.path(path, "resources")
   if (!cache.exists(path)) cache.create(path)
@@ -55,7 +55,8 @@ hub.features <- function(query = NULL, path, genome, online = FALSE) {
   
   if (online) {
     # Retrieve latest feature
-    f.files <- metadata()
+    ah <- AnnotationHub()
+    f.files <- metadata(ah)
     
     # Filter based on genome
     if (!missing(genome)) f.files <- f.files[f.files$Genome == genome,]
