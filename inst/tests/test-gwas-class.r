@@ -39,8 +39,10 @@ test_that("GWAS creation from data.frame  fails without required information", {
 
 
 # Create GRanges object
-test.gr <- GRanges(test.chrs, IRanges(test.pos, width = 1), strand = "*",
-                   test.snps, test.pval, test.or)
+test.gr <- GenomicRanges::GRanges(test.chrs, 
+                                  IRanges::IRanges(test.pos, width = 1), 
+                                  strand = "*",
+                                  test.snps, test.pval, test.or)
 
 test.args <- test.args[!names(test.args) %in% c("chr", "bp")]
 
@@ -60,13 +62,13 @@ test_that("GWAS object from GRanges", {
 })
 
 test_that("GWAS object using annotated genome", {
-  genome(test.gr) <- "hg19"
+  GenomeInfoDb::genome(test.gr) <- "hg19"
   gwas.gr <- do.call("as.GWAS", c(list(test.gr), test.args[-1]))
   expect_match(class(gwas.gr), "GWAS")
 })
 
 test_that("Feature genome versions must match GWAS", {
-  genome(gwas.gr) <- "hg18"
+  GenomeInfoDb::genome(gwas.gr) <- "hg18"
   expect_error(annotate.gwas(gwas.gr, feature.list = f.list))
 })
 
@@ -119,8 +121,8 @@ test_that("Features can be accessed with features()", {
   # Group names match
   expect_equal(names(f), names(f.list))
   # Feature names match
-  expect_match(unlist(colnames(f)),
-               unlist(lapply(LocalPath(f.list), names)))
+  expect_equivalent(unlist(colnames(f)),
+                    unlist(lapply(LocalPath(f.list), names)))
 })
 
 test_that("Features can be accessed with fcols()", {
@@ -132,8 +134,8 @@ test_that("Features can be accessed with fcols()", {
   expect_equal(ncol(f), nrow(unlist(f.list)))
   
   # Feature names match
-  expect_match(names(f),
-               unlist(lapply(LocalPath(f.list), names)))
+  expect_equivalent(names(f),
+                    unlist(lapply(LocalPath(f.list), names)))
 })
 
 
