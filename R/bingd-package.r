@@ -11,5 +11,5 @@
 #' Maintainer: Aaron Wolen \email{aaron@@wolen.com}
 #' @name bingd
 #' @docType package
-#' @import IRanges GenomicRanges
+#' @import S4Vectors IRanges GenomicRanges
 NULL
