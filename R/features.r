@@ -43,12 +43,15 @@ load.feature <- function(path) {
 #' @export
 
 hub.features <- function(query = NULL, path, genome, online = FALSE) {
-
-  if (missing(path)) path <- cache.path()
-  if (!grepl("resources", path)) path <- file.path(path, "resources")
-  if (!cache.exists(path)) cache.create(path)
   
-  cached.files <- local.features(NULL, path)
+  if (missing(path)) {
+    path <- cache.path()
+  } else {
+    if (!cache.exists(path)) cache.create(path)
+    options("AnnotationHub.Cache" = path)
+  }
+
+  cached.files <- local.features(NULL, cache.resources(path))
   if (!is.null(cached.files)) {
     cached.files <- subset(stack(cached.files), select = -name)
   }
@@ -62,14 +65,8 @@ hub.features <- function(query = NULL, path, genome, online = FALSE) {
     if (!missing(genome)) f.files <- f.files[f.files$Genome == genome,]
     
     # Identify which features are already cached
-    f.files$LocalPath <- file.path(path, f.files$RDataPath)
-    
-    if (!is.null(cached.files)) {
-      f.files$Cached <- ifelse(f.files$LocalPath %in% cached.files$LocalPath, T, F)  
-    } else {
-      f.files$Cached <- FALSE
-    }
-    
+    f.files$LocalPath <- file.path(cache.resources(path), f.files$RDataPath)
+    f.files$Cached    <- file.exists(f.files$LocalPath)
   } else {
     if (is.null(cached.files)) stop("No files found in ", path)
     f.files <- cached.files
