@@ -18,6 +18,7 @@ Imports:
     IRanges,
     GenomicRanges,
     AnnotationHub (== 1.4.0),
+    GenomeInfoDb,
     methods,
     foreach,
     testthat
