@@ -41,7 +41,7 @@ load.feature <- function(path) {
 #' 
 #' @export
 
-hub.features <- function(query = NULL, path, genome, online = FALSE) {
+hub.features <- function(query = NULL, path, genome, online = TRUE) {
   
   if (missing(path)) {
     path <- cache.path()
