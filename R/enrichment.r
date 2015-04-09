@@ -52,7 +52,7 @@ setMethod("calc.enrich", c(object = "AnnotatedGWAS", feature.list = "missing"),
     
     enrich[[i]] <- parallel::mclapply(features[[i]], function(f) 
                                serial.enrich(f, stat, thresh.levels),
-                               mc.cores = getDoParWorkers())
+                               mc.cores = foreach::getDoParWorkers())
   }
   
   return(format.enrich(enrich))

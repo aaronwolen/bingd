@@ -36,7 +36,7 @@ setMethod("cache.features", "FeatureList",
     object <- stack(object)
     uncached.files <- basename(subset(object, !Cached)$LocalPath)
     
-    hub <- AnnotationHub(hubCache = path)
+    hub <- AnnotationHub::AnnotationHub(hubCache = path)
     hub.files <- hub@snapshotPaths
       
     # Download uncached files

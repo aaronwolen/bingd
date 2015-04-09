@@ -32,7 +32,7 @@ setMethod("findOverlaps", c(query = "GWAS", subject = "FeatureList"),
                                     maxgap = maxgap, minoverlap = minoverlap,
                                     type = type, select = select, 
                                     ignore.strand = ignore.strand),
-                       mc.cores = getDoParWorkers())
+                       mc.cores = foreach::getDoParWorkers())
     
     if (select == "all") {
       result <- as(SimpleList(result), "HitsList")  

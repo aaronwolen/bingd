@@ -57,8 +57,8 @@ hub.features <- function(query = NULL, path, genome, online = TRUE) {
   
   if (online) {
     # Retrieve latest feature
-    ah <- AnnotationHub()
-    f.files <- metadata(ah)
+    ah <- AnnotationHub::AnnotationHub()
+    f.files <- AnnotationHub::metadata(ah)
     
     # Filter based on genome
     if (!missing(genome)) f.files <- f.files[f.files$Genome == genome,]
