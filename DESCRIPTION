@@ -4,7 +4,7 @@ Description: bingd provides functions for conveniently integrating GWAS summary
     statistics with various kinds of genomic features, including DNaseI
     hypersensitivity data and evolutionary conservation scores
 URL: https://github.com/aaronwolen/bingd
-Version: 0.3.3.3
+Version: 0.3.4
 Authors@R: c(
     person("Aaron", "Wolen", email = "aaron@wolen.com",
     role = c("aut", "cre")),
