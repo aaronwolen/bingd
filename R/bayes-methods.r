@@ -44,26 +44,28 @@ setMethod("calc.bayes", "AnnotatedGWAS",
   fz_r <- function(z, l) (dnorm((2 - z) / l) + dnorm((-2 - z) / l)) / 2 / l
   fz_n <- function(z, l)  dnorm(z / l) / l
   
-  post.probs <- transform(post.probs,
-                          fz.r = fz_r(zscore, gwas.params$lambda), 
-                          fz.n = fz_n(zscore, gwas.params$lambda))
+  post.probs <- dplyr::mutate(post.probs,
+                              fz.r = fz_r(zscore, gwas.params$lambda), 
+                              fz.n = fz_n(zscore, gwas.params$lambda))
+  
   
   # Add conditional feature probabilities
   l.index <- match(post.probs$label, cond.probs$label)
-  post.probs <- transform(post.probs,
-                          p.f.r = cond.probs$prob[l.index],
-                          p.f.n = cond.probs$prob.base[l.index])
+  post.probs <- post.probs %>%
+    dplyr::mutate(p.f.r = cond.probs$prob[l.index],
+                  p.f.n = cond.probs$prob.base[l.index])
   
-  # Calculate posterior probabilities by feature combination groups                  
-  post.probs <- plyr::ddply(post.probs, "label", transform,
-                 post.prob.gwas = (fz.r * p.r) /
-                                 ((fz.r * p.r) + fz.n * p.n),
-                      post.prob = (p.f.r * fz.r * p.r) / 
-                                 ((p.f.r * fz.r * p.r) + p.f.n * fz.n * p.n))  
+  # Calculate posterior probabilities by feature combination groups
+  post.probs <- post.probs %>%
+    dplyr::group_by(label) %>%
+    dplyr::mutate(post.prob.gwas = (fz.r * p.r) /
+                                  ((fz.r * p.r) + fz.n * p.n),
+                       post.prob = (p.f.r * fz.r * p.r) / 
+                                  ((p.f.r * fz.r * p.r) + p.f.n * fz.n * p.n))
   
   m.index <- match(marker(object), post.probs$marker)
   post.probs <- post.probs[m.index, c("label", "post.prob.gwas", "post.prob")]
-  post.probs <- rename(post.probs, c(label = "feature.category"))
+  post.probs <- dplyr::rename(post.probs, feature.category = label)
   mcols(object) <- DataFrame(mcols(object), post.probs)
   
   return(object)

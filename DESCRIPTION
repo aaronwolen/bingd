@@ -21,6 +21,7 @@ Imports:
     AnnotationHub (== 1.6.0),
     methods,
     foreach,
+    dplyr,
     tidyr,
     testthat
 License: MIT + file LICENSE

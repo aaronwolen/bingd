@@ -25,15 +25,21 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
   if (is.null(risk.thresh)) risk.thresh <- calc.threshold(pvalue(object), verbose)
   
   labels <- names(fcols(object))
-  vars <- DataFrame(conditional = pvalue(object) < risk.thresh, fcols(object))
+
+  vars <- data.frame(conditional = pvalue(object) < risk.thresh, fcols(object))
   
   # Baseline probabilities
-  base <- transform(plyr::count(vars[labels]), 
-                    prob = freq /sum(freq))
+  base <- vars %>% 
+    dplyr::count_(labels) %>% 
+    dplyr::ungroup() %>%
+    dplyr::mutate(prob = n / sum(n))
   
   # Probability given conditional variable
-  risk <- transform(plyr::count(subset(vars, conditional)[labels]),
-                    prob = freq / sum(freq))
+  risk <- vars %>%
+    dplyr::filter(conditional) %>%
+    dplyr::count_(labels) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(prob = n / sum(n))
   
   # Impute combined probabilities for unobserved combinations 
   if (nrow(base) > nrow(risk)) risk <- impute.conditionals(base, risk, labels)
@@ -73,7 +79,7 @@ impute.conditionals <- function(base, risk, labels) {
     sub.exp <- paste(paste(names(new.row), new.row, sep = "=="), collapse = "|")
     var.probs <- subset(risk, eval(parse(text = sub.exp)))$prob
     new.prob <- c(do.call("prod", as.list(var.probs)) * length(var.probs))
-    risk <- rbind(risk, c(new.row, freq = 0, prob = new.prob))
+    risk <- rbind(risk, c(new.row, n = 0, prob = new.prob))
   }
   return(risk)
 }

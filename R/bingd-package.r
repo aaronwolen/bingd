@@ -12,4 +12,5 @@
 #' @name bingd
 #' @docType package
 #' @import S4Vectors IRanges GenomicRanges
+#' @importFrom dplyr %>%
 NULL

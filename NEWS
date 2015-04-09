@@ -2,6 +2,7 @@ bingd 0.3.4
 ===========
 
 * Require AnnotationHub v1.6.0
+* Replace plyr with dplyr
 
 
 bingd 0.3.3.3
