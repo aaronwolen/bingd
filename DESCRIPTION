@@ -23,7 +23,7 @@ Imports:
     foreach,
     tidyr,
     testthat
-License: MIT
+License: MIT + file LICENSE
 LazyData: true
 Roxygen: list(wrap = FALSE)
 Collate:
