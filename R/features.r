@@ -37,7 +37,6 @@ load.feature <- function(path) {
 #' 
 #' @param genome filter results based on genome version
 #' @inheritParams filter.features
-#' @importFrom AnnotationHub AnnotationHub metadata
 #' 
 #' 
 #' @export

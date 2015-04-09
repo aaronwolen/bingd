@@ -28,10 +28,10 @@ setMethod("calc.enrich", c(object = "GWAS", feature.list = "FeatureList"),
   
   for (i in names(features)) {
     
-    enrich[[i]] <- mclapply(features[[i]], function(p) 
-                            serial.enrich(object %over% load.feature(p),
-                                          stat, thresh.levels),
-                            mc.cores = getDoParWorkers())
+    enrich[[i]] <- parallel::mclapply(features[[i]], function(p) 
+                               serial.enrich(object %over% load.feature(p),
+                                             stat, thresh.levels),
+                               mc.cores = foreach::getDoParWorkers())
   }
   
   return(format.enrich(enrich))
@@ -50,9 +50,9 @@ setMethod("calc.enrich", c(object = "AnnotatedGWAS", feature.list = "missing"),
   
   for (i in names(features)) {
     
-    enrich[[i]] <- mclapply(features[[i]], function(f) 
-                            serial.enrich(f, stat, thresh.levels),
-                            mc.cores = getDoParWorkers())
+    enrich[[i]] <- parallel::mclapply(features[[i]], function(f) 
+                               serial.enrich(f, stat, thresh.levels),
+                               mc.cores = getDoParWorkers())
   }
   
   return(format.enrich(enrich))

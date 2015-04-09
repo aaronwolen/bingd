@@ -4,8 +4,6 @@
 #' @param feature.list \code{FeatureList} object created with 
 #' \code{\link{hub.features}} or \code{\link{local.features}}
 #' 
-#' @importFrom foreach getDoParWorkers
-#' @importFrom parallel mclapply
 #' @exportMethod annotate.gwas
 #' 
 #' @return \code{\link{AnnotatedGWAS}} object

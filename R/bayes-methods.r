@@ -10,7 +10,6 @@
 #' @inheritParams calc.priors
 #' @inheritParams calc.conditionals
 #' 
-#' @importFrom plyr ddply
 #' @exportMethod calc.bayes
 
 setGeneric("calc.bayes", 
@@ -56,7 +55,7 @@ setMethod("calc.bayes", "AnnotatedGWAS",
                           p.f.n = cond.probs$prob.base[l.index])
   
   # Calculate posterior probabilities by feature combination groups                  
-  post.probs <- ddply(post.probs, "label", transform,
+  post.probs <- plyr::ddply(post.probs, "label", transform,
                  post.prob.gwas = (fz.r * p.r) /
                                  ((fz.r * p.r) + fz.n * p.n),
                       post.prob = (p.f.r * fz.r * p.r) / 

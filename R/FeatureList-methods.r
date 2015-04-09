@@ -19,7 +19,6 @@ setMethod("show", "FeatureList",
 #' @inheritParams annotate.gwas
 #' @inheritParams local.features
 #' 
-#' @importFrom AnnotationHub AnnotationHub
 #' @exportMethod cache.features
 #' 
 #' @return \code{FeatureList}

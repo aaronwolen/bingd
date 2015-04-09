@@ -6,7 +6,6 @@
 #' probabilities for linkage disequilibrium
 #' @inheritParams calc.priors
 #' 
-#' @importFrom plyr count
 #' @exportMethod calc.conditionals
 #' 
 #' @return data.frame containing probabilities of observing each combination of
@@ -29,11 +28,11 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
   vars <- DataFrame(conditional = pvalue(object) < risk.thresh, fcols(object))
   
   # Baseline probabilities
-  base <- transform(count(vars[labels]), 
+  base <- transform(plyr::count(vars[labels]), 
                     prob = freq /sum(freq))
   
   # Probability given conditional variable
-  risk <- transform(count(subset(vars, conditional)[labels]),
+  risk <- transform(plyr::count(subset(vars, conditional)[labels]),
                     prob = freq / sum(freq))
   
   # Impute combined probabilities for unobserved combinations 
