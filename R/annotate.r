@@ -9,9 +9,11 @@
 #' @return \code{\link{AnnotatedGWAS}} object
 #' 
 #' @examples
+#' \dontrun{
 #' query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
 #' feature.list <- hub.features(query)
 #' scz <- annotate.gwas(scz, feature.list)
+#' }
 
 
 setGeneric("annotate.gwas", 
