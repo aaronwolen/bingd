@@ -11,7 +11,6 @@
 #' @param query \code{GWAS} object
 #' @param subject \code{FeatureList} object
 #' @inheritParams IRanges::findOverlaps
-#' @inheritParams GenomicRanges::findOverlaps-methods
 #' @inheritParams featureOverlaps
 #' 
 #' @rdname findOverlaps
