@@ -86,16 +86,7 @@ serial.enrich <- function(feature, stat, thresh.levels) {
 }
 
 
-# Reformat list of enrichment results
+# Convert list of enrichment results to tidy data.frame
 format.enrich <- function(x) {
-  
-  # Melt nested list into a data.frame
-  out <- mapply(function(feature, f) {
-    df <- lapply(names(f), function(s) data.frame(feature, sample = s, f[[s]]))
-    do.call("rbind", df)
-  }, names(x), x, SIMPLIFY = FALSE)
-  
-  out <- data.frame(do.call("rbind", out), row.names = NULL)
-  
-  return(out)
+  tidyr::unnest(lapply(x, tidyr::unnest, col = "sample"), col = "feature")
 } 

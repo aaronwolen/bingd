@@ -21,6 +21,7 @@ Imports:
     GenomeInfoDb,
     methods,
     foreach,
+    tidyr,
     testthat
 License: MIT
 LazyData: true
