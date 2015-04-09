@@ -4,7 +4,7 @@
 \alias{hub.features}
 \title{Retrieve information about AnnotationHub features}
 \usage{
-hub.features(query = NULL, path, genome, online = FALSE)
+hub.features(query = NULL, path, genome, online = TRUE)
 }
 \arguments{
 \item{query}{a vector of strings to filter features; may also be a named list

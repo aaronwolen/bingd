@@ -19,8 +19,10 @@ annotate.gwas(object, feature.list)
 Annotate GWAS makers with genomic features
 }
 \examples{
+\dontrun{
 query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
 feature.list <- hub.features(query)
 scz <- annotate.gwas(scz, feature.list)
+}
 }
 

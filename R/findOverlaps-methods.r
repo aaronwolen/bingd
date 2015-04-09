@@ -23,9 +23,11 @@ setMethod("findOverlaps", c(query = "GWAS", subject = "FeatureList"),
     
     type <- match.arg(type)
     select <- match.arg(select)
-    
+
     f.index <- stack(LocalPath(subject))
     f.paths <- structure(f.index$values, names = rownames(f.index))
+    
+  
     
     result <- mclapply(f.paths, function(p) 
                        findOverlaps(query = query, subject = load.feature(p),
