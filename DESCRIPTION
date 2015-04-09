@@ -17,8 +17,8 @@ Depends:
     IRanges
 Imports:
     GenomicRanges,
-    AnnotationHub (== 1.4.0),
     GenomeInfoDb,
+    AnnotationHub (== 1.6.0),
     methods,
     foreach,
     tidyr,
