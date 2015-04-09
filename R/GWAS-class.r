@@ -156,10 +156,10 @@ setMethod("as.GWAS", "GRanges",
     
     # Genome information
     if (missing(genome)) {
-      if (all(is.na(GenomicRanges::genome(object))))
+      if (all(is.na(GenomeInfoDb::genome(object))))
         stop("Must supply UCSC genome abbreviation (e.g., hg19).")
     } else {
-     GenomicRanges::genome(object) <- genome 
+     GenomeInfoDb::genome(object) <- genome 
     }
      
     # Calculate z-score

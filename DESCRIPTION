@@ -4,7 +4,7 @@ Description: bingd provides functions for conveniently integrating GWAS summary
     statistics with various kinds of genomic features, including DNaseI
     hypersensitivity data and evolutionary conservation scores
 URL: https://github.com/aaronwolen/bingd
-Version: 0.3.3.3
+Version: 0.3.4
 Authors@R: c(
     person("Aaron", "Wolen", email = "aaron@wolen.com",
     role = c("aut", "cre")),
@@ -12,15 +12,19 @@ Authors@R: c(
     role = "aut")
     )
 Depends:
-    R (>= 3.0)
+    R (>= 3.0),
+    S4Vectors,
+    IRanges
 Imports:
-    IRanges,
     GenomicRanges,
-    AnnotationHub (== 1.4.0),
+    GenomeInfoDb,
+    AnnotationHub (== 1.6.0),
     methods,
     foreach,
+    dplyr,
+    tidyr,
     testthat
-License: MIT
+License: MIT + file LICENSE
 LazyData: true
 Roxygen: list(wrap = FALSE)
 Collate:

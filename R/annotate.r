@@ -4,16 +4,16 @@
 #' @param feature.list \code{FeatureList} object created with 
 #' \code{\link{hub.features}} or \code{\link{local.features}}
 #' 
-#' @importFrom foreach getDoParWorkers
-#' @importFrom parallel mclapply
 #' @exportMethod annotate.gwas
 #' 
 #' @return \code{\link{AnnotatedGWAS}} object
 #' 
 #' @examples
+#' \dontrun{
 #' query <- list(DNaseI = c("Dnasen", "broadPeak", "rep1"))
 #' feature.list <- hub.features(query)
 #' scz <- annotate.gwas(scz, feature.list)
+#' }
 
 
 setGeneric("annotate.gwas", 

@@ -11,7 +11,6 @@
 #' @param query \code{GWAS} object
 #' @param subject \code{FeatureList} object
 #' @inheritParams IRanges::findOverlaps
-#' @inheritParams GenomicRanges::findOverlaps-methods
 #' @inheritParams featureOverlaps
 #' 
 #' @rdname findOverlaps
@@ -24,16 +23,18 @@ setMethod("findOverlaps", c(query = "GWAS", subject = "FeatureList"),
     
     type <- match.arg(type)
     select <- match.arg(select)
-    
+
     f.index <- stack(LocalPath(subject))
     f.paths <- structure(f.index$values, names = rownames(f.index))
+    
+  
     
     result <- mclapply(f.paths, function(p) 
                        findOverlaps(query = query, subject = load.feature(p),
                                     maxgap = maxgap, minoverlap = minoverlap,
                                     type = type, select = select, 
                                     ignore.strand = ignore.strand),
-                       mc.cores = getDoParWorkers())
+                       mc.cores = foreach::getDoParWorkers())
     
     if (select == "all") {
       result <- as(SimpleList(result), "HitsList")  

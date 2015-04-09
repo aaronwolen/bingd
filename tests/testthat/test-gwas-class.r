@@ -39,8 +39,10 @@ test_that("GWAS creation from data.frame  fails without required information", {
 
 
 # Create GRanges object
-test.gr <- GRanges(test.chrs, IRanges(test.pos, width = 1), strand = "*",
-                   test.snps, test.pval, test.or)
+test.gr <- GenomicRanges::GRanges(test.chrs, 
+                                  IRanges::IRanges(test.pos, width = 1), 
+                                  strand = "*",
+                                  test.snps, test.pval, test.or)
 
 test.args <- test.args[!names(test.args) %in% c("chr", "bp")]
 
@@ -60,13 +62,13 @@ test_that("GWAS object from GRanges", {
 })
 
 test_that("GWAS object using annotated genome", {
-  genome(test.gr) <- "hg19"
+  GenomeInfoDb::genome(test.gr) <- "hg19"
   gwas.gr <- do.call("as.GWAS", c(list(test.gr), test.args[-1]))
   expect_match(class(gwas.gr), "GWAS")
 })
 
 test_that("Feature genome versions must match GWAS", {
-  genome(gwas.gr) <- "hg18"
+  GenomeInfoDb::genome(gwas.gr) <- "hg18"
   expect_error(annotate.gwas(gwas.gr, feature.list = f.list))
 })
 
@@ -138,7 +140,7 @@ test_that("Features can be accessed with fcols()", {
 
 
 
-context("Ennrichment analysis of GWAS objects")
+context("Enrichment analysis of GWAS objects")
 
 log.pvals <- -log10(gwas.gr$pvalue)
 thresh.levels <- seq(1, ceiling(max(log.pvals)), 1)
@@ -154,23 +156,22 @@ test_that("Enrichment results are valid", {
   expect_identical(nrow(enrich), enrich.rows)
   
   # feature column matches FeatureList names
-  expect_equivalent(as.character(unique(enrich$feature)), names(f.list))
+  expect_equivalent(unique(enrich$feature), names(f.list))
   
   # sample column matches FeatureList Titles
-  expect_equivalent(as.character(unique(enrich$sample)), 
-                    as.character(sapply(f.list, function(x) x$Title)))
+  expect_equivalent(unique(enrich$sample), stack(f.list)$Title)
 })
 
 
 test_that("Same results for annotated and unannotated GWAS objects", {  
   enrich.annot <- calc.enrich(gwas.annot,
-                            stat = log.pvals, thresh.levels = thresh.levels)
+                              stat = log.pvals, thresh.levels = thresh.levels)
  expect_identical(enrich, enrich.annot)
 })
 
 
 test_that("Feature genome versions must match GWAS", {
-  genome(gwas.gr) <- "hg18"
+  GenomeInfoDb::genome(gwas.gr) <- "hg18"
   expect_error(calc.enrich(gwas.gr, feature.list = f.list, 
                       stat = log.pvals, thresh.levels = thresh.levels))
 })

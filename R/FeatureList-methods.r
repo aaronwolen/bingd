@@ -19,7 +19,6 @@ setMethod("show", "FeatureList",
 #' @inheritParams annotate.gwas
 #' @inheritParams local.features
 #' 
-#' @importFrom AnnotationHub AnnotationHub
 #' @exportMethod cache.features
 #' 
 #' @return \code{FeatureList}
@@ -37,7 +36,7 @@ setMethod("cache.features", "FeatureList",
     object <- stack(object)
     uncached.files <- basename(subset(object, !Cached)$LocalPath)
     
-    hub <- AnnotationHub(hubCache = path)
+    hub <- AnnotationHub::AnnotationHub(hubCache = path)
     hub.files <- hub@snapshotPaths
       
     # Download uncached files
@@ -51,13 +50,11 @@ setMethod("cache.features", "FeatureList",
         warning(file, " not found on AnnotationHub.\b", call. = F)
       }
       
-      dl <- AnnotationHub:::.downloadFile(hub, hub.file)
+      # $ is the only exported method from AnnoHub 1.6 to download resources
+      dl <- do.call("$", list(hub, names(hub.file)))
       
-      if (dl == 0) {
-        cached.files <- c(cached.files, file)
-      } else {
-        stop("Failed to download:\n\t", file, call. = FALSE)
-      }
+      if (length(dl) == 0) stop("Failed to download:\n\t", file, call. = FALSE)
+      cached.files <- c(cached.files, file)
     }
     
     object$Cached[basename(object$LocalPath) %in% cached.files] <- TRUE

@@ -29,11 +29,10 @@ calc.z <- function(p, or = NULL, beta = NULL) {
 #' @inheritParams stats::p.adjust
 #' @inheritParams calc.priors
 #' 
-#' @importFrom stats p.adjust
 
 calc.threshold <- function(p, verbose = FALSE, method = "BH") {
 
-  q <- p.adjust(p, method)
+  q <- stats::p.adjust(p, method)
  
   if (sum(q < 0.05) >= 100) {
     thresh <- max(p[q < 0.05])
