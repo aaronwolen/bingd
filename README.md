@@ -1,6 +1,8 @@
 bingd
 =====
 
+[![Travis-CI Build Status](https://travis-ci.org/aaronwolen/bingd.png?branch=master)](https://travis-ci.org/aaronwolen/bingd)
+
 Bayesian integration of genomic data.
 
 Features
