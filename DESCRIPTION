@@ -13,9 +13,9 @@ Authors@R: c(
     )
 Depends:
     R (>= 3.0),
+    S4Vectors,
     IRanges
 Imports:
-    S4Vectors,
     GenomicRanges,
     AnnotationHub (== 1.4.0),
     GenomeInfoDb,
