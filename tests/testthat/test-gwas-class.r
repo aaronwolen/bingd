@@ -140,7 +140,7 @@ test_that("Features can be accessed with fcols()", {
 
 
 
-context("Ennrichment analysis of GWAS objects")
+context("Enrichment analysis of GWAS objects")
 
 log.pvals <- -log10(gwas.gr$pvalue)
 thresh.levels <- seq(1, ceiling(max(log.pvals)), 1)
@@ -156,22 +156,22 @@ test_that("Enrichment results are valid", {
   expect_identical(nrow(enrich), enrich.rows)
   
   # feature column matches FeatureList names
-  expect_match(unique(enrich$feature), names(f.list))
+  expect_equivalent(unique(enrich$feature), names(f.list))
   
   # sample column matches FeatureList Titles
-  expect_match(unique(enrich$sample), sapply(f.list, function(x) x$Title))
+  expect_equivalent(unique(enrich$sample), stack(f.list)$Title)
 })
 
 
 test_that("Same results for annotated and unannotated GWAS objects", {  
   enrich.annot <- calc.enrich(gwas.annot,
-                            stat = log.pvals, thresh.levels = thresh.levels)
+                              stat = log.pvals, thresh.levels = thresh.levels)
  expect_identical(enrich, enrich.annot)
 })
 
 
 test_that("Feature genome versions must match GWAS", {
-  genome(gwas.gr) <- "hg18"
+  GenomeInfoDb::genome(gwas.gr) <- "hg18"
   expect_error(calc.enrich(gwas.gr, feature.list = f.list, 
                       stat = log.pvals, thresh.levels = thresh.levels))
 })
@@ -195,6 +195,6 @@ test_that("Same number of feature groups after consolidation", {
   expect_true(all(sapply(features(gwas.cons), length) == 1))
 
   # Group and feature names match
-  expect_match(names(features(gwas.cons)),
-               sapply(features(gwas.cons),  names))
+  expect_equivalent(names(features(gwas.cons)),
+                    sapply(features(gwas.cons),  names))
 })
