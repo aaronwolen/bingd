@@ -49,11 +49,9 @@ hub.features <- function(query = NULL, path, genome, online = TRUE) {
     if (!cache.exists(path)) cache.create(path)
     options("AnnotationHub.Cache" = path)
   }
-
+  
   cached.files <- local.features(NULL, cache.resources(path))
-  if (!is.null(cached.files)) {
-    cached.files <- subset(stack(cached.files), select = -name)
-  }
+  if (!is.null(cached.files)) cached.files <- stack(cached.files)[-1]
   
   if (online) {
     # Retrieve latest feature
@@ -124,7 +122,7 @@ setMethod("filter.features", "FeatureList",
     if (is.atomic(query)) query <- list(query)
     
     # FeatureList groupings are ignored in favor of query groupings
-    object <- subset(stack(object), select = -name)
+    object <- stack(object)[-1]
     
     # Feature group names
     if(is.null(names(query))) {

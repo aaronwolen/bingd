@@ -44,10 +44,8 @@ setMethod("calc.bayes", "AnnotatedGWAS",
   fz_r <- function(z, l) (dnorm((2 - z) / l) + dnorm((-2 - z) / l)) / 2 / l
   fz_n <- function(z, l)  dnorm(z / l) / l
   
-  post.probs <- dplyr::mutate(post.probs,
-                              fz.r = fz_r(zscore, gwas.params$lambda), 
-                              fz.n = fz_n(zscore, gwas.params$lambda))
-  
+  post.probs$fz.r <- fz_r(post.probs$zscore, gwas.params$lambda)
+  post.probs$fz.n <- fz_n(post.probs$zscore, gwas.params$lambda)
   
   # Add conditional feature probabilities
   l.index <- match(post.probs$label, cond.probs$label)
@@ -57,15 +55,15 @@ setMethod("calc.bayes", "AnnotatedGWAS",
   
   # Calculate posterior probabilities by feature combination groups
   post.probs <- post.probs %>%
-    dplyr::group_by(label) %>%
-    dplyr::mutate(post.prob.gwas = (fz.r * p.r) /
-                                  ((fz.r * p.r) + fz.n * p.n),
-                       post.prob = (p.f.r * fz.r * p.r) / 
-                                  ((p.f.r * fz.r * p.r) + p.f.n * fz.n * p.n))
+    dplyr::group_by_("label") %>%
+    dplyr::mutate_(post.prob.gwas = ~(fz.r * p.r) /
+                                    ((fz.r * p.r) + fz.n * p.n),
+                        post.prob = ~(p.f.r * fz.r * p.r) / 
+                                    ((p.f.r * fz.r * p.r) + p.f.n * fz.n * p.n))
   
   m.index <- match(marker(object), post.probs$marker)
   post.probs <- post.probs[m.index, c("label", "post.prob.gwas", "post.prob")]
-  post.probs <- dplyr::rename(post.probs, feature.category = label)
+  post.probs <- dplyr::rename_(post.probs, feature.category = "label")
   mcols(object) <- DataFrame(mcols(object), post.probs)
   
   return(object)
