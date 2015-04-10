@@ -36,6 +36,8 @@ FeatureList <- function(..., names) {
     
     if (is.list(object) & !is.data.frame(object)) {
       out <- object
+    } else if (grepl("DataFrameList", class(object))) {
+      out <- object
     } else if (class(object) %in% c("data.frame", "DataFrame")) {
       out <- list(object)
     } else {
