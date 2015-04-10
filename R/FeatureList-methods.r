@@ -58,9 +58,8 @@ setMethod("cache.features", "FeatureList",
     }
     
     object$Cached[basename(object$LocalPath) %in% cached.files] <- TRUE
-    object <- lapply(split(object, object$name), subset, select = -name)
-    
-    return(FeatureList(object))
+
+    FeatureList(split(object[-1], object$name))
 })
 
 
