@@ -32,14 +32,14 @@ setMethod("calc.conditionals", "AnnotatedGWAS",
   base <- vars %>% 
     dplyr::count_(labels) %>% 
     dplyr::ungroup() %>%
-    dplyr::mutate(prob = n / sum(n))
+    dplyr::mutate_(prob = ~n / sum(n))
   
   # Probability given conditional variable
   risk <- vars %>%
-    dplyr::filter(conditional) %>%
+    dplyr::filter_("conditional") %>%
     dplyr::count_(labels) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(prob = n / sum(n))
+    dplyr::mutate_(prob = ~n / sum(n))
   
   # Impute combined probabilities for unobserved combinations 
   if (nrow(base) > nrow(risk)) risk <- impute.conditionals(base, risk, labels)

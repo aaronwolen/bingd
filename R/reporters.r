@@ -26,16 +26,16 @@ report.gwas.conditionals <- function(x, header, digits = 2) {
   f.prob <- function(x) format(x, digits = digits)
   f.freq <- function(x) format(x, big.mark = ",")
   
-  out <- transform(out,
-                   n.base = f.freq(n.base),
-                   prob.base = f.prob(prob.base),
-                   n.risk = f.freq(n.risk),
-                   prob.risk = f.prob(prob.risk),
-                        prob = f.prob(prob))
+  out <- dplyr::mutate_(out,
+                        n.base = ~f.freq(n.base),
+                     prob.base = ~f.prob(prob.base),
+                        n.risk = ~f.freq(n.risk),
+                     prob.risk = ~f.prob(prob.risk),
+                          prob = ~f.prob(prob))
   
+  # convert to md-like syntax
   out <- mapply(function(o, n) format(c(n, o)),
                 out, colnames(out), SIMPLIFY = FALSE)
-  
   out <- do.call("paste", c(as.list(out), sep = " | "))
   
   categories <- gsub("\\.", " ", x$label)
