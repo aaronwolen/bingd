@@ -18,8 +18,5 @@ cache.create <- function(dirPath) {
 
 # appends resources to cache path
 cache.resources <- function(hubCache, path=character()) {
-    url <- file.path(hubCache, "resources")
-    if (length(path))
-        url <- file.path(url, .pathToLocalPath(path))
-    url
+  file.path(hubCache, "resources")
 }
