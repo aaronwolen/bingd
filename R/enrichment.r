@@ -77,13 +77,11 @@ serial.enrich <- function(feature, stat, thresh.levels) {
   
   stat.hits <- vapply(thresh.levels, function(t) stat >= t, FUN.VALUE = logical(n))
   
-  hits.mat <- feature & stat.hits
+  hits <- matrix(feature, nrow = 1) %*% stat.hits
   
-  out <- data.frame(threshold = thresh.levels, count = colSums(hits.mat))
-  out$prop <- out$count / colSums(stat.hits)
-  out$enrichment <- out$prop / mean(feature)
-  
-  return(out)
+  dplyr::data_frame(threshold = thresh.levels, count = hits[1,]) %>%
+    dplyr::mutate_(prop = ~count / colSums(stat.hits)) %>%
+    dplyr::mutate_(enrichment = ~prop / mean(feature))
 }
 
 
