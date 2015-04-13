@@ -46,17 +46,17 @@ setMethod("calc.enrich", c(object = "AnnotatedGWAS", feature.list = "missing"),
     thresh.levels <- quantile(stat, seq(0, 1, 0.1))
   }
   
-  features <- features(object)
-  enrich <- list()    
+  fmat <- as.matrix(fcols(object))
+  enrich <- serial.enrich(fmat, stat, thresh.levels)
   
-  for (i in names(features)) {
-    
-    enrich[[i]] <- parallel::mclapply(features[[i]], function(f) 
-                               serial.enrich(f, stat, thresh.levels),
-                               mc.cores = foreach::getDoParWorkers())
-  }
+  # add feature labels
+  flist <- lapply(features(object), names)
+  fnames <- rep(names(flist), elementLengths(flist))
+
+  enrich <- dplyr::data_frame(feature = fnames, sample = unlist(flist)) %>%
+    dplyr::right_join(enrich, by = "sample") 
   
-  return(format.enrich(enrich))
+  structure(enrich, class = "data.frame")
 })
 
 
@@ -72,16 +72,30 @@ setMethod("calc.enrich", c(object = "AnnotatedGWAS", feature.list = "missing"),
 #' @export
 
 serial.enrich <- function(feature, stat, thresh.levels) {
-  
+
   n <- length(stat)
-  
   stat.hits <- vapply(thresh.levels, function(t) stat >= t, FUN.VALUE = logical(n))
   
-  hits <- matrix(feature, nrow = 1) %*% stat.hits
+  if (is.vector(feature)) feature <- matrix(feature, ncol = 1)
   
-  dplyr::data_frame(threshold = thresh.levels, count = hits[1,]) %>%
-    dplyr::mutate_(prop = ~count / colSums(stat.hits)) %>%
-    dplyr::mutate_(enrichment = ~prop / mean(feature))
+  enrich <- list()
+  enrich$count      <- t(crossprod(feature, stat.hits))
+  enrich$prop       <- enrich$count / colSums(stat.hits)
+  enrich$enrichment <- t(t(enrich$prop) / colMeans(feature))
+  
+  enrich <- lapply(enrich, as.data.frame.table) %>%
+    tidyr::unnest(col = "variable") %>%
+    tidyr::spread_("variable", "Freq") %>%
+    dplyr::rename_("threshold" = "Var1", "sample" = "Var2") %>%
+    dplyr::mutate_(threshold = ~thresh.levels[as.integer(threshold)]) %>%
+    dplyr::select_("sample", "threshold", "count", "prop", "enrichment") %>%
+    dplyr::mutate_(sample = ~as.character(sample)) %>%
+    dplyr::arrange_("sample", "threshold")
+  
+  ns <- dplyr::n_distinct(enrich$sample)
+  if (ns == 1) enrich <- dplyr::select_(enrich, ~-sample)
+  
+  return(enrich)
 }
 
 
