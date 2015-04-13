@@ -15,7 +15,7 @@ setGeneric("calc.enrich",
    standardGeneric("calc.enrich")
 }) 
 
-
+#' @rdname calc.enrich
 setMethod("calc.enrich", c(object = "GWAS", feature.list = "FeatureList"), 
   function(object, feature.list, stat, thresh.levels) {
 
@@ -38,6 +38,7 @@ setMethod("calc.enrich", c(object = "GWAS", feature.list = "FeatureList"),
 })
 
 
+#' @rdname calc.enrich
 setMethod("calc.enrich", c(object = "AnnotatedGWAS", feature.list = "missing"),
   function(object, feature.list, stat, thresh.levels) {
 

@@ -1,15 +1,22 @@
 # Accessors ---------------------------------------------------------------
 
+#' @rdname GWAS
 #' @exportMethod pvalue
 setGeneric("pvalue", function(object) standardGeneric("pvalue"))
+#' @rdname GWAS
 setMethod( "pvalue", "GWAS",          function(object) mcols(object)$pvalue)
 
+
+#' @rdname GWAS
 #' @exportMethod marker
 setGeneric("marker", function(object) standardGeneric("marker"))
+#' @rdname GWAS
 setMethod( "marker", "GWAS",          function(object) mcols(object)$marker)
 
+#' @rdname GWAS
 #' @exportMethod zscore
 setGeneric("zscore", function(object) standardGeneric("zscore"))
+#' @rdname GWAS
 setMethod( "zscore", "GWAS",          function(object) mcols(object)$zscore)
 zvalue <- function(object) zscore(object)
 

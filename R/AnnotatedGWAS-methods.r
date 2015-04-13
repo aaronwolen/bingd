@@ -16,6 +16,7 @@ setGeneric("features", function(object) {
   standardGeneric("features")
 })
 
+#' @rdname features
 setMethod("features", "AnnotatedGWAS", function(object) {  
   out <- lapply(featureIndex(object), function(x) mcols(object)[x])
   return(DataFrameList(out))
@@ -30,6 +31,7 @@ setGeneric("fcols", function(object) {
   standardGeneric("fcols")
 })
 
+#' @rdname fcols
 setMethod("fcols", "AnnotatedGWAS", function(object) {
   out <- structure(as.list(features(object)), names = NULL)
   return(DataFrame(out))
@@ -50,6 +52,7 @@ setGeneric("consolidate", function(object) {
   standardGeneric("consolidate")
 })
 
+#' @rdname consolidate
 setMethod("consolidate", "AnnotatedGWAS", function(object) {
   
   # Consolidate

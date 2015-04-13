@@ -16,6 +16,7 @@ setGeneric("calc.conditionals",
   standardGeneric("calc.conditionals")
 })
 
+#' @rdname calc.conditionals
 setMethod("calc.conditionals", "AnnotatedGWAS", 
   function(object, risk.thresh = NULL, adjust = NULL, verbose = FALSE) {
   

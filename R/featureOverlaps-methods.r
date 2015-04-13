@@ -22,6 +22,7 @@ setGeneric("featureOverlaps",
 })
 
 
+#' @rdname featureOverlaps
 setMethod("featureOverlaps", c("GWAS", "FeatureList"),
   function(query, subject, maxgap = 0L, minoverlap = 1L,
            type = c("any", "start", "end", "within"), ...) {

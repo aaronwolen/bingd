@@ -14,20 +14,20 @@ setMethod("show", "FeatureList",
 })
 
 
-#' Download uncached features
+#' Download uncached AnnotationHub features
 #' 
 #' @inheritParams annotate.gwas
 #' @inheritParams local.features
 #' 
-#' @exportMethod cache.features
-#' 
 #' @return \code{FeatureList}
+#' @exportMethod cache.features
 
 setGeneric("cache.features", 
   function(object, path) {
     standardGeneric("cache.features")
 })
            
+#' @rdname cache.features
 setMethod("cache.features", "FeatureList",
   function(object, path) {
     
@@ -65,23 +65,22 @@ setMethod("cache.features", "FeatureList",
 
 # Accessors ---------------------------------------------------------------
 
-#' Access LocalPath information from FeatureList object
-#' @param object \code{FeatureList} object
-#' @export 
-
+#' @rdname featurelist
+#' @exportMethod LocalPath
 setGeneric("LocalPath", function(object) standardGeneric("LocalPath"))
-           
+
+#' @rdname featurelist
 setMethod("LocalPath", "FeatureList",
   function(object) {
     Map(function(x) structure(x$LocalPath, names = x$Title), object)
 })
 
-#' Access Cached column from FeatureList object
-#' @param object \code{FeatureList} object
-#' @export 
 
+#' @rdname featurelist
+#' @exportMethod Cached
 setGeneric("Cached", function(object) standardGeneric("Cached"))
-           
+
+#' @rdname featurelist
 setMethod("Cached", "FeatureList",
   function(object) {
     Map(function(x) structure(x$Cached, names = x$Title), object)
