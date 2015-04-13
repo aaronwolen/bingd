@@ -21,6 +21,7 @@ setGeneric("calc.priors",
   standardGeneric("calc.priors")
 })
 
+#' @rdname calc.priors
 setMethod("calc.priors", "GWAS", 
   function(object, effect = 2, adjust = NULL, verbose = FALSE, trace = 0) {
     

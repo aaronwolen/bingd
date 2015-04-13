@@ -18,6 +18,7 @@ setGeneric("calc.bayes",
   standardGeneric("calc.bayes")
 })
 
+#' @rdname calc.bayes
 setMethod("calc.bayes", "AnnotatedGWAS", 
   function(object, risk.thresh = NULL, adjust = NULL, effect = 2, prob.risk = NULL,  
            verbose = FALSE, trace = 0) {

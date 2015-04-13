@@ -15,12 +15,12 @@
 #' scz <- annotate.gwas(scz, feature.list)
 #' }
 
-
 setGeneric("annotate.gwas", 
   function(object, feature.list) {
     standardGeneric("annotate.gwas")
 })
 
+#' @rdname annotate.gwas
 setMethod("annotate.gwas", c(object = "GWAS", feature.list = "FeatureList"), 
   function(object, feature.list) {
     

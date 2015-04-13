@@ -26,6 +26,18 @@ setValidity("FeatureList", .validFeatureList)
 #' @param names a character vector of names to assign to each element
 #'
 #' @return \code{FeatureList}
+#' @name featurelist
+#' @rdname featurelist
+#' 
+#' @section Methods:
+#' 
+#' \describe{
+#'  \item{\code{cache.features}}{Download uncached features}
+#' }
+#' 
+#' @section Accessors:
+#' \code{LocalPath}: Access LocalPath information from FeatureList object
+#' \code{Cached}: Cached column from FeatureList object
 
 FeatureList <- function(..., names) {
   
