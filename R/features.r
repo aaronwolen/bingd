@@ -4,8 +4,10 @@
 #' \code{GRanges} feature
 #' 
 #' @param path Path of feature to load
+#' @param seqlevels limit the \code{\link[GenomeInfoDb]{seqlevels}} for the returned object
+#' @param GIntervalTree logical, should feature be converted to a \code{\link[GenomicRanges]{GIntervalTree}}
 
-load.feature <- function(path) {
+load.feature <- function(path, seqlevels = NULL, GIntervalTree = FALSE) {
   
   if (file.exists(path)) {
     # Load in temp environment so object name can be determined
@@ -16,8 +18,10 @@ load.feature <- function(path) {
     stop("No such file:\n", path, call. = FALSE)
   }
   
-  if (class(obj) != "GRanges")
-    stop("Features must be GRanges objects.")
+  if (class(obj) != "GRanges") stop("Features must be GRanges objects.")
+  
+  if (!is.null(seqlevels)) obj <- GenomeInfoDb::keepSeqlevels(obj, seqlevels)
+  if (GIntervalTree) obj <- GenomicRanges::GIntervalTree(obj)
   
   return(obj)
 }
