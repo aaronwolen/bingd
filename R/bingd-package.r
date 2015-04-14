@@ -12,5 +12,6 @@
 #' @name bingd
 #' @docType package
 #' @import S4Vectors IRanges GenomicRanges
+#' @importFrom methods setGeneric setMethod setValidity
 #' @importFrom dplyr %>%
 NULL
