@@ -16,13 +16,14 @@ Depends:
     S4Vectors,
     IRanges
 Imports:
+    methods,
     GenomicRanges,
     GenomeInfoDb,
     AnnotationHub (== 1.6.0),
-    methods,
     foreach,
     dplyr,
-    tidyr,
+    tidyr
+Suggests:
     testthat
 License: MIT + file LICENSE
 LazyData: true
