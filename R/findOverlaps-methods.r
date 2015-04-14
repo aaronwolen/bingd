@@ -27,11 +27,12 @@ setMethod("findOverlaps", c(query = "GWAS", subject = "FeatureList"),
 
     f.index <- stack(LocalPath(subject))
     f.paths <- structure(f.index$values, names = rownames(f.index))
-    
   
+    chrs <- GenomeInfoDb::seqlevels(query)
     
     result <- mclapply(f.paths, function(p) 
-                       findOverlaps(query = query, subject = load.feature(p),
+                       findOverlaps(query = query, 
+                                    subject = load.feature(p, chrs, TRUE),
                                     maxgap = maxgap, minoverlap = minoverlap,
                                     type = type, select = select, 
                                     ignore.strand = ignore.strand),

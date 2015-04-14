@@ -2,6 +2,7 @@ bind 0.3.5
 ==========
 
 * improve performance of calc.enrich()
+* improve performance of overlap functions with GIntervalTrees
 
 bingd 0.3.4
 ===========
