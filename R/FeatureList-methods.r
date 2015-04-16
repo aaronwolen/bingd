@@ -67,7 +67,7 @@ setMethod("cache.features", "FeatureList",
 
 #' @rdname featurelist
 #' @exportMethod LocalPath
-setGeneric("LocalPath", function(object) standardGeneric("LocalPath"))
+setGeneric("LocalPath", function(object) {standardGeneric("LocalPath")})
 
 #' @rdname featurelist
 setMethod("LocalPath", "FeatureList",
@@ -78,7 +78,7 @@ setMethod("LocalPath", "FeatureList",
 
 #' @rdname featurelist
 #' @exportMethod Cached
-setGeneric("Cached", function(object) standardGeneric("Cached"))
+setGeneric("Cached", function(object) {standardGeneric("Cached")})
 
 #' @rdname featurelist
 setMethod("Cached", "FeatureList",

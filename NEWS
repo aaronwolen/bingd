@@ -17,7 +17,7 @@ bingd 0.3.3.3
 * Require AnnotationHub v1.4.0
 
 bingd 0.3.3.2
-=============
+=============≥
 
 * export consolidate()
 * calc.conditionals() reports feature probabilities when verbose = TRUE

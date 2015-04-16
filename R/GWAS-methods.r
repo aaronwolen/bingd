@@ -1,22 +1,38 @@
 # Accessors ---------------------------------------------------------------
 
-#' @rdname GWAS
-#' @exportMethod pvalue
+#' pvalue accessor and setter
+#' 
+#' Gets and sets an object's pvalues
+#' 
+#' @param object an object to get or set the pvalue of
+#' @export
 setGeneric("pvalue", function(object) standardGeneric("pvalue"))
-#' @rdname GWAS
+
+#' @describeIn pvalue Get and set the pvalues of a \code{GWAS} object
 setMethod( "pvalue", "GWAS",          function(object) mcols(object)$pvalue)
 
 
-#' @rdname GWAS
-#' @exportMethod marker
+#' marker accessor and setter
+#' 
+#' Gets and sets an object's markers
+#' 
+#' @param object an object to get or set the markers of
+#' @export
 setGeneric("marker", function(object) standardGeneric("marker"))
-#' @rdname GWAS
+
+#' @describeIn marker Get and set a \code{GWAS} object's markers
 setMethod( "marker", "GWAS",          function(object) mcols(object)$marker)
 
-#' @rdname GWAS
-#' @exportMethod zscore
+
+#' zscore accessor and setter
+#' 
+#' Gets and sets an object's zscores
+#' 
+#' @param object an object to get or set the zscore of
+#' @export
 setGeneric("zscore", function(object) standardGeneric("zscore"))
-#' @rdname GWAS
+
+#' @describeIn zscore Get and set a \code{GWAS} object's zscores
 setMethod( "zscore", "GWAS",          function(object) mcols(object)$zscore)
 zvalue <- function(object) zscore(object)
 
@@ -25,10 +41,6 @@ zvalue <- function(object) zscore(object)
 
 # Summarize AnnotatedGWAS object
 # @param object \code{AnnotatedGWAS} object
-#' @export
-
-setGeneric("summary", function(object) standardGeneric("summary"))
-
 setMethod("summary", "AnnotatedGWAS", function(object) {
   
   f <- features(object)

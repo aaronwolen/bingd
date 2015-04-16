@@ -61,6 +61,11 @@
     returned containing indices that are offset to align with the unlisted
     \code{query}.
   }
+
+\item{ignore.strand}{
+    When set to \code{TRUE}, the strand information is ignored in the
+    overlap calculations.
+  }
 }
 \value{
 \code{findOverlaps} returns either a \code{\link[IRanges]{HitsList-class}}
