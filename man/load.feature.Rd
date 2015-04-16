@@ -4,10 +4,14 @@
 \alias{load.feature}
 \title{Load a local GRanges feature}
 \usage{
-load.feature(path)
+load.feature(path, seqlevels = NULL, GIntervalTree = FALSE)
 }
 \arguments{
 \item{path}{Path of feature to load}
+
+\item{seqlevels}{limit the \code{\link[GenomeInfoDb]{seqlevels}} for the returned object}
+
+\item{GIntervalTree}{logical, should feature be converted to a \code{\link[GenomicRanges]{GIntervalTree}}}
 }
 \description{
 \code{path} must point to an \code{R} object that contains a
