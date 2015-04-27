@@ -169,4 +169,3 @@ setMethod("as.GWAS", "GRanges",
 
     return(new("GWAS", object))      
 })
-

@@ -80,3 +80,27 @@ setMethod("is.consolidated", "AnnotatedGWAS", function(object) {
   all(sapply(features(object), length) == 1)
 })
 
+
+
+#' @describeIn as.GWAS Drop annotations to coerce an \code{\link{AnnotatedGWAS}} object back to a \code{GWAS} object
+
+setMethod("as.GWAS", signature = "AnnotatedGWAS", 
+  function(object) {
+    
+    fvars <- unlist(object@featureIndex)
+    mvars <- setdiff(names(mcols(object)), fvars)
+    mcols(object) <- mcols(object)[mvars]
+    
+    or <- beta <- NULL
+    if ("or"   %in% mvars) or   <- "or"
+    if ("beta" %in% mvars) beta <- "beta"
+    
+    as.GWAS(as(object, "GRanges"),
+            genome = GenomeInfoDb::genome(object)[1],
+            marker = "marker",
+            pvalue = "pvalue",
+            zscore = "zscore",
+            or     = or,
+            beta   = beta)
+})
+
