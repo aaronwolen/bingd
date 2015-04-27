@@ -87,20 +87,19 @@ setMethod("is.consolidated", "AnnotatedGWAS", function(object) {
 setMethod("as.GWAS", signature = "AnnotatedGWAS", 
   function(object) {
     
+    # drop features
     fvars <- unlist(object@featureIndex)
     mvars <- setdiff(names(mcols(object)), fvars)
     mcols(object) <- mcols(object)[mvars]
     
-    or <- beta <- NULL
-    if ("or"   %in% mvars) or   <- "or"
-    if ("beta" %in% mvars) beta <- "beta"
+    args <- list(genome = GenomeInfoDb::genome(object)[1],
+                 marker = "marker",
+                 pvalue = "pvalue",
+                 zscore = "zscore")
     
-    as.GWAS(as(object, "GRanges"),
-            genome = GenomeInfoDb::genome(object)[1],
-            marker = "marker",
-            pvalue = "pvalue",
-            zscore = "zscore",
-            or     = or,
-            beta   = beta)
+    if ("or"   %in% mvars) args <- c(args, or = "or")
+    if ("beta" %in% mvars) beta <- c(args, beta = "beta")
+
+    do.call("as.GWAS", c(object = as(object, "GRanges"), args))
 })
 
