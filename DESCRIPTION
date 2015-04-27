@@ -49,3 +49,4 @@ Collate:
     'reporters.r'
     'stats.r'
     'utils.r'
+    'write.r'
