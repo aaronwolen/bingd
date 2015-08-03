@@ -14,4 +14,5 @@
 #' @import S4Vectors IRanges GenomicRanges
 #' @importFrom methods setGeneric setMethod setValidity
 #' @importFrom dplyr %>%
+#' @importFrom lazyeval interp
 NULL

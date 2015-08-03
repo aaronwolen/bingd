@@ -89,14 +89,23 @@ hub.features <- function(query = NULL, path, genome, online = TRUE) {
 
 local.features <- function(query = NULL, path) {
   
-  files <- dir(path, full.names = TRUE, recursive = TRUE)
+  if (missing(path)) path <- cache.path()
+  db <- ah_db(path)
+  
+  files <- cached_files(path)
   if (length(files) == 0) return(NULL)
   
-  f.files <- DataFrame(Title = feature.labels(files), 
-                       LocalPath = files, 
-                       Cached = TRUE)
-  rownames(f.files) <- NULL # DataFrame (1.20.6) doesn't respect row.names=NULL
-  names(f.files$Title) <- NULL
+  # retrieve metadata from database
+  # TODO: fields returned should match output of AnnotationHub::mcols
+  f.files <- dplyr::src_sqlite(db) %>% 
+    dplyr::tbl("resources") %>% 
+    dplyr::filter_(.dots = interp("ah_id %in% x", x = names(files))) %>%
+    dplyr::select_(.dots = .DB_RESOURCE_FIELDS) %>%
+    dplyr::collect() %>%
+    dplyr::rename_(.dots = list(Title = "title")) %>%
+    dplyr::mutate(LocalPath = unname(files), Cached = TRUE) %>%
+    dplyr::select_(.dots = "c(ah_id, Title, LocalPath, Cached, everything())") %>%
+    DataFrame()
   
   f.list <- FeatureList(f.files)
   if (is.null(query)) return(f.list)
@@ -142,25 +151,9 @@ setMethod("filter.features", "FeatureList",
       which(hits == length(pattern))
     }
     
-    query.hits <- lapply(query, mgrep, x = object$LocalPath)
+    query.hits <- lapply(query, mgrep, x = object$Title)
     object <- lapply(query.hits, function(x) object[x, ])
     
     return(FeatureList(object))
 })
-
-
-
-#' Create pretty feature labels from the full RDataPaths
-#' 
-#' Basically just strips off the extension from the basename
-#' 
-#' @param x characer vector of full RDataPaths
-
-feature.labels <- function(x) {
-  out <- basename(x)
-  ext.pos <- sapply(gregexpr("\\.", out), function(x) tail(x, 1))
-  out <- substr(out, 1, stop = ext.pos - 1)
-  names(out) <- x
-  return(out)  
-}
 

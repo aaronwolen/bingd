@@ -19,10 +19,11 @@ Imports:
     methods,
     GenomicRanges,
     GenomeInfoDb,
-    AnnotationHub (== 1.6.0),
+    AnnotationHub (== 2.0.3),
     foreach,
     dplyr,
-    tidyr
+    tidyr,
+    lazyeval
 Suggests:
     testthat
 License: MIT + file LICENSE
@@ -50,3 +51,4 @@ Collate:
     'stats.r'
     'utils.r'
     'write.r'
+    'zzz.r'

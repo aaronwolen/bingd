@@ -17,7 +17,25 @@ cache.create <- function(path) {
     path
 }
 
-# appends resources to cache path
-cache.resources <- function(hubCache, path=character()) {
-  file.path(hubCache, "resources")
+# path of AnnotationHub database
+ah_db <- function(path) {
+  if (missing(path)) path <- cache.path()
+  db <- dir(path, "annotationhub.sqlite3", full.names = TRUE)
+  if (length(db) == 0) stop("AnnotationHub database not found in ", path)
+  db
+}
+  
+# list of feature files available in cache directory
+cached_files <- function(path) {
+  if (missing(path)) path <- cache.path()
+  db <- ah_db(path)
+  
+  ids <- dplyr::src_sqlite(db) %>% 
+    dplyr::tbl("resources") %>% 
+    dplyr::select_(.dots = "id") %>%
+    dplyr::collect()
+  
+  files <- setdiff(dir(path, full.names = TRUE), db)
+  files <- files[basename(files) %in% as.character(ids$id)]
+  setNames(files, paste0("AH", basename(files)))
 }
