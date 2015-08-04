@@ -17,15 +17,15 @@ cache.create <- function(path) {
     path
 }
 
-# path of AnnotationHub database
+# Returns path of AnnotationHub database or NULL if it doesn't exist
 ah_db <- function(path) {
   if (missing(path)) path <- cache.path()
   db <- dir(path, "annotationhub.sqlite3", full.names = TRUE)
-  if (length(db) == 0) stop("AnnotationHub database not found in ", path)
+  if (length(db) == 0) return(NULL)
   db
 }
   
-# list of feature files available in cache directory
+# Returns list of feature files available in cache directory or NULL if empty
 cached_files <- function(path) {
   if (missing(path)) path <- cache.path()
   db <- ah_db(path)
@@ -41,6 +41,9 @@ cached_files <- function(path) {
   
   # filter rdatapaths for local files
   local.files <- dir(path, full.names = TRUE)
+  local.files <- setdiff(local.files, db)
+  if (length(local.files) == 0) return(NULL)
+  
   rdatapaths  <- rdatapaths %>%
     dplyr::filter_(.dots = interp(~id %in% f, f = basename(local.files)))
 
