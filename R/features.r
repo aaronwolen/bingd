@@ -52,12 +52,18 @@ hub.features <- function(query = NULL, path, genome, online = TRUE) {
   else 
     cache.create(path)
   
+  if (online) {
+    ah <- AnnotationHub::AnnotationHub(path = path)
+  } else {
+    if (is.null(ah_db()))
+      stop("No database found in ", path, ",\n", 
+           "\tonline must be TRUE to download a new copy.")
+  }
+  
   cached.files <- local.features(NULL, path)
   if (!is.null(cached.files)) cached.files <- stack(cached.files)[-1]
   
   if (online) {
-    # Retrieve latest feature
-    ah <- AnnotationHub::AnnotationHub()
     f.files <- AnnotationHub::mcols(ah)
     f.files <- S4Vectors::rename(f.files, c("title" = "Title"))
     
