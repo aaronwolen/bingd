@@ -95,19 +95,16 @@ local.features <- function(query = NULL, path) {
   files <- cached_files(path)
   if (length(files) == 0) return(NULL)
   
-  # retrieve metadata from database
-  # TODO: fields returned should match output of AnnotationHub::mcols
-  f.files <- dplyr::src_sqlite(db) %>% 
-    dplyr::tbl("resources") %>% 
-    dplyr::filter_(.dots = interp("ah_id %in% x", x = names(files))) %>%
-    dplyr::select_(.dots = .DB_RESOURCE_FIELDS) %>%
-    dplyr::collect() %>%
-    dplyr::rename_(.dots = list(Title = "title")) %>%
-    dplyr::mutate(LocalPath = unname(files), Cached = TRUE) %>%
-    dplyr::select_(.dots = "c(ah_id, Title, LocalPath, Cached, everything())") %>%
-    DataFrame()
+  f.files <- db_metadata(db, ids = names(files)) %>%
+    S4Vectors::rename(title = "Title")
   
+  f.files$LocalPath <- files[f.files$ah_id]
+  f.files$Cached    <- TRUE
+  f.files <- f.files[c("ah_id", "Title", "LocalPath", "Cached", "tags",
+                    intersect(.DB_RESOURCE_FIELDS[-1], names(f.files)))]
+
   f.list <- FeatureList(f.files)
+  
   if (is.null(query)) return(f.list)
   filter.features(f.list, query)
 }
@@ -150,10 +147,9 @@ setMethod("filter.features", "FeatureList",
       hits <- .rowSums(hits, m = length(x), n = length(pattern))
       which(hits == length(pattern))
     }
-    
-    query.hits <- lapply(query, mgrep, x = object$Title)
+
+    query.hits <- lapply(query, mgrep, x = object$tags)
     object <- lapply(query.hits, function(x) object[x, ])
     
     return(FeatureList(object))
 })
-
