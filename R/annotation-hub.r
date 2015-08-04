@@ -57,22 +57,31 @@ cached_files <- function(path) {
   setNames(file.path(path, files$id), files$ah_id)
 }
 
-# retrieve all ids in database
+# retrieve all resource IDs named by hub identifiers (e.g., AH28854 = 34294)
 db_ids <- function(db) {
   if (missing(db)) db <- ah_db()
-  ids <- dplyr::src_sqlite(db) %>% 
-    dplyr::tbl("resources") %>%
-    dplyr::select_(.dots = "ah_id") %>%
-    dplyr::collect()
   
-  ids$ah_id
+  ah.sql <- dplyr::src_sqlite(db)
+  
+  ids <- ah.sql %>% 
+    dplyr::tbl("resources") %>%
+    dplyr::select_(.dots = c("ah_id", "id")) %>%
+    dplyr::rename_(.dots = c("resource_id" = "id"))
+  
+  ids <- ah.sql %>% 
+    dplyr::tbl("rdatapaths") %>%
+    dplyr::select_(.dots = c("id", "resource_id")) %>%
+    dplyr::left_join(ids, by = "resource_id") %>%
+    dplyr::collect()
+    
+  setNames(ids$id, ids$ah_id)
 }
 
 # retrieve metadata fields matching AnnotationHub::mcols
 # TODO: Add rdataclass, sourceurl and sourcetype fields
 db_metadata <- function(db, ids) {
   if (missing(db)) db <- ah_db()
-  if (missing(ids)) ids <- db_ids(db)
+  if (missing(ids)) ids <- names(db_ids(db))
 
   # ah_id %in% ids filtering fails if length(ids) == 1
   # convert ids to a data.frame and perform inner_joins as a workaround
@@ -99,4 +108,7 @@ db_metadata <- function(db, ids) {
     
   DataFrame(mdata[-1], row.names = mdata[["ah_id"]])
 }
+
+
+# Returns an AnnotationHub object filtered for GRanges objects
 
