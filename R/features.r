@@ -155,8 +155,10 @@ setMethod("filter.features", "FeatureList",
       hits <- .rowSums(hits, m = length(x), n = length(pattern))
       which(hits == length(pattern))
     }
-    browser(0)
-    query.hits <- lapply(query, mgrep, x = object$tags)
+    
+    tag.hits   <- lapply(query, mgrep, x = object$tags)
+    title.hits <- lapply(query, mgrep, x = object$Title)
+    query.hits <- Map("union", tag.hits, title.hits)
     object <- lapply(query.hits, function(x) object[x, ])
     
     return(FeatureList(object))
