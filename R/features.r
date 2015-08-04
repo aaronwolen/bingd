@@ -46,28 +46,30 @@ load.feature <- function(path, seqlevels = NULL, GIntervalTree = FALSE) {
 #' @export
 
 hub.features <- function(query = NULL, path, genome, online = TRUE) {
-  
-  if (missing(path)) {
+
+  if (missing(path)) 
     path <- cache.path()
-  } else {
-    if (!cache.exists(path)) cache.create(path)
-    options("AnnotationHub.Cache" = path)
-  }
+  else 
+    cache.create(path)
   
-  cached.files <- local.features(NULL, cache.resources(path))
+  cached.files <- local.features(NULL, path)
   if (!is.null(cached.files)) cached.files <- stack(cached.files)[-1]
   
   if (online) {
     # Retrieve latest feature
     ah <- AnnotationHub::AnnotationHub()
-    f.files <- AnnotationHub::metadata(ah)
+    f.files <- AnnotationHub::mcols(ah)
+    f.files <- S4Vectors::rename(f.files, c("title" = "Title"))
     
     # Filter based on genome
-    if (!missing(genome)) f.files <- f.files[f.files$Genome == genome,]
+    if (!missing(genome)) f.files <- f.files[f.files$genome == genome,]
     
     # Identify which features are already cached
-    f.files$LocalPath <- file.path(cache.resources(path), f.files$RDataPath)
+    f.files$LocalPath <- file.path(path, db_ids()[rownames(f.files)])
     f.files$Cached    <- file.exists(f.files$LocalPath)
+    
+    fl.cols <- c("Title", "LocalPath", "Cached")
+    f.files <- f.files[c(fl.cols, setdiff(names(f.files), fl.cols))]
   } else {
     if (is.null(cached.files)) stop("No files found in ", path)
     f.files <- cached.files
@@ -97,10 +99,10 @@ local.features <- function(query = NULL, path) {
   
   f.files <- db_metadata(db, ids = names(files)) %>%
     S4Vectors::rename(title = "Title")
-  
-  f.files$LocalPath <- files[f.files$ah_id]
+
+  f.files$LocalPath <- files[rownames(f.files)]
   f.files$Cached    <- TRUE
-  f.files <- f.files[c("ah_id", "Title", "LocalPath", "Cached", "tags",
+  f.files <- f.files[c("Title", "LocalPath", "Cached", "tags",
                     intersect(.DB_RESOURCE_FIELDS[-1], names(f.files)))]
 
   f.list <- FeatureList(f.files)
@@ -147,7 +149,7 @@ setMethod("filter.features", "FeatureList",
       hits <- .rowSums(hits, m = length(x), n = length(pattern))
       which(hits == length(pattern))
     }
-
+    browser(0)
     query.hits <- lapply(query, mgrep, x = object$tags)
     object <- lapply(query.hits, function(x) object[x, ])
     
