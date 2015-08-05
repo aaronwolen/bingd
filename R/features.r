@@ -26,7 +26,20 @@ load.feature <- function(path, seqlevels = NULL, GIntervalTree = FALSE) {
   return(obj)
 }
 
-
+# load.feature for AnnotationHub record
+# @param which numeric index or name of AnnotationHub feature
+load_feature <- function(object, which, seqlevels = NULL, GNCList = FALSE) {
+  
+  if (!is(object, "AnnotationHub")) stop("object must be an AnnotatoinHub object.")
+  if (missing(which)) stop("Must provide index or name of AnnotationHub record.")
+  
+  obj <- object[[which]]
+  if (!is(obj, "GRanges")) stop("Features must be GRanges objects.")
+  
+  if (!is.null(seqlevels)) obj <- GenomeInfoDb::keepSeqlevels(obj, seqlevels)
+  if (GNCList) obj <- GenomicRanges::GNCList(obj)
+  obj
+}
 
 #' Retrieve information about AnnotationHub features
 #' 
