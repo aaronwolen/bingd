@@ -1,4 +1,8 @@
-bind 0.3.4.1
+bingd 0.4
+===========
+
+* Update to AnnotationHub 2.0
+* Add AnnotationHubList class to store related groups AnnotationHub objects
 ============
 
 * improve performance of calc.enrich()
