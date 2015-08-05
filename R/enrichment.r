@@ -39,6 +39,43 @@ setMethod("calc.enrich", c(object = "GWAS", feature.list = "FeatureList"),
 
 
 #' @rdname calc.enrich
+setMethod("calc.enrich", c(object = "GWAS", feature.list = "AnnotationHub"), 
+  function(object, feature.list, stat, thresh.levels) {
+
+  if (missing(thresh.levels)) {
+    thresh.levels <- quantile(stat, seq(0, 1, 0.1))
+  }
+  
+  enrich <- parallel::mclapply(names(feature.list), function(p) 
+                               serial.enrich(object %over% feature.list[[p]],
+                                             stat, thresh.levels),
+                               mc.cores = foreach::getDoParWorkers())
+  
+  setNames(enrich, names(feature.list)) %>% tidyr::unnest(col = "feature")
+})
+
+
+
+#' @rdname calc.enrich
+setMethod("calc.enrich", c(object = "GWAS", feature.list = "AnnotationHubList"), 
+  function(object, feature.list, stat, thresh.levels) {
+
+  if (missing(thresh.levels)) {
+    thresh.levels <- quantile(stat, seq(0, 1, 0.1))
+  }
+  
+  if (is.null(names(feature.list))) 
+    names(features.list) <- paste0("Group", seq_along(feature.list))
+  
+  enrich <- lapply(feature.list, calc.enrich, object = object, 
+                   stat = stat, thresh.levels = thresh.levels)
+  
+  tidyr::unnest(enrich, col = "group")
+})
+
+
+
+#' @rdname calc.enrich
 setMethod("calc.enrich", c(object = "AnnotatedGWAS", feature.list = "missing"),
   function(object, feature.list, stat, thresh.levels) {
 
