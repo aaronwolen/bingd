@@ -41,3 +41,28 @@ setMethod("featureOverlaps", c("GWAS", "FeatureList"),
   
     return(result)
 })
+
+
+#' @rdname featureOverlaps
+setMethod("featureOverlaps", c("GWAS", "AnnotationHubList"),
+  function(query, subject, maxgap = 0L, minoverlap = 1L,
+           type = c("any", "start", "end", "within"), ...) {
+    
+    result <- lapply(subject, featureOverlaps, query = query, 
+                     maxgap = maxgap, minoverlap = minoverlap, type = type, ...)
+
+    DataFrameList(result)
+})
+
+
+setMethod("featureOverlaps", c("GWAS", "AnnotationHub"),
+  function(query, subject, maxgap = 0L, minoverlap = 1L,
+           type = c("any", "start", "end", "within"), ...) {
+    
+    result <- findOverlaps(query, subject, 
+                           maxgap = maxgap, minoverlap = minoverlap, type = type,
+                           select = "arbitrary", ...)
+    
+    result <- lapply(result, function(x) !is.na(x))
+    DataFrame(result, row.names = names(query))
+})
