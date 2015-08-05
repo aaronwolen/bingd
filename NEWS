@@ -7,6 +7,7 @@ bingd 0.4
 * Add AnnotationHub and AnnotationHubList methods to calc.enrich()
 * Add AnnotationHub method to findOverlaps()
 * Add AnnotationHub and AnnotationHubList methods to featureOverlaps()
+* Add AnnotationHub and AnnotationHubList methods to annotate.gwas()
 ============
 
 * improve performance of calc.enrich()

@@ -37,3 +37,25 @@ setMethod("annotate.gwas", c(object = "GWAS", feature.list = "FeatureList"),
       
     return(object)
 })
+
+#' @rdname annotate.gwas
+setMethod("annotate.gwas", c(object = "GWAS", feature.list = "AnnotationHubList"), 
+  function(object, feature.list) {
+    overlaps <- featureOverlaps(query = object, subject = feature.list)
+    f.index <- lapply(overlaps, function(x) make.names(names(x)))
+    overlaps <- do.call("DataFrame", as(overlaps, "list"))
+    names(overlaps) <- unlist(f.index)
+    mcols(object) <- DataFrame(mcols(object), overlaps)
+    
+    new("AnnotatedGWAS", object, featureIndex = as(f.index, "SimpleList"))
+})
+
+#' @rdname annotate.gwas
+setMethod("annotate.gwas", c(object = "GWAS", feature.list = "AnnotationHub"), 
+  function(object, feature.list) {
+    overlaps <- featureOverlaps(query = object, subject = feature.list)
+    f.index <- list(features = make.names(names(overlaps)))
+    mcols(object) <- DataFrame(mcols(object), overlaps)
+    
+    new("AnnotatedGWAS", object, featureIndex = SimpleList(f.index))
+})
