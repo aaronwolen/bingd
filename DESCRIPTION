@@ -34,8 +34,6 @@ Collate:
     'AnnotatedGWAS-class.r'
     'AnnotatedGWAS-methods.r'
     'AnnotationHubList-class.r'
-    'FeatureList-class.r'
-    'FeatureList-methods.r'
     'GWAS-methods.r'
     'annotate.r'
     'annotation-hub.r'

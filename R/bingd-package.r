@@ -11,6 +11,7 @@
 #' Maintainer: Aaron Wolen \email{aaron@@wolen.com}
 #' @name bingd
 #' @docType package
+#' @import AnnotationHub
 #' @import S4Vectors IRanges GenomicRanges
 #' @importFrom methods setGeneric setMethod setValidity
 #' @importFrom dplyr %>%

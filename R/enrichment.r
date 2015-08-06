@@ -15,28 +15,6 @@ setGeneric("calc.enrich",
    standardGeneric("calc.enrich")
 }) 
 
-#' @rdname calc.enrich
-setMethod("calc.enrich", c(object = "GWAS", feature.list = "FeatureList"), 
-  function(object, feature.list, stat, thresh.levels) {
-
-  if (missing(thresh.levels)) {
-    thresh.levels <- quantile(stat, seq(0, 1, 0.1))
-  }
-  
-  features <- LocalPath(feature.list)
-  enrich <- list()
-  
-  for (i in names(features)) {
-    
-    enrich[[i]] <- parallel::mclapply(features[[i]], function(p) 
-                               serial.enrich(object %over% load.feature(p),
-                                             stat, thresh.levels),
-                               mc.cores = foreach::getDoParWorkers())
-  }
-  
-  return(format.enrich(enrich))
-})
-
 
 #' @rdname calc.enrich
 setMethod("calc.enrich", c(object = "GWAS", feature.list = "AnnotationHub"), 

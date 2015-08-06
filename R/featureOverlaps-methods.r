@@ -23,27 +23,6 @@ setGeneric("featureOverlaps",
 
 
 #' @rdname featureOverlaps
-setMethod("featureOverlaps", c("GWAS", "FeatureList"),
-  function(query, subject, maxgap = 0L, minoverlap = 1L,
-           type = c("any", "start", "end", "within"), ...) {
-
-    type <- match.arg(type)
-    
-    result <- findOverlaps(query, subject, 
-                           maxgap = maxgap, minoverlap = minoverlap, type = type,
-                           select = "arbitrary", ...)
-    
-    result <- lapply(result, function(x) !is.na(x))
-    result <- split(result, f = stack(LocalPath(subject))$ind)
-    result <- lapply(result, DataFrame)
-    
-    result <- DataFrameList(result)
-  
-    return(result)
-})
-
-
-#' @rdname featureOverlaps
 setMethod("featureOverlaps", c("GWAS", "AnnotationHubList"),
   function(query, subject, maxgap = 0L, minoverlap = 1L,
            type = c("any", "start", "end", "within"), ...) {

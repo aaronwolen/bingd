@@ -16,38 +16,6 @@
 #' 
 #' @rdname findOverlaps
 
-setMethod("findOverlaps", c(query = "GWAS", subject = "FeatureList"),
-  function(query, subject, maxgap = 0L, minoverlap = 1L,
-           type = c("any", "start", "end", "within"),
-           select = c("all", "first", "last", "arbitrary"), 
-           ignore.strand = FALSE) {
-    
-    type <- match.arg(type)
-    select <- match.arg(select)
-
-    f.index <- stack(LocalPath(subject))
-    f.paths <- structure(f.index$values, names = rownames(f.index))
-  
-    chrs <- GenomeInfoDb::seqlevels(query)
-    
-    result <- mclapply(f.paths, function(p) 
-                       findOverlaps(query = query, 
-                                    subject = load.feature(p, chrs, TRUE),
-                                    maxgap = maxgap, minoverlap = minoverlap,
-                                    type = type, select = select, 
-                                    ignore.strand = ignore.strand),
-                       mc.cores = foreach::getDoParWorkers())
-    
-    if (select == "all") {
-      result <- as(SimpleList(result), "HitsList")  
-    } else {
-      result <- IntegerList(result)
-    }
-    
-    return(result)
-})
-
-
 setMethod("findOverlaps", c(query = "GWAS", subject = "AnnotationHub"),
   function(query, subject, maxgap = 0L, minoverlap = 1L,
            type = c("any", "start", "end", "within"),

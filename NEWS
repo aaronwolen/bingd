@@ -2,7 +2,8 @@ bingd 0.4
 ===========
 
 * Update to AnnotationHub 2.0
-
+* Remove FeatureList class and methods. bingd functions now operate directly
+  on AnnotationHub objects instead
 * Add AnnotationHubList class to store related groups AnnotationHub objects
 * Add AnnotationHub and AnnotationHubList methods to calc.enrich()
 * Add AnnotationHub method to findOverlaps()
